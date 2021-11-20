@@ -1,0 +1,18 @@
+Package: diffval
+Title: Using the DiffVal Index to Classify Vegetation Data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Tiago",
+           family = "Monteiro-Henriques",
+           role = c("aut", "cre"),
+           email = "tiagomonteirohenriques@gmail.com",
+           comment = c(ORCID = "https://orcid.org/0000-0002-4206-0699"))
+Description: This package contains functions to explore vegetation data aiming at obtaining classifications based on differential taxa.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    graphics,
+    grDevices
