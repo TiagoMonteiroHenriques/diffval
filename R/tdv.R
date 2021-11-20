@@ -28,7 +28,8 @@
 tdv <- function (m, p, full.output=FALSE) {
   if (!identical(length(p), ncol(m))) {stop("Object p must be a partition of the columns of m")}
   k <- max(p)
-  if (!identical(c(0,1), sort(unique(as.vector(as.matrix(m)))))) {stop("Matrix m should contain only 0's and 1's")}
+  mode(m) <- "integer"
+  if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa")}
   mt <- t(m)
