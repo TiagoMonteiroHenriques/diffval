@@ -410,6 +410,7 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
         }
       }
     }
-    return(res.list)
+    ind.order <- order(sapply(res.list, function (x) {x$max.TotDiffVal1}))
+    return(res.list[ind.order])
   }
 }
