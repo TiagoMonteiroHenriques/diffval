@@ -2,27 +2,37 @@
 % Please edit documentation in R/HillClimb_optim_tdv.R
 \name{HillClimb_optim_tdv}
 \alias{HillClimb_optim_tdv}
-\title{TotDiffVal1 optimization using hill climbing algorithms}
+\title{TotDiffVal (or TotDiffVal1) optimization using hill climbing algorithms}
 \usage{
 HillClimb_optim_tdv(
   m,
-  k,
-  maxit = 10,
   p.ini = "random",
+  k,
+  n.starts = 1,
+  n.sol = 1,
+  index = "TotDiffVal1",
+  maxit = 10,
   min.g.size = 2,
   random.first = FALSE,
   rf.neigh.size = 1,
-  rf.maxit = 500
+  rf.maxit = 500,
+  full.output = FALSE
 )
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
+\item{p.ini}{A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+
 \item{k}{A \code{numeric}, giving the number of desired groups.}
 
-\item{maxit}{A \code{numeric} giving the number of iterations of the hill-climbing optimization.}
+\item{n.starts}{A \code{numeric}, giving the number of starts to perform.}
 
-\item{p.ini}{A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+\item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output.}
+
+\item{index}{A \code{character}, selecting wich index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO}
+
+\item{maxit}{A \code{numeric} giving the number of iterations of the hill-climbing optimization.}
 
 \item{min.g.size}{A \code{numeric} The minimum number of relevés that a group can contain (must be 2 or higher).}
 
@@ -31,6 +41,8 @@ HillClimb_optim_tdv(
 \item{rf.neigh.size}{A \code{numeric}, giving the size (\code{n}) of the \code{n}-neighbour for the stochastic hill-climbing; only used if \code{random.first} = \code{TRUE}.}
 
 \item{rf.maxit}{A \code{numeric}, giving the number of iterations of the hill-climbing optimization; only used if \code{random.first} = \code{TRUE}.}
+
+\item{full.output}{A \code{logical}. If \code{FALSE} (the default) the best \code{n.sol} partitions and respective indices are returned. If \code{TRUE} (only available for \code{n.sols = 1}) the output will also contain information on the optimization steps (see below).}
 }
 \value{
 A \code{list} with the following components:
@@ -47,10 +59,10 @@ A \code{list} with the following components:
 }
 }
 \description{
-This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal1 index.
+This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal (or TotDiffVal1) index.
 }
 \details{
-Given a phytosociological table (\code{m}, rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (k, defined by the user) optimizing TotDiffVal1 index (see http://home.isa.utl.pt/~tmh/), i.e. searches, using a hill-climbing algorithm, for patterns of differential taxa by rearranging the relevés into k groups.
+Given a phytosociological table (\code{m}, rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (k, defined by the user) optimizing TotDiffVal (or TotDiffVal1) index (see http://home.isa.utl.pt/~tmh/), i.e. searches, using a hill-climbing algorithm, for patterns of differential taxa by rearranging the relevés into k groups.
 
 Optimization can start from a random partition (\code{p.ini} = "random"), or from a given partition (\code{p.ini}, defined by the user or produced by any clustering method, or even a manual classification).
 
