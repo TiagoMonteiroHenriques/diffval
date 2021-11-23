@@ -6,7 +6,7 @@
 \usage{
 HillClimb_optim_tdv(
   m,
-  p.ini = "random",
+  p.initial = "random",
   k,
   n.starts = 1,
   n.sol = 1,
@@ -22,7 +22,7 @@ HillClimb_optim_tdv(
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
-\item{p.ini}{A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+\item{p.initial}{A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
 
 \item{k}{A \code{numeric}, giving the number of desired groups.}
 

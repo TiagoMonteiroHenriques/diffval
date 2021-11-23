@@ -5,7 +5,7 @@
 #' @description This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal (or TotDiffVal1) index.
 #'
 #' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
-#' @param p.ini A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
+#' @param p.initial A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
 #' @param k A `numeric`, giving the number of desired groups.
 #' @param n.starts A `numeric`, giving the number of starts to perform.
 #' @param n.sol A `numeric`, giving the number of best solutions to keep in the final output.
@@ -46,7 +46,7 @@
 #'
 #' @export
 #'
-HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, index = "TotDiffVal1", maxit = 10, min.g.size = 2, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
+HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 1, index = "TotDiffVal1", maxit = 10, min.g.size = 2, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
   stopifnot(is.matrix(m))
   mode(m) <- "integer"
   if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's.")}
@@ -57,21 +57,28 @@ HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, i
   nr <- nrow(mt) # no. of relevés
   ns <- ncol(mt) #no. of taxa
   if (nr <= mgs*k) {stop(paste0("Random partition cannot guarantee at least ", mgs, " relev\u00e9s per group!"))}
-  if (p.ini[1] == "random") {
-    p.ini <- sample(c(rep(1:k, mgs), sample(k, nr-mgs*k, replace=TRUE)))
-    tp <- table(p.ini)
-  } else {
-    tp <- table(p.ini)
+
+  if (p.initial[1] != "random") {
+    p.ini <- p.initial
     if (!identical(as.integer(sort(unique(p.ini))), 1:k)) {stop("Your partition doesn't have k groups!")} #maybe when p.ini is given k could be ignored
     if (!identical(length(p.ini), nr)) {stop("Object p.ini must be a partition of the columns of matrix m.")}
     if (min(tp)<mgs) {stop(paste0("At least one group of the provided partition has less than ", mgs, " elements"))}
     if (max(tp)==mgs) {stop(paste0("At least one group of the provided partition has to have more than ", mgs, " elements"))}
+    tp <- table(p.ini)
   }
+
   if (n.sol > n.starts) {stop("The number of starts ('n.starts') should not be lower than the desired number of best solutions ('n.sol').")}
+
   if ((n.sol > 1 | n.starts > 1) & full.output == TRUE) {stop("The option 'full.output = TRUE' is only available for 'n.sol == 1' and 'n.starts = 1'.")}
 
   if (n.sol == 1 & n.starts == 1 & full.output == TRUE) {
     t <- Sys.time()
+
+    if (p.initial[1] == "random") {
+      p.ini <- sample(c(rep(1:k, mgs), sample(k, nr-mgs*k, replace=TRUE)))
+      tp <- table(p.ini)
+    }
+
     arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
     afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
     t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
@@ -233,6 +240,15 @@ HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, i
   if (full.output == FALSE) {
     res.list <- list()
     for (n.run in 1:n.starts) {
+
+      if (p.initial[1] == "random") {
+        p.ini <- sample(c(rep(1:k, mgs), sample(k, nr-mgs*k, replace=TRUE)))
+        tp <- table(p.ini)
+      } else {
+        p.ini <- p.initial
+        tp <- table(p.ini)
+      }
+
       arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
       afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
       t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
@@ -250,7 +266,6 @@ HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, i
       }
       cuscor <- sum(colSums(arf*adp))/ns
 
-      cuscor.rf=NULL
       if (random.first==TRUE) {
 
         #random.neighbour: this function returns randomly one of the (k-1)*nr 1-neighbour partitions, assuring that the minimum group size (mgs) is respected
@@ -294,7 +309,6 @@ HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, i
           if (cusviz >= cuscor) {parcor <- parviz; cuscor <- cusviz}
         }
         p.ini <- parcor
-        cuscor.rf <- cuscor
         tp <- table(p.ini)
         #afg, t1, t2, t3, arf and adp must be recalculated for parcor (as a worse neighbour might have been used to calculate them before)!
         arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
@@ -381,7 +395,7 @@ HillClimb_optim_tdv <- function(m, p.ini="random", k, n.starts = 1, n.sol = 1, i
         }
       }
 
-      if (n.run == 1) {res.list[[1]] <- list(local_maximum=loc_max, par=parcor, max.TotDiffVal1=cuscor)} else {
+      if (n.run == 1) {res.list[[1]] <- list(local_maximum = loc_max, par = parcor, max.TotDiffVal1 = cuscor)} else {
         already.in.bestsol <- any(sapply(res.list, function (x) {equivalent_partition(x$par, parcor)}))
         if (!already.in.bestsol) {
           if (length(res.list) < n.sol) {
