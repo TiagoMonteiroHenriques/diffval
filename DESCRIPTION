@@ -1,6 +1,6 @@
 Package: diffval
 Title: Using the DiffVal Index to Classify Vegetation Data
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: 
     person(given = "Tiago",
            family = "Monteiro-Henriques",

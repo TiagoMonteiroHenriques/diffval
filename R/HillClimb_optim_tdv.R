@@ -399,7 +399,7 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
             break
           }
         }
-      cat(paste("Run number: ", n.run," Confirmed local maximum: ", loc_max))
+      cat(paste("Run number: ", n.run," Confirmed local maximum: ", loc_max, "\n"))
       }
 
       if (n.run == 1) {res.list[[1]] <- list(local_maximum = loc_max, par = parcor, max.TotDiffVal1 = cuscor)} else {
