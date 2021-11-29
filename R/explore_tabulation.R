@@ -28,29 +28,35 @@ explore_tabulation <- function (x) {
   id.x <- rep(seq(0,1,length.out=k))
   id.y <- rev(rep(seq(0,1,length.out=ns+2)[1:ns], times=k))
   list.cent.label <- apply((mat2>0)+0, 2, function (x) {
+    #x <- (mat2>0)+0
+    #x <- x[,2]
     ic <- 1; i.from <- NULL; i.to <- NULL; sen <- "from"
     x <- c(x,0)
+
     while (ic <= length(x)) { #maybe replace with strgsplit + grep!
       if (sen=="from") {
         if (x[ic]==0) {ic <- ic+1} else {i.from <- c(i.from,ic); sen <- "to"; ic <- ic+1}
       } else {if (x[ic]==1) {ic <- ic+1} else {i.to <- c(i.to,ic-1); sen <- "from"; ic <- ic+1}}
     }
-    ind <- apply(cbind(i.from,i.to),1, function (z) seq(z[1],z[2]))
+    if (is.null(cbind(i.from,i.to))) {return()}
+    ind <- apply(cbind(i.from,i.to), 1, function (z) seq(z[1],z[2]))
     if (is.matrix(ind)) {
       apply(ind, 2, function (y) {
-        res.y <- mean(id.y[y])
+        res.y <- mean(id.y[y]) #find mean coordinate for plotting
         res.label <- paste(paste(taxa.names[taxa.ord][y], collapse="\n"), "\n\n")
         return(list(res.y=res.y, res.label=res.label))
       })
     } else {
       lapply(ind, function (y) {
-        res.y <- mean(id.y[y])
+        res.y <- mean(id.y[y]) #find mean coordinate for plotting
         res.label <- paste(paste(taxa.names[taxa.ord][y], collapse="\n"), "\n\n")
         return(list(res.y=res.y, res.label=res.label))
       })
     }
   })
-  id.y.cent.labt <- lapply(list.cent.label, function (x) {as.matrix(simplify2array(x,higher = FALSE)[1,])})
+  id.x <- id.x[!sapply(list.cent.label, is.null)]
+  list.cent.label <- Filter(Negate(is.null), list.cent.label)
+  id.y.cent.labt <- lapply(list.cent.label, function (x) {as.matrix(simplify2array(x, higher = FALSE)[1,])})
   id.y.cent.lab <- unlist(id.y.cent.labt)
   id.lab <- c("",unlist(sapply(list.cent.label, function (x) {as.matrix(simplify2array(x,higher = FALSE)[2,])})))
   id.x.cent.lab <- rep.int(id.x, times=sapply(id.y.cent.labt, length))
