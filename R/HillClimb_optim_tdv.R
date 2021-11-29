@@ -52,7 +52,7 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
   if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's.")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9.")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa.")}
-  if ((mgs <- as.integer(min.g.size))<2) {stop("Object min.g.size must be greater than 2.")} #TODO: check if this can be eliminated
+  if ((mgs <- as.integer(min.g.size)) < 1) {stop("Object min.g.size must be greater than 1.")}
   mt <- t(m)
   nr <- nrow(mt) # no. of relevés
   ns <- ncol(mt) #no. of taxa
@@ -219,8 +219,8 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
     }
 
     #HILL CLIMBING
-    if (maxit==0) {res <- NULL; parcor=p.ini; loc_max = NA} else {
-      loc_max <- NA
+    if (maxit==0) {res <- NULL; parcor=p.ini; loc_max = FALSE} else {
+      loc_max <- FALSE
       parcor <- p.ini
       #cuscor is already calculated
       res <- c(0,0,0)
@@ -383,16 +383,23 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
       }
 
       #HILL CLIMBING
-      if (maxit==0) {parcor=p.ini; loc_max = NA} else {
-        loc_max <- NA
+      if (maxit==0) {parcor=p.ini; loc_max = FALSE} else {
+        loc_max <- FALSE
         parcor <- p.ini
         #cuscor is already calculated
         for (iter in 1:maxit) {
           temp <- max.tdv.neighbour(parcor)
           parviz <- temp$p
           cusviz <- temp$tdv
-          if (cusviz > cuscor) {parcor <- parviz; cuscor <- cusviz} else {loc_max <- TRUE; print("Local maximum reached"); break}
+          if (cusviz > cuscor) {
+            parcor <- parviz
+            cuscor <- cusviz
+          } else {
+            loc_max <- TRUE
+            break
+          }
         }
+      cat(paste("Run number: ", n.run," Confirmed local maximum: ", loc_max))
       }
 
       if (n.run == 1) {res.list[[1]] <- list(local_maximum = loc_max, par = parcor, max.TotDiffVal1 = cuscor)} else {
