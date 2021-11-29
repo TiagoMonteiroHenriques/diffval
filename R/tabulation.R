@@ -33,22 +33,22 @@ tabulation <- function (m, p, taxa.names, plot.im=NULL) {
   if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa")}
-  mgs <- 2 #tem que ter no mínimo 2 grupos!
+  #mgs <- 2 #tem que ter no mínimo 2 grupos! #COMTÁRIO A CONFIRMAR!
   k <- max(p)
   nr <- ncol(m) # no. of relevés
   ns <- nrow(m) #no. of taxa
   tp <- table(p)
   if (length(taxa.names)!=ns) {stop("The length of taxa.names must match the number of rows of m")}
   if (!identical(length(p), nr)) {stop("Object p must be a partition of the columns of m")}
-  if (min(tp)<mgs) {stop("At least one group of the provided partition has less than 2 elements")}
+  #if (min(tp)<mgs) {stop("At least one group of the provided partition has less than 2 elements")}
   res <- tdv(m, p, full.output=TRUE)
   ot <- (res$afg>0)*(1:k)
   order.t1 <- res$t2 #no. of groups containing the taxon
-  order.t2 <- apply(ot,2,function(x){prod(x[x>0])}) #product of group numbers when the taxon is present
-  order.t3 <- 1-(colSums(res$arf)/res$t2) #1 - the sum of all the adjusted relative frequencies for the taxon
+  order.t2 <- apply(ot, 2, function(x) {prod(x[x>0])}) #product of group numbers when the taxon is present
+  order.t3 <- 1 - (colSums(res$arf) / res$t2) #1 - the sum of all the adjusted relative frequencies for the taxon
   sort.rel <- order(p)
-  taxa.ord <- order(order.t1,order.t2,order.t3)
-  mat1 <- rbind(sort(p),0, m[taxa.ord,sort.rel])
+  taxa.ord <- order(order.t1, order.t2, order.t3)
+  mat1 <- rbind(sort(p), 0, m[taxa.ord,sort.rel])
   colnames(mat1) <- sort.rel
   ht <- colnames(m)[sort.rel]
   rownames(mat1) <- c("group","space",as.character(taxa.names)[taxa.ord])
