@@ -12,7 +12,7 @@ HillClimb_optim_tdv(
   n.sol = 1,
   index = "TotDiffVal1",
   maxit = 10,
-  min.g.size = 2,
+  min.g.size = 1,
   random.first = FALSE,
   rf.neigh.size = 1,
   rf.maxit = 500,

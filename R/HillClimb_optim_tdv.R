@@ -46,13 +46,13 @@
 #'
 #' @export
 #'
-HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 1, index = "TotDiffVal1", maxit = 10, min.g.size = 2, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
+HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 1, index = "TotDiffVal1", maxit = 10, min.g.size = 1, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
   stopifnot(is.matrix(m))
   mode(m) <- "integer"
   if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's.")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9.")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa.")}
-  if ((mgs <- as.integer(min.g.size)) < 1) {stop("Object min.g.size must be greater than 1.")}
+  if ((mgs <- as.integer(min.g.size)) < 1) {stop("Object min.g.size must be greater than or equal to 1.")}
   mt <- t(m)
   nr <- nrow(mt) # no. of relevés
   ns <- ncol(mt) #no. of taxa
