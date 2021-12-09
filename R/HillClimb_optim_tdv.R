@@ -359,7 +359,7 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
           pn <- mat.neig$p.list[x,]
           kc <- mat.neig$pairs[x,]
           tpn <- table(pn) #neighbour partition
-          for (i in kc) {afg[i,] <- colSums(mt[which(pn==i),])} #(updates afg) no. of relevés containing the taxa, within each group, only for the two groups that changed a relevé!
+          for (i in kc) {afg[i,] <- colSums(mt[which(pn==i), ,drop=FALSE])} #(updates afg) no. of relevés containing the taxa, within each group, only for the two groups that changed a relevé!
           t5 <- afg[kc,][1,]>0 | afg[kc,][2,]>0 #taxa affected by the change of relevés
           t1[kc,] <- (afg==0)[kc,]*as.vector(tpn)[kc] #(updates t1) no. of relevés of each group, when the taxon is not present #t5 must not be used here!
           t2[t5] <- colSums(afg>0)[t5] #(new t2) no. of groups containing the taxon
