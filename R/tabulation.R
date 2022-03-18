@@ -8,6 +8,7 @@
 #' @param p A `vector` of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).
 #' @param taxa.names A `character vector` (with length equal to the number of rows of `m`) with the taxa names.
 #' @param plot.im By default, `NULL`, returns without plotting. If `plot.im` = "normal", plots an image of the tabulated matrix. If `plot.im` = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.
+#' @param palette A `character` with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".
 #'
 #' @details The function accepts a phytosociological table (`m`) and a k-partition of its columns (`p`), returning the respective TotDiffVal1 index.
 #'
@@ -27,7 +28,7 @@
 #'
 #' @export
 #'
-tabulation <- function (m, p, taxa.names, plot.im=NULL) {
+tabulation <- function (m, p, taxa.names, plot.im=NULL, palette = "Vik") {
   stopifnot(is.matrix(m))
   nr <- ncol(m) # no. of relevés
   if (!identical(length(p), nr)) {stop("Object p must be a partition of the columns of m")}
@@ -67,7 +68,7 @@ tabulation <- function (m, p, taxa.names, plot.im=NULL) {
       mat1.im[mat1.im==0] <- 1
       mat1.im[1,] <- mat1.im[1,]+1
       mat1.im[2,] <- 0
-      graphics::image(t(mat1.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
+      graphics::image(t(mat1.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
     }
     if (plot.im=="condensed") {
       mat2.im <- mat2>0
@@ -75,7 +76,7 @@ tabulation <- function (m, p, taxa.names, plot.im=NULL) {
       mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
       mat2.im[mat2.im==0] <- 1
       mat2.im[2,] <- 0
-      graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
+      graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
     }
   }
   return(list('taxa.names'=taxa.names, 'taxa.ord'=taxa.ord, header=ht, tabulated=mat1[-2,], condensed=mat2))

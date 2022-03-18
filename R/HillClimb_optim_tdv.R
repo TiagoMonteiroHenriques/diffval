@@ -60,17 +60,26 @@ HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 
 
   if (p.initial[1] != "random") {
     p.ini <- p.initial
-    if (!identical(as.integer(sort(unique(p.ini))), 1:k)) {stop("Your partition doesn't have k groups!")} #maybe when p.ini is given k could be ignored
-    if (!identical(length(p.ini), nr)) {stop("Object p.ini must be a partition of the columns of matrix m.")}
-    if (min(tp)<mgs) {stop(paste0("At least one group of the provided partition has less than ", mgs, " elements"))}
-    if (max(tp)==mgs) {stop(paste0("At least one group of the provided partition has to have more than ", mgs, " elements"))}
+    if (!identical(as.integer(sort(unique(p.ini))), 1:k)) { #maybe when p.ini is given k could be ignored
+      stop("Your partition doesn't have k groups!")
+    }
+    if (!identical(length(p.ini), nr)) {
+      stop("Object p.ini must be a partition of the columns of matrix m.")
+    }
     tp <- table(p.ini)
+    if (min(tp)<mgs) {
+      stop(paste0("At least one group of the provided partition has less than ", mgs, " elements"))
+    }
+    if (max(tp)==mgs) {
+      stop(paste0("At least one group of the provided partition has to have more than ", mgs, " elements"))
+    }
   }
-
-  if (n.sol > n.starts) {stop("The number of starts ('n.starts') should not be lower than the desired number of best solutions ('n.sol').")}
-
-  if ((n.sol > 1 | n.starts > 1) & full.output == TRUE) {stop("The option 'full.output = TRUE' is only available for 'n.sol == 1' and 'n.starts = 1'.")}
-
+  if (n.sol > n.starts) {
+    stop("The number of starts ('n.starts') should not be lower than the desired number of best solutions ('n.sol').")
+  }
+  if ((n.sol > 1 | n.starts > 1) & full.output == TRUE) {
+    stop("The option 'full.output = TRUE' is only available for 'n.sol == 1' and 'n.starts = 1'.")
+  }
   if (n.sol == 1 & n.starts == 1 & full.output == TRUE) {
     t <- Sys.time()
 
