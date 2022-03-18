@@ -5,6 +5,7 @@
 #' @description This function plots an interactive image of a tabulation.
 #'
 #' @param x A `list` as returned by the \code{\link{tabulation}} function.
+#' @param palette A `character` with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}`()`) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".
 #'
 #' @details The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
 #'
@@ -14,7 +15,7 @@
 #'
 #' @export
 #'
-explore_tabulation <- function (x) {
+explore_tabulation <- function (x, palette = "Vik") {
   mat2 <- x$condensed; ns <- nrow(mat2)
   k <- ncol(mat2)
   taxa.names <- x$taxa.names
@@ -24,7 +25,7 @@ explore_tabulation <- function (x) {
   mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
   mat2.im[mat2.im==0] <- 1
   mat2.im[2,] <- 0
-  graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
+  graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
   id.x <- rep(seq(0,1,length.out=k))
   id.y <- rev(rep(seq(0,1,length.out=ns+2)[1:ns], times=k))
   list.cent.label <- apply((mat2>0)+0, 2, function (x) {

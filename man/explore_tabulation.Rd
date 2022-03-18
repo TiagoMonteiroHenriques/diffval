@@ -4,10 +4,12 @@
 \alias{explore_tabulation}
 \title{Interactively explore a tabulation of a phytosociologic matrix.}
 \usage{
-explore_tabulation(x)
+explore_tabulation(x, palette = "Vik")
 }
 \arguments{
 \item{x}{A \code{list} as returned by the \code{\link{tabulation}} function.}
+
+\item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
 }
 \value{
 Returns invisibly, although it plots taxa names on the console upon the user click.

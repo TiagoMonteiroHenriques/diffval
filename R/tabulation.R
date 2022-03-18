@@ -8,7 +8,7 @@
 #' @param p A `vector` of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).
 #' @param taxa.names A `character vector` (with length equal to the number of rows of `m`) with the taxa names.
 #' @param plot.im By default, `NULL`, returns without plotting. If `plot.im` = "normal", plots an image of the tabulated matrix. If `plot.im` = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.
-#' @param palette A `character` with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".
+#' @param palette A `character` with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}`()`) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".
 #'
 #' @details The function accepts a phytosociological table (`m`) and a k-partition of its columns (`p`), returning the respective TotDiffVal1 index.
 #'

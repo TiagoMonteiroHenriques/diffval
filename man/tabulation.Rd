@@ -15,7 +15,7 @@ tabulation(m, p, taxa.names, plot.im = NULL, palette = "Vik")
 
 \item{plot.im}{By default, \code{NULL}, returns without plotting. If \code{plot.im} = "normal", plots an image of the tabulated matrix. If \code{plot.im} = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.}
 
-\item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
+\item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
 }
 \value{
 If \code{plot.im} = \code{NULL}, a \code{list} with the following components:
