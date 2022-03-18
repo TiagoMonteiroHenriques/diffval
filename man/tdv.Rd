@@ -2,19 +2,21 @@
 % Please edit documentation in R/tdv.R
 \name{tdv}
 \alias{tdv}
-\title{The total differential value (TotDiffVal1) of a phytosociologic table}
+\title{The total differential value of a phytosociological table}
 \usage{
-tdv(m, p, full.output = FALSE)
+tdv(m, p, index = "TotDiffVal", output.type = "normal")
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
 \item{p}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).}
 
-\item{full.output}{A \code{logical}, determining the amount of information returned by the function (defaults to \code{FALSE}).}
+\item{index}{A \code{character} selecting which index is calculated: "TotDiffVal", "TotDiffVal1" or "both". If \code{output.type = "fast"}, "both" can not be selected.}
+
+\item{output.type}{A \code{character}, determining the amount of information returned by the function and also pre-validations (defaults to "normal").}
 }
 \value{
-If \code{full.output} = \code{FALSE}, a \code{list} with the following components:
+If \code{output.type} = "normal" (the default) pre-validations are done and a \code{list} is returned, with the following components:
 
 \describe{
 \item{arf}{A \code{matrix} with the adjusted relative frequency (a/b/e) of each taxon in each group (see http://home.isa.utl.pt/~tmh/).}
@@ -23,13 +25,17 @@ If \code{full.output} = \code{FALSE}, a \code{list} with the following component
 \item{TotDiffVal1}{A \code{numeric} with the TotDiffVal1 of matrix \code{m} given the partition \code{p} (see http://home.isa.utl.pt/~tmh/).}
 }
 
-If \code{full.output} = \code{TRUE}, these extra components are added: afg, t1, t2, t3. These are intermediate matrices used in the computation of TotDiffVal1.
+If \code{output.type} = "full", some extra components are added to the output: afg, t1, t2, t3. These are intermediate matrices used in the computation of TotDiffVal (or TotDiffVal1).
+
+If \code{output.type} = "fast", only the value of the selected index is returned and no pre-validations are done.
 }
 \description{
-Calculates TotDiffVal1 index (see http://home.isa.utl.pt/~tmh/ for the calculation formula of TotDiffVal1).
+Calculates TotDiffVal index (or TotDiffVal1) given a phytosociological table (see http://home.isa.utl.pt/~tmh/).
 }
 \details{
-The function accepts a phytosociological table (\code{m}) and a k-partition of its columns (\code{p}), returning the respective TotDiffVal1 index.
+The function accepts a phytosociological table (\code{m}) and a k-partition of its columns (\code{p}), returning the respective TotDiffVal (or TotDiffVal1) index.
+TotDiffVal was proposed by Monteiro-Henriques and Bellu (2014). Monteiro-Henriques (2016) proposed TotDiffVal1, modifying the previous index slightly with the objective of ensuring the index to be bounded between 0 and 1. Yet, TotDiffVal is already bounded between 0 and 1.
+In practice, both indices are bounded between 0 and 1, but TotDiffVal1 reduces further the contribution of differential taxa present in more than one group.
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

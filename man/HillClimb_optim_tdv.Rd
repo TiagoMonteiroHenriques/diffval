@@ -22,15 +22,15 @@ HillClimb_optim_tdv(
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
-\item{p.initial}{A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+\item{p.initial}{A \code{vector} or a \code{character}. A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
 
 \item{k}{A \code{numeric}, giving the number of desired groups.}
 
 \item{n.starts}{A \code{numeric}, giving the number of starts to perform.}
 
-\item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output.}
+\item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output. Defaults to 1.}
 
-\item{index}{A \code{character}, selecting wich index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO}
+\item{index}{A \code{character}, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO}
 
 \item{maxit}{A \code{numeric} giving the number of iterations of the hill-climbing optimization.}
 

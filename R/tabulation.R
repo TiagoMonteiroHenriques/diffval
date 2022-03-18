@@ -29,43 +29,54 @@
 #'
 tabulation <- function (m, p, taxa.names, plot.im=NULL) {
   stopifnot(is.matrix(m))
+  nr <- ncol(m) # no. of relevés
+  if (!identical(length(p), nr)) {stop("Object p must be a partition of the columns of m")}
+  k <- max(p)
+  mode(p) <- "integer"
+  if (!identical(sort(unique(p)), 1:k)) {stop("Object p is not a valid partition of the columns of m")}
   mode(m) <- "integer"
   if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa")}
-  k <- max(p)
-  nr <- ncol(m) # no. of relevés
   ns <- nrow(m) #no. of taxa
   tp <- table(p)
   if (length(taxa.names)!=ns) {stop("The length of taxa.names must match the number of rows of m")}
   if (!identical(length(p), nr)) {stop("Object p must be a partition of the columns of m")}
-  res <- tdv(m, p, full.output=TRUE)
+  res <- tdv(m, p, output.type = "full")
   ot <- (res$afg>0)*(1:k)
-  order.t1 <- res$t2 #no. of groups containing the taxon
-  order.t2 <- apply(ot, 2, function(x) {prod(x[x>0])}) #product of group numbers when the taxon is present
-  order.t3 <- 1 - (colSums(res$arf) / res$t2) #1 - the sum of all the adjusted relative frequencies for the taxon
+
+  order.0 <- apply(ot, 2, function(x) {as.numeric(paste0(x[x>0], collapse=""))})
+  #order.1 <- res$t2 #no. of groups containing the taxon
+  #order.2 <- apply(ot, 2, function(x) {prod(x[x>0])}) #product of group numbers when the taxon is present
+  order.3 <- 1 - (colSums(res$arf) / res$t2) #1 - the sum of all the adjusted relative frequencies for the taxon
+
   sort.rel <- order(p)
-  taxa.ord <- order(order.t1, order.t2, order.t3)
+  #taxa.ord <- order(order.1, order.2, order.3)
+  taxa.ord <- order(order.0, order.3)
+
   mat1 <- rbind(sort(p), 0, m[taxa.ord,sort.rel])
   colnames(mat1) <- sort.rel
   ht <- colnames(m)[sort.rel]
   rownames(mat1) <- c("group","space",as.character(taxa.names)[taxa.ord])
   mat2 <- t(res$adp*res$arf)[taxa.ord,]
   rownames(mat2) <- c(as.character(taxa.names)[taxa.ord])
-  if (is.null(plot.im)) {} else if (plot.im=="normal") {
-    mat1.im <- mat1
-    mat1.im[3:(ns+2),] <- mat1.im[3:(ns+2),]*matrix(sort(p)+1,ns,nr,byrow=TRUE)
-    mat1.im[mat1.im==0] <- 1
-    mat1.im[1,] <- mat1.im[1,]+1
-    mat1.im[2,] <- 0
-    graphics::image(t(mat1.im[(ns+2):1,]),col = c("black","white", grDevices::rainbow(k)), xaxt="n", yaxt="n")
-  } else if (plot.im=="condensed") {
-    mat2.im <- mat2>0
-    mat2.im <- rbind((1:k)+1, 0, mat2.im)
-    mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
-    mat2.im[mat2.im==0] <- 1
-    mat2.im[2,] <- 0
-    graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::rainbow(k)), xaxt="n", yaxt="n")
+  if (!is.null(plot.im)) {
+    if (plot.im=="normal") {
+      mat1.im <- mat1
+      mat1.im[3:(ns+2),] <- mat1.im[3:(ns+2),]*matrix(sort(p)+1,ns,nr,byrow=TRUE)
+      mat1.im[mat1.im==0] <- 1
+      mat1.im[1,] <- mat1.im[1,]+1
+      mat1.im[2,] <- 0
+      graphics::image(t(mat1.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
+    }
+    if (plot.im=="condensed") {
+      mat2.im <- mat2>0
+      mat2.im <- rbind((1:k)+1, 0, mat2.im)
+      mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
+      mat2.im[mat2.im==0] <- 1
+      mat2.im[2,] <- 0
+      graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
+    }
   }
   return(list('taxa.names'=taxa.names, 'taxa.ord'=taxa.ord, header=ht, tabulated=mat1[-2,], condensed=mat2))
 }

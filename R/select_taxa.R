@@ -24,7 +24,9 @@
 #' @export
 #'
 select_taxa <- function(m, const=c(0,100), min.pres=NULL) {
-  if (!identical(c(0,1), sort(unique(as.vector(as.matrix(m)))))) {stop("Matrix m should contain only 0's and 1's")}
+  stopifnot(is.matrix(m))
+  mode(m) <- "integer"
+  if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
   if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9")}
   if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa")}
   mpa <- (m>0)+0
@@ -33,14 +35,14 @@ select_taxa <- function(m, const=c(0,100), min.pres=NULL) {
   if (is.null(min.pres)) { #selects based on constancy values
     inf <- const[1]/100
     sup <- const[2]/100
-    sp.ind <- rowSums(mpa)>round(m.col*inf) & rowSums(mpa)<round(m.col*sup)
+    sp.ind <- rowSums(mpa) > round(m.col*inf) & rowSums(mpa)<round(m.col*sup)
     m.select <- m[sp.ind,]
-    rel.ind <- colSums(m.select)>0
+    rel.ind <- colSums(m.select) > 0
     m.select <- m.select[, rel.ind]
     cat(paste0(m.row-sum(sp.ind), " taxon(taxa) removed and ", m.col-sum(rel.ind), " empty relev\u00e9(s) removed\n"))
     return(list(remo.rel=which(!rel.ind), remo.sp=which(!sp.ind), m.select=m.select))
   } else { #selects using number of presences in relevés
-    sp.ind <- rowSums(mpa)>= min.pres
+    sp.ind <- rowSums(mpa) >= min.pres
     m.select <- m[sp.ind,]
     rel.ind <- colSums(m.select)>0
     m.select <- m.select[, rel.ind]

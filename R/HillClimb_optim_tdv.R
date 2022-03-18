@@ -5,11 +5,11 @@
 #' @description This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal (or TotDiffVal1) index.
 #'
 #' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
-#' @param p.initial A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
+#' @param p.initial A `vector` or a `character`. A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
 #' @param k A `numeric`, giving the number of desired groups.
 #' @param n.starts A `numeric`, giving the number of starts to perform.
-#' @param n.sol A `numeric`, giving the number of best solutions to keep in the final output.
-#' @param index A `character`, selecting wich index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO
+#' @param n.sol A `numeric`, giving the number of best solutions to keep in the final output. Defaults to 1.
+#' @param index A `character`, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO
 #' @param maxit A `numeric` giving the number of iterations of the hill-climbing optimization.
 #' @param min.g.size A `numeric` The minimum number of relevés that a group can contain (must be 2 or higher).
 #' @param random.first A `logical`. `FALSE` (the default), performs only hill-climbing on the 1-neighbours; `TRUE` first, performs a stochastic hill-climbing on random `n`-neighbours (`n` is definded by the parameter `rf.neigh.size`), and only after runs the hill-climbing search on the 1-neighbours; see description above.

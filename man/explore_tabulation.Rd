@@ -16,7 +16,7 @@ Returns invisibly, although it plots taxa names on the console upon the user cli
 This function plots an interactive image of a tabulation.
 }
 \details{
-The function explore.tabulation accepts an object returned by the "tabulate" function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
+The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

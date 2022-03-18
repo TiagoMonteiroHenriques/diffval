@@ -6,7 +6,7 @@
 #'
 #' @param x A `list` as returned by the \code{\link{tabulation}} function.
 #'
-#' @details The function explore.tabulation accepts an object returned by the "tabulate" function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
+#' @details The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
 #'
 #' @return Returns invisibly, although it plots taxa names on the console upon the user click.
 #'
@@ -24,7 +24,7 @@ explore_tabulation <- function (x) {
   mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
   mat2.im[mat2.im==0] <- 1
   mat2.im[2,] <- 0
-  graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::rainbow(k)), xaxt="n", yaxt="n")
+  graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, "Vik")), xaxt="n", yaxt="n")
   id.x <- rep(seq(0,1,length.out=k))
   id.y <- rev(rep(seq(0,1,length.out=ns+2)[1:ns], times=k))
   list.cent.label <- apply((mat2>0)+0, 2, function (x) {
