@@ -2,15 +2,14 @@
 % Please edit documentation in R/HillClimb_optim_tdv.R
 \name{HillClimb_optim_tdv}
 \alias{HillClimb_optim_tdv}
-\title{TotDiffVal (or TotDiffVal1) optimization using hill climbing algorithms}
+\title{Total Differential Value optimization using Hill-climbing algorithms}
 \usage{
 HillClimb_optim_tdv(
-  m,
+  m.bin,
   p.initial = "random",
   k,
   n.starts = 1,
   n.sol = 1,
-  index = "TotDiffVal1",
   maxit = 10,
   min.g.size = 1,
   random.first = FALSE,
@@ -20,9 +19,9 @@ HillClimb_optim_tdv(
 )
 }
 \arguments{
-\item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
+\item{m.bin}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
-\item{p.initial}{A \code{vector} or a \code{character}. A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+\item{p.initial}{A \code{vector} or a \code{character}. A \code{vector} of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of \code{m.bin}, ascribing each relevé to one of the k groups). By default, \code{p.initial = "random"}, generates a random initial partition.}
 
 \item{k}{A \code{numeric}, giving the number of desired groups.}
 
@@ -30,49 +29,68 @@ HillClimb_optim_tdv(
 
 \item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output. Defaults to 1.}
 
-\item{index}{A \code{character}, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO}
+\item{maxit}{A \code{numeric} giving the number of iterations of the Hill-climbing optimization.}
 
-\item{maxit}{A \code{numeric} giving the number of iterations of the hill-climbing optimization.}
+\item{min.g.size}{A \code{numeric} The minimum number of relevés that a group can contain (must be 1 or higher).}
 
-\item{min.g.size}{A \code{numeric} The minimum number of relevés that a group can contain (must be 2 or higher).}
+\item{random.first}{A \code{logical}. \code{FALSE} (the default), performs only Hill-climbing on the 1-neighbours; \code{TRUE} first, performs a Stochastic Hill-climbing on \code{n}-neighbours (\code{n} is definded by the parameter \code{rf.neigh.size}), and only after runs the Hill-climbing search on the 1-neighbours; see description above.}
 
-\item{random.first}{A \code{logical}. \code{FALSE} (the default), performs only hill-climbing on the 1-neighbours; \code{TRUE} first, performs a stochastic hill-climbing on random \code{n}-neighbours (\code{n} is definded by the parameter \code{rf.neigh.size}), and only after runs the hill-climbing search on the 1-neighbours; see description above.}
+\item{rf.neigh.size}{A \code{numeric}, giving the size (\code{n}) of the \code{n}-neighbour for the Stochastic Hill-climbing; only used if \code{random.first} = \code{TRUE}.}
 
-\item{rf.neigh.size}{A \code{numeric}, giving the size (\code{n}) of the \code{n}-neighbour for the stochastic hill-climbing; only used if \code{random.first} = \code{TRUE}.}
-
-\item{rf.maxit}{A \code{numeric}, giving the number of iterations of the hill-climbing optimization; only used if \code{random.first} = \code{TRUE}.}
+\item{rf.maxit}{A \code{numeric}, giving the number of iterations of the Hill-climbing optimization; only used if \code{random.first} = \code{TRUE}.}
 
 \item{full.output}{A \code{logical}. If \code{FALSE} (the default) the best \code{n.sol} partitions and respective indices are returned. If \code{TRUE} (only available for \code{n.sols = 1}) the output will also contain information on the optimization steps (see below).}
 }
 \value{
-A \code{list} with the following components:
+If \code{full.output = FALSE}, a \code{list} with (at most) \code{n.sol} best solutions (equivalent solutions are removed). Each best solution is also
+a \code{list} with the following components:
 
 \describe{
-\item{res.rf}{A \code{matrix} with the iteration number (of the stochastic hill-climbing phase), the maximum TotDiffVal1 found until that iteration, and the higher TotDiffVal1 among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-\item{par.rf}{A \code{vector} with the best partition found in the stochastic hill-climbing phase.}
-\item{max.TotDiffVal1.rf}{A \code{numeric} showing the maximum TotDifVal1 found in the stochastic hill-climbing phase (if selected).}
-\item{res}{A \code{matrix} with the iteration number (of the hill-climbing), the maximum TotDiffVal1 found until that iteration, and the higher TotDiffVal1 among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-\item{par}{A \code{vector} with the best partition found in the hill-climbing phase.}
+\item{local_maximum}{A \code{logical} indicating if \code{par} is a 1-neighbour local maximum.}
+\item{par}{A \code{vector} with the best partition found after the Hill-climbing phase.}
+\item{max.tdv}{A \code{numeric} with the maximum TDV found in the respective run.}
+}
+
+If \code{full.output = TRUE}, a \code{list} with the following components:
+
+\describe{
+\item{res.rf}{A \code{matrix} with the iteration number (of the Stochastic Hill-climbing phase), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
+\item{par.rf}{A \code{vector} with the best partition found in the Stochastic Hill-climbing phase.}
+\item{max.tdv.rf}{A \code{numeric} showing the maximum TDV found in the Stochastic Hill-climbing phase (if selected).}
+\item{res}{A \code{matrix} with the iteration number (of the Hill-climbing), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
+\item{par}{A \code{vector} with the best partition found after the Hill-climbing phase.}
 \item{local_maximum}{A \code{logical} indicating if \code{par} is a 1-neighbour local maximum.}
 \item{time}{The total amount of time of the run (from function \code{\link[base]{Sys.time}}).}
-\item{max.TotDiffVal1}{A \code{numeric} with the maximum TotDifVal1 found in the run.}
+\item{max.tdv}{A \code{numeric} with the maximum TDV found in the respective run.}
 }
 }
 \description{
-This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal (or TotDiffVal1) index.
+This function searches for partitions of the columns of a given matrix, optimizing the Total Differential Value (TDV).
 }
 \details{
-Given a phytosociological table (\code{m}, rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (k, defined by the user) optimizing TotDiffVal (or TotDiffVal1) index (see http://home.isa.utl.pt/~tmh/), i.e. searches, using a hill-climbing algorithm, for patterns of differential taxa by rearranging the relevés into k groups.
+Given a phytosociological table (\code{m.bin}, rows corresponding to taxa and columns corresponding to relevés) this function searches for
+a k-partition (\code{k} defined by the user) optimizing TDV, i.e. searches, using a Hill-climbing algorithm, for patterns of differential taxa by
+rearranging the relevés into k groups.
 
-Optimization can start from a random partition (\code{p.ini} = "random"), or from a given partition (\code{p.ini}, defined by the user or produced by any clustering method, or even a manual classification).
+Optimization can start from a random partition (\code{p.ini = "random"}), or from a given partition (\code{p.ini}, defined by the user or produced by any
+clustering method, or even a manual classification).
 
-Each iteration searches for a TotDiffVal1 improvement screening all 1-neighbours, until the given number of maximum iterations (\code{maxit}) is reached. A 1-neighbour of a given partition is another partition obtained by ascribing 1 relevé (of the original partition) to a different group.  A n-neighbour is obtained, equivalently, ascribing n relevés to different groups.
+Each iteration searches for a TDV improvement screening all 1-neighbours, until the given number of maximum iterations (\code{maxit}) is reached. A
+1-neighbour of a given partition is another partition obtained by changing 1 relevé (of the original partition) to a different group. A n-neighbour
+is obtained, equivalently, ascribing n relevés to different groups.
 
-Optionally, a faster search (stochastic hill-climbing) can be performed in a first moment (\code{random.first} = \code{TRUE}), consisting on searching for TotDiffVal1 improvements, by randomly selecting n-neighbours (n defined by the user with the parameter \code{rf.neigh.size}), until a given number of maximum iterations (\code{rf.maxit}) is reached. Stochastic hill-climbing might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
+Optionally, a faster search (Stochastic Hill-climbing) can be performed in a first step (\code{random.first} = \code{TRUE}), consisting on searching for
+TDV improvements, by randomly selecting n-neighbours (n defined by the user with the parameter \code{rf.neigh.size}), accepting that neighour partition
+as a better solution if it improves TDV. This is repeated until a given number of maximum iterations (\code{rf.maxit}) is reached. Stochastic Hill-climbing
+might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
 
-Several runs of HillClimb_optim_tdv (multi-starts) should be tried out, as several local maxima are usually present and the hill-climbing algorithm converges easily to local maxima. Sometimes, converging to a known high-valued partition is very unlikely, being dependent on data structure and on the initial partition.
+Several runs of HillClimb_optim_tdv (multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
+algorithm converges easily to local maxima.
 
-Trimming your table by a 'constancy' range (see \code{\link{select_taxa}} function) or using the result of other cluster methodologies as input, might help finding interesting partitions. Specially after trimming the table by a 'constancy' range, getting a random initial partition with TotDiffVal1 greater than zero might be very unlike; on such cases using the result of other clustering strategies as input is useful.
+Trimming your table by a 'constancy' range or using the result of other cluster methodologies as input, might help finding interesting partitions.
+Specially after trimming the table by a 'constancy' range, getting a random initial partition with TDV greater than zero might be very unlikely; on
+such cases using a initial partition from \code{\link{GRASP_partition_tdv}} or \code{\link{GRDTP_partition_tdv}} (or even the result of other clustering
+strategies) as input might be useful.
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

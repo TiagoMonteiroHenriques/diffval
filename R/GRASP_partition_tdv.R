@@ -1,39 +1,48 @@
 # GRASP_partition_tdv.R
 #'
-#' @title Obtain a partition of a phytosociological table using a GRASP algorithm (based on TotDiffVal)
+#' @title Obtain a partition using a GRASP algorithm
 #'
-#' @description This function obtains a partition of the columns of a given matrix, aiming at high values of the TotDiffVal index using a GRASP algorithm.
+#' @description This function obtains a partition of the columns of a given phytosociological matrix, aiming at high values of the
+#'Total Differential Value (TDV) using a GRASP algorithm.
 #'
 #' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
 #' @param k A `numeric` giving the number of desired groups.
 #' @param thr A `numeric` giving a threshold value (from 0 to 1 ) with the probability used to compute the sample quantile, in order to get the best `m` columns from which to select one to be include in the GRASP solution (in each step of the procedure).
+#' @param verify A `logical`. If `TRUE` (the default) the function verifies if basic features of `m` data structure are met. Otherwise if `FALSE`.
 #'
-#' @details This function uses a greedy randomized adaptive search procedure (GRASP) to obtain a partition of `m`.
-#' Given a phytosociological table (`m`, with rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (`k`, defined by the user) aiming at high values of the TotDiffVal index.
+#' @details This function uses a Greedy Randomized Adaptive Search Procedure (GRASP) to obtain a partition of `m`.
+#' Given a phytosociological table (`m`, with rows corresponding to taxa and columns corresponding to relevés) this function searches
+#' for a k-partition (`k`, defined by the user) aiming at high values of the TDV. See \code{\link{tdv}} for an explanation on the
+#' TDV of a phytosociological table.
 #'
-#' @return A `numeric vector`, which length is the same as the number of columns of m, with numbers from 1 to `k`, representing the group to which the respective column was ascribed.
+#' With `thr = 1`, the algorithm corresponds to the Greedy algorithm.
+#'
+#' @return A `numeric vector`, which length is the same as the number of columns of m, with numbers from 1 to `k`, representing the group to which
+#' the respective column was ascribed.
 #'
 #' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
 #' @export
 #'
-GRASP_partition_tdv <- function(m, k, thr = 0.95) {
-  stopifnot(is.matrix(m))
-  mode(m) <- "integer"
-  if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
-  if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9")}
-  if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa")}
-  nr <- ncol(m) # no. of relevés
-  ns <- nrow(m) # no. of taxa
-  if (k > nr) {stop("Given k size is too big.")}
+GRASP_partition_tdv <- function(m, k, thr = 0.95, verify = TRUE) {
+  if (verify) {
+    stopifnot(is.matrix(m))
+    mode(m) <- "integer"
+    if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's")}
+    if (min(rowSums(m)) == 0) {stop("At least one taxa is not present in any relev\u00e9")}
+    if (min(colSums(m)) == 0) {stop("At least one relev\u00e9 contains no taxa")}
+  }
   if (k <= 1) {stop("Given k size is too small.")}
+  nr <- ncol(m) # no. of relevés
+  if (k > nr) {stop("Given k size is too big.")}
+  ns <- nrow(m) # no. of taxa
 
   #GRASP initial partition
   par.GRASP <- rep(0, nr)
   seed <- sample(1:nr, k) #simple random seed
   par.GRASP[seed] <- 1:k
 
-  #preparing mat_cur (the matrix to assist DV and TDV calculation)
+  #preparing mat_cur (the matrix to assist DiffVal and TDV calculation)
   mat_cur <- matrix(0, ns, 6 * k + 2)
   ind_a <- 1 + 0:(k-1) * 6
   ind_b <- ind_a + 1
@@ -118,62 +127,19 @@ GRASP_partition_tdv <- function(m, k, thr = 0.95) {
   return(par.GRASP)
 }
 
-###
-### Auxiliary functions to decrease GRASP computation time
-###
-
-### aux_function_c; aux_function_c_if0; aux_function_c_if1
-
-#auxiliary function to recalculate parameter "c" (outside group g) given a new column relevé to be included in group g
-#these functions could be adapted to the use of function ifelse(); apparently the gain in time is only for smaller datasets, as mapply() returned faster for very big datasets.
-
-#a_wg   the "a" parameter within the group g
-#newrel the new relevé to be included
-#c_og   the "c" parameter, outside the group g #this vector could be longer, the other vectors are recycled by the mapply function
-#b_wg   the "b" parameter, within the group g
-
-aux_function_c <- function(a_wg, newrel, c_og, b_wg) {
-  if (a_wg == 0) {
-    if (newrel == 0) {
-      return (c_og + 1)
-    } else {
-      return (c_og - b_wg)
-    }
-  } else {
-    return(c_og)
-  }
-}
-
-aux_function_c_if0 <- function(a_wg, c_og) { #simpler function, to use when newrel is a vector of 0s
-  if (a_wg == 0) {
-    return (c_og + 1)
-  } else {
-    return(c_og)
-  }
-}
-
-aux_function_c_if1 <- function(a_wg, c_og, b_wg) {  #simpler function, to use when newrel is a vector of 1s
-  if (a_wg == 0) {
-    return (c_og - b_wg)
-  } else {
-    return(c_og)
-  }
-}
-
 ### get_DV_01
 
+#auxiliary function for GRASP efficiency
 #this function uses current calculation matrix (mat_cur) to obtain, for each (usable) row (and for each group g!), the result of DiffVal by introducing a new relevé. For each row and for each group the DiffVal is presented in two columns considering that new relevé brings a 0 or a 1 to that row.
 
-#usable.row      the lines of mat_cur that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups), but the respective taxa could still be absent from all groups
-#p_a_u            (present and usable) the lines of mat_cur that are not null and that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups)
-#ns
-
-#ind_0 <- (1:k-1)*k+1 #k indices to store values when adding 0 values
-#ind_1 <- (1:k-1)*k+2 #k indices to store values when adding 1 values
+#usable.row   the lines of mat_cur that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups), but the respective taxa could still be absent from all groups
+#p_a_u        (present and usable) the lines of mat_cur that are not null and that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups)
+#ind_0        k indices to store values when adding 0 values
+#ind_1        k indices to store values when adding 1 values
 
 get_DV_01 <- function(m, k, mat_cur, usable.row, p_a_u, ns, ind_0, ind_1, ind_a, ind_b, ind_c, ind_d, ind_e, ind_usable) {
-  res.mat.01 <- matrix(0, ns, k*2) #to keep DiffVal for each group (depending if the new relevé to enter the group has a 0 or 1 in the row)
-  res.mat.02 <- matrix(NA, ns, k) #to keep p_a_u_new for each group
+  res.mat.01 <- matrix(0, ns, k*2) #to store DiffVal for each group (depending if the new relevé to enter the group has a 0 or 1 in the row)
+  res.mat.02 <- matrix(NA, ns, k) #to store p_a_u_new for each group
   for (g in 1:k) {
 
     #for the 0 column
@@ -200,8 +166,7 @@ get_DV_01 <- function(m, k, mat_cur, usable.row, p_a_u, ns, ind_0, ind_1, ind_a,
     usable_col[usable.row][ind.for.usable] <- 0 #lost rows
     #updating "usable.row" and "p_a_u"
     usable.row_new <- as.logical(usable_col) #taxa not present in all groups (taxa that are present in all groups have DiffVal = 0)
-    #present.in.groups_new <- rep(TRUE, ns) #all will have at least presence in group g (i.e. all taxa not absent from all groups)
-    p_a_u_new <- usable.row_new #as present.in.groups_new is all TRUE it is the same as usable.row_new (present and usable) taxa present in at least one group but not present in all of them
+    p_a_u_new <- usable.row_new
 
     a_local <- mat_cur[p_a_u_new,ind_a, drop = FALSE]
     a_local[, g] <- a_local[, g] + 1
@@ -227,12 +192,11 @@ get_DV_01 <- function(m, k, mat_cur, usable.row, p_a_u, ns, ind_0, ind_1, ind_a,
 
 #newcol           the index of the column of m (the relevé) to be included in group g
 #g                the group (of the partition) where the new relevé is to be included
-#usable.row      the lines of mat_cur that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups), but the respective taxa could still be absent from all groups
+#usable.row       the lines of mat_cur that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups), but the respective taxa could still be absent from all groups
 #p_a_u            the lines of mat_cur that are not null and that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups)
-#ns               the number ot rows of m (only needed to calculate TDV "with zeros", i.e. taking into account the empty lines)
-
-#ind_0 <- (1:k-1)*k+1 #k indices to store values when adding 0 values
-#ind_1 <- (1:k-1)*k+2 #k indices to store values when adding 1 values
+#ind_0            k indices to store values when adding 0 values
+#ind_1            k indices to store values when adding 1 values
+#ns               the number ot rows of m (not used now). It would be needed to calculate TDV, but as ns is a constant it is not needed in this auxiliary function.
 
 #currDV <- rep(0, ns)
 #currDV[p_a_u] <- sum(mat_cur[p_a_u, ind_ab] * mat_cur[p_a_u, ind_cd] / mat_cur[p_a_u, ind_e])
@@ -250,5 +214,5 @@ get_tdv_newcol <- function(m, mat_cur, newcol, g, p_a_u, present.in.groups, curr
 
   present.in.groups_final <- present.in.groups | newrel
 
-  return(sum(currDV[p_a_u_final]) / sum(present.in.groups_final)) #Attention this is not divided by ns (as it should if TotDiffVal is needed)
+  return(sum(currDV[p_a_u_final]) / sum(present.in.groups_final)) #Attention this is not divided by ns (as it should if TDV is needed). As ns is a constant it is not needed here.
 }

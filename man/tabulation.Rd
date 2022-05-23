@@ -2,7 +2,7 @@
 % Please edit documentation in R/tabulation.R
 \name{tabulation}
 \alias{tabulation}
-\title{Rearrange a phytosociologic matrix, showing each differential taxa on top.}
+\title{Rearrange a phytosociological table, showing differential taxa on top.}
 \usage{
 tabulation(m, p, taxa.names, plot.im = NULL, palette = "Vik")
 }
@@ -31,10 +31,12 @@ If \code{plot.im} = "normal", it returns the above list and, additionally, plots
 If \code{plot.im} = "condensed", it returns the above list and, additionally, plots an image of the tabulated matrix, but presenting the sets of differential taxa as solid coloured blocks.
 }
 \description{
-This function reorders a phytosociological table rows based on, firstly, the number of groups in which a taxon occurs in, and secondly, on the within-group (adjusted) relative frequency. The columns are reordered using the given k-partition \code{p}.
+This function reorders a phytosociological table rows based on, firstly, the number of groups in which a taxon occurs in, and secondly,
+on the within-group relative frequency. The columns are reordered using the given k-partition \code{p}.
 }
 \details{
-The function accepts a phytosociological table (\code{m}) and a k-partition of its columns (\code{p}), returning the respective TotDiffVal1 index.
+The function accepts a phytosociological table (\code{m}), a k-partition of its columns (\code{p}) and the names of the taxa (corresponding to
+the rows of \code{m}), returning a rearranged/reordered matrix (and plotting optionally).
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

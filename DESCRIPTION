@@ -1,6 +1,6 @@
 Package: diffval
 Title: Using the DiffVal Index to Classify Vegetation Data
-Version: 0.0.0.9013
+Version: 0.0.0.9014
 Authors@R: 
     person(given = "Tiago",
            family = "Monteiro-Henriques",
@@ -21,3 +21,5 @@ Imports:
     stats
 Remotes: 
     gitlab::point-veg/maniphyt
+Depends: 
+    R (>= 2.10)

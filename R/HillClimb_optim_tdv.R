@@ -1,432 +1,249 @@
 # HillClimb_optim_tdv.R
 #'
-#' @title TotDiffVal (or TotDiffVal1) optimization using hill climbing algorithms
+#' @title Total Differential Value optimization using Hill-climbing algorithms
 #'
-#' @description This function searches for partitions of the columns of a given matrix, optimizing the TotDiffVal (or TotDiffVal1) index.
+#' @description This function searches for partitions of the columns of a given matrix, optimizing the Total Differential Value (TDV).
 #'
-#' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
-#' @param p.initial A `vector` or a `character`. A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
+#' @param m.bin A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
+#' @param p.initial A `vector` or a `character`. A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of `m.bin`, ascribing each relevé to one of the k groups). By default, `p.initial = "random"`, generates a random initial partition.
 #' @param k A `numeric`, giving the number of desired groups.
 #' @param n.starts A `numeric`, giving the number of starts to perform.
 #' @param n.sol A `numeric`, giving the number of best solutions to keep in the final output. Defaults to 1.
-#' @param index A `character`, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO
-#' @param maxit A `numeric` giving the number of iterations of the hill-climbing optimization.
-#' @param min.g.size A `numeric` The minimum number of relevés that a group can contain (must be 2 or higher).
-#' @param random.first A `logical`. `FALSE` (the default), performs only hill-climbing on the 1-neighbours; `TRUE` first, performs a stochastic hill-climbing on random `n`-neighbours (`n` is definded by the parameter `rf.neigh.size`), and only after runs the hill-climbing search on the 1-neighbours; see description above.
-#' @param rf.neigh.size	A `numeric`, giving the size (`n`) of the `n`-neighbour for the stochastic hill-climbing; only used if `random.first` = `TRUE`.
-#' @param rf.maxit A `numeric`, giving the number of iterations of the hill-climbing optimization; only used if `random.first` = `TRUE`.
+#' @param maxit A `numeric` giving the number of iterations of the Hill-climbing optimization.
+#' @param min.g.size A `numeric` The minimum number of relevés that a group can contain (must be 1 or higher).
+#' @param random.first A `logical`. `FALSE` (the default), performs only Hill-climbing on the 1-neighbours; `TRUE` first, performs a Stochastic Hill-climbing on `n`-neighbours (`n` is definded by the parameter `rf.neigh.size`), and only after runs the Hill-climbing search on the 1-neighbours; see description above.
+#' @param rf.neigh.size	A `numeric`, giving the size (`n`) of the `n`-neighbour for the Stochastic Hill-climbing; only used if `random.first` = `TRUE`.
+#' @param rf.maxit A `numeric`, giving the number of iterations of the Hill-climbing optimization; only used if `random.first` = `TRUE`.
 #' @param full.output A `logical`. If `FALSE` (the default) the best `n.sol` partitions and respective indices are returned. If `TRUE` (only available for `n.sols = 1`) the output will also contain information on the optimization steps (see below).
 #'
-#' @details Given a phytosociological table (`m`, rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (k, defined by the user) optimizing TotDiffVal (or TotDiffVal1) index (see http://home.isa.utl.pt/~tmh/), i.e. searches, using a hill-climbing algorithm, for patterns of differential taxa by rearranging the relevés into k groups.
+#' @details Given a phytosociological table (`m.bin`, rows corresponding to taxa and columns corresponding to relevés) this function searches for
+#' a k-partition (`k` defined by the user) optimizing TDV, i.e. searches, using a Hill-climbing algorithm, for patterns of differential taxa by
+#' rearranging the relevés into k groups.
 #'
-#' Optimization can start from a random partition (`p.ini` = "random"), or from a given partition (`p.ini`, defined by the user or produced by any clustering method, or even a manual classification).
+#' Optimization can start from a random partition (`p.ini = "random"`), or from a given partition (`p.ini`, defined by the user or produced by any
+#' clustering method, or even a manual classification).
 #'
-#' Each iteration searches for a TotDiffVal1 improvement screening all 1-neighbours, until the given number of maximum iterations (`maxit`) is reached. A 1-neighbour of a given partition is another partition obtained by ascribing 1 relevé (of the original partition) to a different group.  A n-neighbour is obtained, equivalently, ascribing n relevés to different groups.
+#' Each iteration searches for a TDV improvement screening all 1-neighbours, until the given number of maximum iterations (`maxit`) is reached. A
+#' 1-neighbour of a given partition is another partition obtained by changing 1 relevé (of the original partition) to a different group. A n-neighbour
+#' is obtained, equivalently, ascribing n relevés to different groups.
 #'
-#' Optionally, a faster search (stochastic hill-climbing) can be performed in a first moment (`random.first` = `TRUE`), consisting on searching for TotDiffVal1 improvements, by randomly selecting n-neighbours (n defined by the user with the parameter `rf.neigh.size`), until a given number of maximum iterations (`rf.maxit`) is reached. Stochastic hill-climbing might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
+#' Optionally, a faster search (Stochastic Hill-climbing) can be performed in a first step (`random.first` = `TRUE`), consisting on searching for
+#' TDV improvements, by randomly selecting n-neighbours (n defined by the user with the parameter `rf.neigh.size`), accepting that neighour partition
+#' as a better solution if it improves TDV. This is repeated until a given number of maximum iterations (`rf.maxit`) is reached. Stochastic Hill-climbing
+#' might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
 #'
-#' Several runs of HillClimb_optim_tdv (multi-starts) should be tried out, as several local maxima are usually present and the hill-climbing algorithm converges easily to local maxima. Sometimes, converging to a known high-valued partition is very unlikely, being dependent on data structure and on the initial partition.
+#' Several runs of HillClimb_optim_tdv (multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
+#' algorithm converges easily to local maxima.
 #'
-#' Trimming your table by a 'constancy' range (see \code{\link{select_taxa}} function) or using the result of other cluster methodologies as input, might help finding interesting partitions. Specially after trimming the table by a 'constancy' range, getting a random initial partition with TotDiffVal1 greater than zero might be very unlike; on such cases using the result of other clustering strategies as input is useful.
+#' Trimming your table by a 'constancy' range or using the result of other cluster methodologies as input, might help finding interesting partitions.
+#' Specially after trimming the table by a 'constancy' range, getting a random initial partition with TDV greater than zero might be very unlikely; on
+#' such cases using a initial partition from \code{\link{GRASP_partition_tdv}} or \code{\link{GRDTP_partition_tdv}} (or even the result of other clustering
+#' strategies) as input might be useful.
 #'
-#' @return A `list` with the following components:
+#' @return If `full.output = FALSE`, a `list` with (at most) `n.sol` best solutions (equivalent solutions are removed). Each best solution is also
+#' a `list` with the following components:
 #'
 #' \describe{
-#'   \item{res.rf}{A `matrix` with the iteration number (of the stochastic hill-climbing phase), the maximum TotDiffVal1 found until that iteration, and the higher TotDiffVal1 among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-#'   \item{par.rf}{A `vector` with the best partition found in the stochastic hill-climbing phase.}
-#'   \item{max.TotDiffVal1.rf}{A `numeric` showing the maximum TotDifVal1 found in the stochastic hill-climbing phase (if selected).}
-#'   \item{res}{A `matrix` with the iteration number (of the hill-climbing), the maximum TotDiffVal1 found until that iteration, and the higher TotDiffVal1 among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-#'   \item{par}{A `vector` with the best partition found in the hill-climbing phase.}
+#'   \item{local_maximum}{A `logical` indicating if `par` is a 1-neighbour local maximum.}
+#'   \item{par}{A `vector` with the best partition found after the Hill-climbing phase.}
+#'   \item{max.tdv}{A `numeric` with the maximum TDV found in the respective run.}
+#' }
+#'
+#' If `full.output = TRUE`, a `list` with the following components:
+#'
+#' \describe{
+#'   \item{res.rf}{A `matrix` with the iteration number (of the Stochastic Hill-climbing phase), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
+#'   \item{par.rf}{A `vector` with the best partition found in the Stochastic Hill-climbing phase.}
+#'   \item{max.tdv.rf}{A `numeric` showing the maximum TDV found in the Stochastic Hill-climbing phase (if selected).}
+#'   \item{res}{A `matrix` with the iteration number (of the Hill-climbing), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
+#'   \item{par}{A `vector` with the best partition found after the Hill-climbing phase.}
 #'   \item{local_maximum}{A `logical` indicating if `par` is a 1-neighbour local maximum.}
 #'   \item{time}{The total amount of time of the run (from function \code{\link[base]{Sys.time}}).}
-#'   \item{max.TotDiffVal1}{A `numeric` with the maximum TotDifVal1 found in the run.}
+#'   \item{max.tdv}{A `numeric` with the maximum TDV found in the respective run.}
 #' }
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
 #' @export
 #'
-HillClimb_optim_tdv <- function(m, p.initial="random", k, n.starts = 1, n.sol = 1, index = "TotDiffVal1", maxit = 10, min.g.size = 1, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
-  stopifnot(is.matrix(m))
-  mode(m) <- "integer"
-  if (!identical(c(0L,1L), sort(unique(as.vector(m))))) {stop("Matrix m should contain only 0's and 1's.")}
-  if (min(rowSums(m))==0) {stop("At least one taxa is not present in any relev\u00e9.")}
-  if (min(colSums(m))==0) {stop("At least one relev\u00e9 contains no taxa.")}
-  if ((mgs <- as.integer(min.g.size)) < 1) {stop("Object min.g.size must be greater than or equal to 1.")}
-  mt <- t(m)
+HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.starts = 1, n.sol = 1, maxit = 10, min.g.size = 1, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
+  stopifnot(is.matrix(m.bin))
+  mode(m.bin) <- "integer"
+  if (!identical(c(0L,1L), sort(unique(as.vector(m.bin))))) {stop("Matrix m.bin should contain only 0's and 1's.")}
+  if (min(rowSums(m.bin)) == 0) {stop("At least one taxa is not present in any relev\u00e9.")}
+  if (min(colSums(m.bin)) == 0) {stop("At least one relev\u00e9 contains no taxa.")}
+  mgs <- as.integer(min.g.size)
+  if (mgs < 1) {stop("Object min.g.size must be greater than or equal to 1.")}
+  mt <- t(m.bin)
   nr <- nrow(mt) # no. of relevés
   ns <- ncol(mt) #no. of taxa
-  if (nr <= mgs*k) {stop(paste0("Random partition cannot guarantee at least ", mgs, " relev\u00e9s per group!"))}
+  if (nr <= mgs * k) {stop(paste0("Random partition cannot guarantee at least ", mgs, " relev\u00e9s per group!"))}
 
   if (p.initial[1] != "random") {
     p.ini <- p.initial
     if (!identical(as.integer(sort(unique(p.ini))), 1:k)) { #maybe when p.ini is given k could be ignored
-      stop("Your partition doesn't have k groups!")
+      stop("Object p is not a valid partition of the columns of m")
     }
     if (!identical(length(p.ini), nr)) {
-      stop("Object p.ini must be a partition of the columns of matrix m.")
+      stop("Object p.ini must be a partition of the columns of matrix m.bin.")
     }
-    tp <- table(p.ini)
-    if (min(tp)<mgs) {
+    tp <- tabulate(p.ini) #size of each group (inner)
+    if (min(tp) < mgs) {
       stop(paste0("At least one group of the provided partition has less than ", mgs, " elements"))
     }
-    if (max(tp)==mgs) {
+    if (max(tp) == mgs) {
       stop(paste0("At least one group of the provided partition has to have more than ", mgs, " elements"))
     }
   }
   if (n.sol > n.starts) {
     stop("The number of starts ('n.starts') should not be lower than the desired number of best solutions ('n.sol').")
   }
-  if ((n.sol > 1 | n.starts > 1) & full.output == TRUE) {
+  if ((n.sol != 1 | n.starts != 1) & full.output == TRUE) {
     stop("The option 'full.output = TRUE' is only available for 'n.sol == 1' and 'n.starts = 1'.")
   }
-  if (n.sol == 1 & n.starts == 1 & full.output == TRUE) {
+
+  #SPECIAL CASE OF n.sol == 1 & n.starts == 1 & full.output == TRUE
+  if (full.output == TRUE) {
     t <- Sys.time()
-
+  } else {
+    res.list <- list()
+  }
+  for (n.run in 1:n.starts) {
     if (p.initial[1] == "random") {
-      p.ini <- sample(c(rep(1:k, mgs), sample(k, nr-mgs*k, replace=TRUE)))
-      tp <- table(p.ini)
+      p.ini <- sample(c(rep(1:k, mgs), sample(k, nr - mgs * k, replace = TRUE)))
+      tp <- tabulate(p.ini) #size of each group (inner)
+    }  else {
+      p.ini <- p.initial #needed only for n.run > 1... (can be improved, aditionally for p.ini not random should not repeat the "first calculation!")
+      tp <- tabulate(p.ini)
     }
 
-    arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-    afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-    t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-    t2 <- colSums(afg>0) #no. of groups containing the taxon
-    t3 <- t2 > 1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-    for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-      rel.i <- which(p.ini==i) #indices of the relevés of the group
-      spe.i <- afg[i,]>0 #indices of the taxa present in the group
-      adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-      if (sum(t3) > 0) { #for taxa occurring in more than one group
-        t4 <- spe.i & t3
-        adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
+    #first calculation of TDV (i.e. current value, curr.val, for p.ini), keeping the intermediate steps of the tdv calculation
+    outer.size <- nr - tp #sum of the sizes of the outer groups
+    ofda <- ifp <- matrix(0, k, ns) #matrices to store [a/b], i.e. the inner frequency of presences (ifp) and [c/d], i.e. the outer frequency of differenciating absences (ofda)
+    afg <- rowsum(mt, group = p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
+    empty.size <- (afg == 0) * tp #no. of relevés of each group (group size), when the taxon is not present
+    gct <- colSums(afg > 0) #no. of groups containing the taxon [e]
+    i.mul <- gct > 1 #indices of the taxa occurring in more than one group (taxa must occur in at least one group)
+    for (g in 1:k) { #fills matrices ofda [c/d] and ifp [a/b], only when the taxon is present in the group!
+      i.tx <- afg[g,] > 0 #indices of the taxa present in the group g
+      ofda[g, i.tx & !i.mul] <- 1 #ofda is 1 for the taxa occurring in one group only!
+      if (sum(i.mul) > 0) { #if there are taxa occurring in more than one group
+        i.tx.mul <- i.tx & i.mul #taxa of group g occurring also in other group than g
+        ofda[g,i.tx.mul] <- colSums(empty.size[-g,i.tx.mul,drop = FALSE] / outer.size[g]) #size of outer empty groups divided by the sum of the sizes of the outer groups [c/d]
       }
-      arf[i, spe.i] <- afg[i, spe.i]/as.vector(tp[i])/(t2[spe.i])
+      ifp[g,i.tx] <- afg[g,i.tx] / tp[g] #presences inside group g divided by the group g size [a/b]
     }
-    cuscor <- sum(colSums(arf*adp))/ns
+    DV <- colSums(ifp * ofda) / gct
+    curr.val <- sum(DV) / ns
+    #curr.val <- tdv.aux(mt = mt, p = p.ini, tp = tp, k = k, ns = ns, nr = nr)
 
-    res.rf = NULL
-    par.rf = NULL
-    cuscor.rf=NULL
-    if (random.first==TRUE) {
+    res.rf <- NULL
+    par.rf <- NULL
+    curr.val.rf <- NULL
 
-      #random.neighbour: this function returns randomly one of the (k-1)*nr 1-neighbour partitions, assuring that the minimum group size (mgs) is respected
-      random.neighbour <- function (p) {
-        tp <- table(p)
-        k.int <- which(tp>mgs) #k of interest to sample
-        k.sam <- tp[k.int]-mgs #k samplable
-        troca <- sample(rep(k.int,k.sam), min(rf.neigh.size, sum(k.sam))) #neighbourhood.size cannot be greater than sum(k.sam)
-        niter <- table(troca)
-        gn.tot <- NULL
-        in.tot <- NULL
-        for (gv in sort(unique(troca))) {#it assumes that table function also sorts!
-          if(length(c(1:k)[-gv])!=1) {gn.tot <- c(gn.tot,sample(c(1:k)[-gv],niter[paste(gv)],replace=TRUE))} else {gn.tot <- c(gn.tot,rep(c(1:k)[-gv],niter[paste(gv)]))}
-          in.tot <- c(in.tot,sample(which(p==gv),niter[paste(gv)]))
-        }
-        p[in.tot] <- gn.tot
-        return(p)
+    if (random.first == TRUE) { #STOCHASTIC HILL CLIMBING (random.first = TRUE)
+      p.curr <- p.ini
+      if (full.output == TRUE) {
+        res.rf <- matrix(0, rf.maxit, 3)
       }
-
-      #STOCHASTIC HILL CLIMBING (random.first=TRUE)
-      parcor <- p.ini
-      res.rf <- c(0,0,0)
       for (iter in 1:rf.maxit) {
-        parviz <- random.neighbour(parcor)
-        tp <- table(parviz)
-        arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-        afg <- rowsum(mt, group=parviz) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-        t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-        t2 <- colSums(afg>0) #no. of groups containing the taxon
-        t3 <- t2>1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-        for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-          rel.i <- which(parviz==i) #indices of the relevés of the group
-          spe.i <- afg[i,]>0 #indices of the taxa present in the group
-          adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-          if (sum(t3)>0) { #for taxa occurring in more than one group
-            t4 <- spe.i & t3
-            adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
-          }
-          arf[i, spe.i] <- afg[i,spe.i]/as.vector(tp[i])/(t2[spe.i])
+        p.neig <- random.neighbour(p = p.curr, k = k, mgs = mgs, rf.neigh.size = rf.neigh.size)
+        neig.val <- tdv.aux(mt = mt, p = p.neig, k = k, ns = ns, nr = nr)
+        if (neig.val >= curr.val) {
+          p.curr <- p.neig
+          curr.val <- neig.val
         }
-        cusviz <- sum(colSums(arf*adp))/ns
-        if (cusviz >= cuscor) {parcor <- parviz; cuscor <- cusviz}
-        res.rf <- rbind(res.rf,c(iter,cuscor,cusviz))
-      }
-      p.ini <- par.rf <- parcor
-      cuscor.rf <- cuscor
-      tp <- table(p.ini)
-      #afg, t1, t2, t3, arf and adp must be recalculated for parcor (as a worse neighbour might have been used to calculate them before)!
-      arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-      afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-      t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-      t2 <- colSums(afg>0) #no. of groups containing the taxon
-      t3 <- t2>1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-      for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-        rel.i <- which(p.ini==i) #indices of the relevés of the group
-        spe.i <- afg[i,]>0 #indices of the taxa present in the group
-        adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-        if (sum(t3)>0) { #for taxa occurring in more than one group
-          t4 <- spe.i & t3
-          adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
+        if (full.output == TRUE) {
+          res.rf[iter,] <- c(iter, curr.val, neig.val)
         }
-        arf[i, spe.i] <- afg[i,spe.i]/as.vector(tp[i])/(t2[spe.i])
       }
-    }
+      p.ini <- p.curr
+      if (full.output == TRUE) {
+        par.rf <- p.curr
+        curr.val.rf <- curr.val
+      }
 
-    #max.tdv.neighbour: this function returns the(one of the) 1-neighbouring partition(s) presenting greater TotDiffVal1 (tdv)
-    max.tdv.neighbour <- function (p) {
-      tp <- table(p); mtemp <- matrix(p, nr, nr, byrow=TRUE); fordiag <- p; res1 <- NULL; res2 <- NULL
-      if (min(tp)>mgs) { #all groups have more than mgs elements
-        for (i in 1:(k-1)) {
-          fordiag <- fordiag+1
-          fordiag[which(fordiag==k+1)] <- 1
-          diag(mtemp) <- fordiag
-          res1 <- rbind(res1,mtemp)
-          res2 <- c(res2,fordiag)
+      #replacing the intermediate steps of the tdv calculation, for p.ini/p.curr coming from Stochastic Hill-climbing (it is calculating again, actually, but it is preferable this way)
+      tp <- tabulate(p.ini) #size of each group (inner)
+      outer.size <- nr - tp #sum of the sizes of the outer groups
+      ofda <- ifp <- matrix(0, k, ns) #matrices to store [a/b], i.e. the inner frequency of presences (ifp) and [c/d], i.e. the outer frequency of differenciating absences (ofda)
+      afg <- rowsum(mt, group = p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
+      empty.size <- (afg == 0) * tp #no. of relevés of each group (group size), when the taxon is not present
+      gct <- colSums(afg > 0) #no. of groups containing the taxon [e]
+      i.mul <- gct > 1 #indices of the taxa occurring in more than one group (taxa must occur in at least one group)
+      for (g in 1:k) { #fills matrices ofda [c/d] and ifp [a/b], only when the taxon is present in the group!
+        i.tx <- afg[g,] > 0 #indices of the taxa present in the group g
+        ofda[g, i.tx & !i.mul] <- 1 #ofda is 1 for the taxa occurring in one group only!
+        if (sum(i.mul) > 0) { #if there are taxa occurring in more than one group
+          i.tx.mul <- i.tx & i.mul #taxa of group g occurring also in other group than g
+          ofda[g,i.tx.mul] <- colSums(empty.size[-g,i.tx.mul,drop = FALSE] / outer.size[g]) #size of outer empty groups divided by the sum of the sizes of the outer groups [c/d]
         }
-        res2 <- cbind(rep(p, k-1),res2)
-        colnames(res2) <- NULL
-      } else { #at least one group has only mgs elements
-        ind.rm <- as.numeric(sapply(which(tp==mgs), function (x) {which(p==x)})) #it returns the indices of the partition corresponding to groups presenting only mgs elements #as.numeric is probably not necessary, it is possibly done by default in []
-        for (i in 1:(k-1)) {
-          fordiag <- fordiag+1
-          fordiag[which(fordiag==k+1)] <- 1
-          diag(mtemp) <- fordiag
-          res1 <- rbind(res1,mtemp[-ind.rm,])
-          res2 <- c(res2,fordiag[-ind.rm])
-        }
-        res2 <- cbind(rep(p[-ind.rm], k-1),res2)
-        colnames(res2) <- NULL
+        ifp[g,i.tx] <- afg[g,i.tx] / tp[g] #presences inside group g divided by the group g size [a/b]
       }
-      mat.neig <- list(p.list=res1,pairs=res2)
-
-      mat.neig.tdv <- sapply(1:nrow(mat.neig$p.list), function (x) { #like this, it is difficult to parallelize!
-        pn <- mat.neig$p.list[x,]
-        kc <- mat.neig$pairs[x,]
-        tpn <- table(pn) #neighbour partition
-        for (i in kc) {afg[i,] <- colSums(mt[which(pn==i), , drop=FALSE])} #(updates afg) no. of relevés containing the taxa, within each group, only for the two groups that changed a relevé!
-        t5 <- afg[kc,][1,]>0 | afg[kc,][2,]>0 #taxa affected by the change of relevés
-        t1[kc,] <- (afg==0)[kc,]*as.vector(tpn)[kc] #(updates t1) no. of relevés of each group, when the taxon is not present #t5 must not be used here!
-        t2[t5] <- colSums(afg>0)[t5] #(new t2) no. of groups containing the taxon
-        t3[t5] <- (t2>1)[t5] #indices of the taxa occurring in more than one group (they must occur in at least one)
-        for (i in 1:k) { #changes matrices adp and arf, only when the taxon is present in the group!
-          rel.i <- which(pn==i) #indices of the relevés of the group
-          spe.i <- afg[i,]>0 #indices of the taxa present in the group
-          if (sum(spe.i & t5)>0) { #caso o grupo em causa contenha espécies afetadas
-            adp[i, spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-            if (sum(t3)>0) { #for taxa occurring in more than one group
-              t4 <- spe.i & t3
-              adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tpn[-i]))/(t2[t4])
-            }
-            adp[i, t5 & !spe.i] <- 0 #inserts a zero to the affected taxa that is no more present in the group!
-            arf[i, t5] <- afg[i, t5]/as.vector(tpn[i])/(t2[t5])
-          }
-        }
-        return(sum(colSums(arf*adp))/ns)
-      })
-      return(list(tdv=tdv <- max(mat.neig.tdv), p=mat.neig$p.list[which(mat.neig.tdv==tdv)[1],]))
+      DV <- colSums(ifp * ofda) / gct
+      #curr.val was already calculated in the Stochastic Hill-climbing
     }
 
     #HILL CLIMBING
-    if (maxit==0) {res <- NULL; parcor=p.ini; loc_max = FALSE} else {
+    if (maxit == 0) {
+      if (full.output == TRUE) {
+        res <- NULL
+      }
+      p.curr <- p.ini
       loc_max <- FALSE
-      parcor <- p.ini
-      #cuscor is already calculated
-      res <- c(0,0,0)
+    } else {
+      loc_max <- FALSE
+      p.curr <- p.ini
+      #curr.val is already calculated (during or before the Stochastic Hill-climbing)
+      if (full.output == TRUE) {
+        res <- matrix(0, maxit, 3)
+      }
       for (iter in 1:maxit) {
-        temp <- max.tdv.neighbour(parcor)
-        parviz <- temp$p
-        cusviz <- temp$tdv
-        if (cusviz > cuscor) {parcor <- parviz; cuscor <- cusviz} else {loc_max <- TRUE; print("Local maximum reached"); break}
-        res <- rbind(res,c(iter,cuscor,cusviz))
-      }
-    }
-    res.t <- Sys.time() - t
-    return(list(res.rf=res.rf, par.rf=par.rf, max.TotDiffVal1.rf=cuscor.rf,res=res, par=parcor, local_maximum=loc_max, time=res.t, max.TotDiffVal1=cuscor))
-  }
-
-  ###### THE COMMON CASE
-  if (full.output == FALSE) {
-    res.list <- list()
-    for (n.run in 1:n.starts) {
-
-      if (p.initial[1] == "random") {
-        p.ini <- sample(c(rep(1:k, mgs), sample(k, nr-mgs*k, replace=TRUE)))
-        tp <- table(p.ini)
-      } else {
-        p.ini <- p.initial
-        tp <- table(p.ini)
-      }
-
-      arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-      afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-      t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-      t2 <- colSums(afg>0) #no. of groups containing the taxon
-      t3 <- t2 > 1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-      for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-        rel.i <- which(p.ini==i) #indices of the relevés of the group
-        spe.i <- afg[i,]>0 #indices of the taxa present in the group
-        adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-        if (sum(t3) > 0) { #for taxa occurring in more than one group
-          t4 <- spe.i & t3
-          adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
+        temp <- max.tdv.neighbour(mt = mt, p = p.curr, k = k, ns = ns, nr = nr, mgs = mgs, ofda = ofda, ifp = ifp, afg = afg, empty.size = empty.size, gct = gct, i.mul = i.mul, DV = DV)
+        p.neig <- temp$p
+        neig.val <- temp$tdv
+        if (neig.val > curr.val) {
+          p.curr <- p.neig
+          curr.val <- neig.val
+        } else {
+          loc_max <- TRUE
+          break
         }
-        arf[i, spe.i] <- afg[i, spe.i]/as.vector(tp[i])/(t2[spe.i])
-      }
-      cuscor <- sum(colSums(arf*adp))/ns
-
-      if (random.first==TRUE) {
-
-        #random.neighbour: this function returns randomly one of the (k-1)*nr 1-neighbour partitions, assuring that the minimum group size (mgs) is respected
-        random.neighbour <- function (p) {
-          tp <- table(p)
-          k.int <- which(tp>mgs) #k of interest to sample
-          k.sam <- tp[k.int]-mgs #k samplable
-          troca <- sample(rep(k.int,k.sam), min(rf.neigh.size, sum(k.sam))) #neighbourhood.size cannot be greater than sum(k.sam)
-          niter <- table(troca)
-          gn.tot <- NULL
-          in.tot <- NULL
-          for (gv in sort(unique(troca))) {#it assumes that table function also sorts!
-            if(length(c(1:k)[-gv])!=1) {gn.tot <- c(gn.tot,sample(c(1:k)[-gv],niter[paste(gv)],replace=TRUE))} else {gn.tot <- c(gn.tot,rep(c(1:k)[-gv],niter[paste(gv)]))}
-            in.tot <- c(in.tot,sample(which(p==gv),niter[paste(gv)]))
-          }
-          p[in.tot] <- gn.tot
-          return(p)
-        }
-
-        #STOCHASTIC HILL CLIMBING (random.first=TRUE)
-        parcor <- p.ini
-        for (iter in 1:rf.maxit) {
-          parviz <- random.neighbour(parcor)
-          tp <- table(parviz)
-          arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-          afg <- rowsum(mt, group=parviz) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-          t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-          t2 <- colSums(afg>0) #no. of groups containing the taxon
-          t3 <- t2>1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-          for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-            rel.i <- which(parviz==i) #indices of the relevés of the group
-            spe.i <- afg[i,]>0 #indices of the taxa present in the group
-            adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-            if (sum(t3)>0) { #for taxa occurring in more than one group
-              t4 <- spe.i & t3
-              adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
-            }
-            arf[i, spe.i] <- afg[i,spe.i]/as.vector(tp[i])/(t2[spe.i])
-          }
-          cusviz <- sum(colSums(arf*adp))/ns
-          if (cusviz >= cuscor) {parcor <- parviz; cuscor <- cusviz}
-        }
-        p.ini <- parcor
-        tp <- table(p.ini)
-        #afg, t1, t2, t3, arf and adp must be recalculated for parcor (as a worse neighbour might have been used to calculate them before)!
-        arf <- matrix(0, k, ns); colnames(arf) <- colnames(mt); rownames(arf) <- 1:k; adp <- arf #arf is the adjusted relative frequency in each group and adp is the adjusted differential proportion
-        afg <- rowsum(mt, group=p.ini) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-        t1 <- (afg==0)*as.vector(tp) #no. of relevés of each group, when the taxon is not present
-        t2 <- colSums(afg>0) #no. of groups containing the taxon
-        t3 <- t2>1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-        for (i in 1:k) { #fills matrices adp and arf, only when the taxon is present in the group!
-          rel.i <- which(p.ini==i) #indices of the relevés of the group
-          spe.i <- afg[i,]>0 #indices of the taxa present in the group
-          adp[i,spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-          if (sum(t3)>0) { #for taxa occurring in more than one group
-            t4 <- spe.i & t3
-            adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tp[-i]))/(t2[t4])
-          }
-          arf[i, spe.i] <- afg[i,spe.i]/as.vector(tp[i])/(t2[spe.i])
+        if (full.output == TRUE) {
+          res[iter,] <- c(iter, curr.val, neig.val)
         }
       }
-
-      #max.tdv.neighbour: this function returns the(one of the) 1-neighbouring partition(s) presenting greater TotDiffVal1 (tdv)
-      max.tdv.neighbour <- function (p) {
-        tp <- table(p); mtemp <- matrix(p, nr, nr, byrow=TRUE); fordiag <- p; res1 <- NULL; res2 <- NULL
-        if (min(tp)>mgs) { #all groups have more than mgs elements
-          for (i in 1:(k-1)) {
-            fordiag <- fordiag+1
-            fordiag[which(fordiag==k+1)] <- 1
-            diag(mtemp) <- fordiag
-            res1 <- rbind(res1, mtemp)
-            res2 <- c(res2,fordiag)
-          }
-          res2 <- cbind(rep(p, k-1),res2)
-          colnames(res2) <- NULL
-        } else { #at least one group has only mgs elements
-          ind.rm <- as.numeric(sapply(which(tp==mgs), function (x) {which(p==x)})) #it returns the indices of the partition corresponding to groups presenting only mgs elements #as.numeric is probably not necessary, it is possibly done by default in []
-          for (i in 1:(k-1)) {
-            fordiag <- fordiag+1
-            fordiag[which(fordiag==k+1)] <- 1
-            diag(mtemp) <- fordiag
-            res1 <- rbind(res1, mtemp[-ind.rm,])
-            res2 <- c(res2, fordiag[-ind.rm])
-          }
-          res2 <- cbind(rep(p[-ind.rm], k-1),res2)
-          colnames(res2) <- NULL
-        }
-        mat.neig <- list(p.list=res1, pairs=res2)
-
-        mat.neig.tdv <- sapply(1:nrow(mat.neig$p.list), function (x) { #like this, it is difficult to parallelize!
-          pn <- mat.neig$p.list[x,]
-          kc <- mat.neig$pairs[x,]
-          tpn <- table(pn) #neighbour partition
-          for (i in kc) {afg[i,] <- colSums(mt[which(pn==i), ,drop=FALSE])} #(updates afg) no. of relevés containing the taxa, within each group, only for the two groups that changed a relevé!
-          t5 <- afg[kc,][1,]>0 | afg[kc,][2,]>0 #taxa affected by the change of relevés
-          t1[kc,] <- (afg==0)[kc,]*as.vector(tpn)[kc] #(updates t1) no. of relevés of each group, when the taxon is not present #t5 must not be used here!
-          t2[t5] <- colSums(afg>0)[t5] #(new t2) no. of groups containing the taxon
-          t3[t5] <- (t2>1)[t5] #indices of the taxa occurring in more than one group (they must occur in at least one)
-          for (i in 1:k) { #changes matrices adp and arf, only when the taxon is present in the group!
-            rel.i <- which(pn==i) #indices of the relevés of the group
-            spe.i <- afg[i,]>0 #indices of the taxa present in the group
-            if (sum(spe.i & t5)>0) { #caso o grupo em causa contenha espécies afetadas
-              adp[i, spe.i & !t3] <- 1 #adp is 1 for the taxa occurring in one group only!
-              if (sum(t3)>0) { #for taxa occurring in more than one group
-                t4 <- spe.i & t3
-                adp[i, t4] <- colSums(t1[-i, t4, drop=FALSE]/sum(tpn[-i]))/(t2[t4])
-              }
-              adp[i, t5 & !spe.i] <- 0 #inserts a zero to the affected taxa that is no more present in the group!
-              arf[i, t5] <- afg[i, t5]/as.vector(tpn[i])/(t2[t5])
-            }
-          }
-          return(sum(colSums(arf*adp))/ns)
-        })
-        return(list(tdv=tdv <- max(mat.neig.tdv), p=mat.neig$p.list[which(mat.neig.tdv==tdv)[1],]))
-      }
-
-      #HILL CLIMBING
-      if (maxit==0) {parcor=p.ini; loc_max = FALSE} else {
-        loc_max <- FALSE
-        parcor <- p.ini
-        #cuscor is already calculated
-        for (iter in 1:maxit) {
-          temp <- max.tdv.neighbour(parcor)
-          parviz <- temp$p
-          cusviz <- temp$tdv
-          if (cusviz > cuscor) {
-            parcor <- parviz
-            cuscor <- cusviz
-          } else {
-            loc_max <- TRUE
-            break
-          }
-        }
       cat(paste("Run number: ", n.run," Confirmed local maximum: ", loc_max, "\n"))
+    }
+    if (full.output == TRUE) {
+      if (!is.null(res)) {
+        rows.not.zero <- apply(res, 1, function (x) {any(as.logical(x))})
+        res <- res[rows.not.zero,,drop = FALSE]
       }
-
-      if (n.run == 1) {res.list[[1]] <- list(local_maximum = loc_max, par = parcor, max.TotDiffVal1 = cuscor)} else {
-        already.in.bestsol <- any(sapply(res.list, function (x) {equivalent_partition(x$par, parcor)}))
+      res.t <- Sys.time() - t
+      return(list(res.rf = res.rf, par.rf = par.rf, max.tdv.rf = curr.val.rf, res = res, par = p.curr, local_maximum = loc_max, time = res.t, max.tdv = curr.val))
+    } else { # full.output == FALSE
+      #keeping only (at most) n.sol best solutions (deleting repeated ones)
+      if (n.run == 1) {
+        res.list[[1]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
+      } else {
+        already.in.bestsol <- any(sapply(res.list, function (x) {
+          equivalent_partition(x$par, p.curr)
+        }))
         if (!already.in.bestsol) {
           if (length(res.list) < n.sol) {
-            res.list[[length(res.list)+1]] <- list(local_maximum=loc_max, par=parcor, max.TotDiffVal1=cuscor)
+            res.list[[length(res.list) + 1]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
           } else { #already n.sol components in res.list
-            best.sol.values <- sapply(res.list, function (x) {x$max.TotDiffVal1})
-            if (cuscor >  min(best.sol.values)) {
+            best.sol.values <- sapply(res.list, function (x) {x$max.tdv})
+            if (curr.val >  min(best.sol.values)) {
               worse.bestsol <- which(best.sol.values == min(best.sol.values))[1] #selects one, in case of ties!
-              res.list[[worse.bestsol]] <- list(local_maximum=loc_max, par=parcor, max.TotDiffVal1=cuscor)
+              res.list[[worse.bestsol]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
             }
           }
         }
       }
     }
-    ind.order <- order(sapply(res.list, function (x) {x$max.TotDiffVal1}))
-    return(res.list[ind.order])
   }
+  ind.order <- order(sapply(res.list, function (x) {x$max.tdv}), decreasing = TRUE)
+  return(res.list[ind.order])
 }

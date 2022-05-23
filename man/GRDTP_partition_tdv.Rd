@@ -2,25 +2,35 @@
 % Please edit documentation in R/GRDTP_partition_tdv.R
 \name{GRDTP_partition_tdv}
 \alias{GRDTP_partition_tdv}
-\title{Obtain a partition of a phytosociological table using a Greedy-type algorithm (based on TotDiffVal)}
+\title{Obtain a partition using a Greedy-type algorithm}
 \usage{
-GRDTP_partition_tdv(m, k)
+GRDTP_partition_tdv(m, k, verify = TRUE)
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
 \item{k}{A \code{numeric} giving the number of desired groups.}
+
+\item{verify}{A \code{logical}. If \code{TRUE} (the default) the function verifies if basic features of \code{m} data structure are met. Otherwise if \code{FALSE}.}
 }
 \value{
-A \verb{numeric vector}, which length is the same as the number of columns of m, with numbers from 1 to \code{k}, representing the group to which the respective column was ascribed.
+A \verb{numeric vector}, which length is the same as the number of columns of m, with numbers from 1 to \code{k}, representing the group to which
+the respective column was ascribed.
 }
 \description{
-This function obtains a partition of the columns of a given phytosociological matrix, aiming at high values of the TotDiffVal index using a Greedy-type algorithm.
-After selecting \code{k} random columns to work as seeds for each of the desired \code{k} groups, the remaining columns are placed in the partition in the following manner: from those unplaced columns, one is selected randomly and, after evaluation, is placed in the group which maximizes the upcoming TotDiffVal. This is repeated until no more columns are unplaced.
+This function obtains a partition of the columns of a given phytosociological matrix, aiming at high values of the
+Total Differential Value (TDV), implementing a Greedy-type algorithm.
 }
 \details{
-This function uses a Greedy-type procedure to obtain a partition of \code{m}.
-Given a phytosociological table (\code{m}, with rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (\code{k}, defined by the user) aiming at high values of the TotDiffVal index. Being a simpler method, it is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet returning worse partitions in terms of TotDiffVal.
+Given the phytosociological table \code{m} (rows corresponding to taxa and columns corresponding to relevés), this function
+uses a Greedy-type algorithm (a simplified version of the Greedy algorithm) to obtain a k-partition (\code{k}, defined by the user) of the columns of \code{m}, aiming at high values of TVD.
+The algorithm operates in the following way: Firstly, \code{k} columns are selected randomly to work as seeds for each one of the
+desired \code{k} groups. Secondly, one of the remaining columns is selected randomly and added to the partition group which maximizes
+the upcoming TDV. This second step is repeated until all columns are placed in a group of the k-partition.
+
+Being a simplified version of the Greedy algorithm, it is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
+returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{GRASP_partition_tdv}}.
+See \code{\link{tdv}} for an explanation on the TDV of a phytosociological table.
 }
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

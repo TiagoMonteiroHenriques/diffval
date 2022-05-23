@@ -2,39 +2,49 @@
 % Please edit documentation in R/GUROBI_k2_optim_tdv.R
 \name{GUROBI_k2_optim_tdv}
 \alias{GUROBI_k2_optim_tdv}
-\title{TotDiffVal (or TotDiffVal1) optimization using GUROBI}
+\title{Total Differential Value optimization using GUROBI}
 \usage{
-GUROBI_k2_optim_tdv(
-  m,
-  formulation = c("t-independent", "t-dependent"),
-  index = "TotDiffVal1",
-  TimeLimit = Inf
-)
+GUROBI_k2_optim_tdv(m, formulation = "t-dependent", TimeLimit = 5)
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
-\item{formulation}{A \code{character},  of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.}
+\item{formulation}{A \code{character} selecting wich formulation to use. Possible values are "t-dependent" (the default) or "t-independent". See Details.}
 
-\item{index}{A \code{character}, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO}
-
-\item{TimeLimit}{A \code{numeric} ("double") with the time limit (in seconds) to be passed as a parameter to GUROBI, Defaults to \code{Inf}, but see Details.}
+\item{TimeLimit}{A \code{numeric} ("double") with the time limit (in seconds) to be passed as a parameter to GUROBI, Defaults to 5 seconds, but see Details.}
 }
 \value{
-A \code{list} with the following components:
+For \code{formulation = "t-dependent"}, a \code{list} with the following components:
 
 \describe{
-\item{par}{A \code{vector} with the 2-partition that maximizes TotDiffVal (or TotDiffVal1). A global maximum.}
-\item{objval}{A \code{numeric} with the maximum TotDiffVal (or TotDiffVal1) found.}
+\item{status.runs}{A \code{character} with GUROBI output status for all the runs.}
+\item{objval}{A \code{numeric} with the maximum TDV found by GUROBI.}
+\item{par}{A \code{vector} with the 2-partition corresponding to the the maximum TDV found by GUROBI.}
+}
+
+For \code{formulation = "t-independent"}, a \code{list} with the following components:
+
+\describe{
+\item{status}{A \code{character} with GUROBI output status.}
+\item{objval}{A \code{numeric} with the maximum TDV found by GUROBI.}
+\item{par}{A \code{vector} with the 2-partition corresponding to the the maximum TDV found by GUROBI.}
 }
 }
 \description{
-This function finds the partition of the columns of a given matrix that maximizes the TotDiffVal (or TotDiffVal1) index.
+Given a phytosociological matrix, this function finds the partition of its columns that maximizes the Total Differential Value (TDV).
 }
 \details{
-Given a phytosociological table \code{m} (rows corresponding to taxa and columns corresponding to relevés) this function finds a 2-partition (a partition in two groups) that maximizes TotDiffVal (or TotDiffVal1) index (see http://home.isa.utl.pt/~tmh/), i.e. finds, using the GUROBI otpimizer (see \code{\link[gurobi]{gurobi}}). This partition is a global maximum of TotDiffVal (or TotDiffVal1) for any 2-partitions of the dataset.
+Given a phytosociological table \code{m} (rows corresponding to taxa and columns corresponding to relevés) this function finds a 2-partition (a
+partition in two groups) that maximizes TDV, using the GUROBI otpimizer (see \code{\link[gurobi]{gurobi}}).
+When successful, this partition is a global maximum of TDV for any 2-partitions of the columns on \code{m}.
 
-For medium-sized matrices the computation time might became prohibitive, thus the use of a time limit (\code{TimeLimit}) is very advisable.
+See \code{\link{tdv}} for an explanation on the Total Differential Value of a phytosociological table.
+
+The function implements two different mixed linear programming formulations of the problem. The formulations differ as one is independent of the size
+of the obtained groups (t-independent), while the other formulation fixes the size of the obtained groups (t-dependent). The t-dependent formulation is
+implemented to run GUROBI as many times as necessary to cover all possible group sizes; this approach can result in faster total computation time.
+
+For medium-sized matrices the computation time might become already prohibitive, thus the use of a time limit (\code{TimeLimit}) is advisable.
 }
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

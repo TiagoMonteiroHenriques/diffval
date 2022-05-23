@@ -2,9 +2,9 @@
 % Please edit documentation in R/GRASP_partition_tdv.R
 \name{GRASP_partition_tdv}
 \alias{GRASP_partition_tdv}
-\title{Obtain a partition of a phytosociological table using a GRASP algorithm (based on TotDiffVal)}
+\title{Obtain a partition using a GRASP algorithm}
 \usage{
-GRASP_partition_tdv(m, k, thr = 0.95)
+GRASP_partition_tdv(m, k, thr = 0.95, verify = TRUE)
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
@@ -12,16 +12,24 @@ GRASP_partition_tdv(m, k, thr = 0.95)
 \item{k}{A \code{numeric} giving the number of desired groups.}
 
 \item{thr}{A \code{numeric} giving a threshold value (from 0 to 1 ) with the probability used to compute the sample quantile, in order to get the best \code{m} columns from which to select one to be include in the GRASP solution (in each step of the procedure).}
+
+\item{verify}{A \code{logical}. If \code{TRUE} (the default) the function verifies if basic features of \code{m} data structure are met. Otherwise if \code{FALSE}.}
 }
 \value{
-A \verb{numeric vector}, which length is the same as the number of columns of m, with numbers from 1 to \code{k}, representing the group to which the respective column was ascribed.
+A \verb{numeric vector}, which length is the same as the number of columns of m, with numbers from 1 to \code{k}, representing the group to which
+the respective column was ascribed.
 }
 \description{
-This function obtains a partition of the columns of a given matrix, aiming at high values of the TotDiffVal index using a GRASP algorithm.
+This function obtains a partition of the columns of a given phytosociological matrix, aiming at high values of the
+Total Differential Value (TDV) using a GRASP algorithm.
 }
 \details{
-This function uses a greedy randomized adaptive search procedure (GRASP) to obtain a partition of \code{m}.
-Given a phytosociological table (\code{m}, with rows corresponding to taxa and columns corresponding to relevés) this function searches for a k-partition (\code{k}, defined by the user) aiming at high values of the TotDiffVal index.
+This function uses a Greedy Randomized Adaptive Search Procedure (GRASP) to obtain a partition of \code{m}.
+Given a phytosociological table (\code{m}, with rows corresponding to taxa and columns corresponding to relevés) this function searches
+for a k-partition (\code{k}, defined by the user) aiming at high values of the TDV. See \code{\link{tdv}} for an explanation on the
+TDV of a phytosociological table.
+
+With \code{thr = 1}, the algorithm corresponds to the Greedy algorithm.
 }
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

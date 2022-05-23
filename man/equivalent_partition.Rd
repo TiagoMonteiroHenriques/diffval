@@ -18,7 +18,8 @@ equivalent_partition(p1, p2)
 Checks if two k-partitions are equivalent.
 }
 \details{
-The function checks if the two given k-partitions are equivalent, i.e. if their groupings are the same (useful in the case that the partitions have a divergent group numbering).
+The function checks if the two given k-partitions are equivalent, i.e. if their groupings are the same (useful
+in the case that the partitions have a divergent group numbering).
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

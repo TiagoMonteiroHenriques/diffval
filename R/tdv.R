@@ -1,36 +1,100 @@
 # tdv.R
 #'
-#' @title The total differential value of a phytosociological table
+#' @title The Total Differential Value of a phytosociological table
 #'
-#' @description Calculates TotDiffVal index (or TotDiffVal1) given a phytosociological table (see http://home.isa.utl.pt/~tmh/).
+#' @description Given a phytosociological table and a partition of its columns, this function calculates the respective Total Differential Value (TDV).
 #'
 #' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
-#' @param p A `vector` of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).
-#' @param index A `character` selecting which index is calculated: "TotDiffVal", "TotDiffVal1" or "both". If `output.type = "fast"`, "both" can not be selected.
-#' @param output.type A `character`, determining the amount of information returned by the function and also pre-validations (defaults to "normal").
+#' @param p A `vector` of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of `m`, ascribing each relevé to one of the k groups).
+#' @param output.type A `character`, determining the amount of information returned by the function and also the amount of pre-validations. Possible values are "normal" (the default), "fast" and "full".
 #'
-#' @details The function accepts a phytosociological table (`m`) and a k-partition of its columns (`p`), returning the respective TotDiffVal (or TotDiffVal1) index.
-#' TotDiffVal was proposed by Monteiro-Henriques and Bellu (2014). Monteiro-Henriques (2016) proposed TotDiffVal1, modifying the previous index slightly with the objective of ensuring the index to be bounded between 0 and 1. Yet, TotDiffVal is already bounded between 0 and 1.
-#' In practice, both indices are bounded between 0 and 1, but TotDiffVal1 reduces further the contribution of differential taxa present in more than one group.
+#' @details The function accepts a phytosociological table (`m`) and a k-partition of its columns (`p`), returning the corresponding TDV.
+#' TDV was proposed by Monteiro-Henriques and Bellu (2014). Monteiro-Henriques (2016) proposed TDV1, modifying TDV slightly with the objective of ensuring a value from 0 to 1. Yet, TDV is always within that range.
+#' In practice, both TDV and TDV1 have 0 as possible minimum value and 1 as possible maximum value, but TDV1 reduces further the contribution of differential taxa present in more than one group. TDV is then implemented here, for parsimony.
+#'
+#' TDV is calculated using the \eqn{DiffVal} index for each (and all) of the taxa present in a tabulated phytosociological table (also called sorted table).
+#' \eqn{DiffVal} index aims at characterizing how well a taxon works as a differential taxon in a tabulated phytosociological table (for more information on differential taxa
+#' see Mueller-Dombois & Ellenberg, 1974).
+#' An archetypal differential taxon of a certain group \eqn{g} of the partition \eqn{p} is the one present in all relevés of group \eqn{g}, and absent from all the other
+#' groups of that partition. Therefore, \eqn{DiffVal} has two components, an inner one (\eqn{\frac{a}{b}}{a/b}), which measures the presence of the taxon inside each of the groups,
+#' and an outer one (\eqn{\frac{c}{d}}{c/d}), which measures the relevant absences of the taxon outside of each of the groups. Specifically, given a partition \eqn{p} with \eqn{k} groups, \eqn{DiffVal} is
+#' calculated for each taxon \eqn{s} as:
+#'
+#' \deqn{DiffVal_{s,p} = \frac{1}{e}\sum_{g=1}^k{\frac{a}{b}\frac{c}{d}}}{DiffVal of taxon s, given the partition p = the summation of [(a/b)*(c/d)]/e, obtained for each group g, from g = 1 to k}
+#' where,
+#'
+#' \itemize{
+#' \item{\eqn{a}, is the total number of presences of taxon \eqn{s} within group \eqn{g}}
+#' \item{\eqn{b}, is the total number of relevés of group \eqn{g}}
+#' \item{\eqn{c}, is the total number of differentiating absences of taxon \eqn{s}, i.e. absences coming from the groups other than \eqn{g} from which the taxon \eqn{s} is completely absent}
+#' \item{\eqn{d}, is the total number of relevés of all groups but \eqn{g} (i.e., the total number of relevés in the table - \eqn{b})}
+#' \item{\eqn{e}, is the total number of groups in which the taxon \eqn{s} occurs at least once}
+#' }
+#'
+#' Therefore, for each taxon \eqn{s} and for each group \eqn{g}, the \eqn{DiffVal} index evaluates:
+#' \itemize{
+#' \item{\eqn{\frac{a}{b}}{a/b}, i.e., the frequency of the presences of taxon \eqn{s}, relative to the size of group \eqn{g}; commonly called 'relative frequency.' \eqn{\frac{a}{b}}{a/b} is only 1 if and only if taxon \eqn{s} occures in all the relevés of group \eqn{g}.}
+#' \item{\eqn{\frac{c}{d}}{c/d}, i.e., the frequency of the differentiating absences of taxon \eqn{s} outside group \eqn{g}, relative to the sum of sizes of all groups but \eqn{g}. _Nota bene_: absences in \eqn{c} are counted outside the group \eqn{g} but only in the groups from which taxon \eqn{s} is completely absent (these are the relevant absences, which produce differentiation among groups); in practice \eqn{c} corresponds to the sum of the sizes of all groups other than \eqn{g} that are empty. \eqn{\frac{c}{d}}{c/d} is 1 if and only if the taxon \eqn{s} is absent from all groups but \eqn{g}.}
+#' }
+#'
+#' Finally, \eqn{\frac{1}{e}}{1/e} ensures that \eqn{DiffVal} is a value from 0 to 1.
+#'
+#' The Total Differential Value (TDV or \eqn{TotDiffVal}) of a phytosociological table \eqn{m} tabulated/sorted by the partition \eqn{p} is:
+#'
+#'  \deqn{TDV_{m,p} = \frac{1}{n}\sum_{i=1}^n{Diffval_{i,p}}}{TDV of table m, given the partition p = the summation of the DiffVal of all taxa in the table, divided by n}
+#' where,
+#'
+#' \itemize{
+#' \item{\eqn{n}, is the number of taxa in table \eqn{m}}
+#' }
+#'
+#' The division by the number of taxa present in the `m` ensures that TDV remains in the \[0,1\] interval (as \eqn{DiffVal} is also in the same interval).
 #'
 #' @return If `output.type` = "normal" (the default) pre-validations are done and a `list` is returned, with the following components:
 #'
 #' \describe{
-#'   \item{arf}{A `matrix` with the adjusted relative frequency (a/b/e) of each taxon in each group (see http://home.isa.utl.pt/~tmh/).}
-#'   \item{adp}{A `matrix` with the adjusted differential proportion (c/d/e) of each taxon in each group (see http://home.isa.utl.pt/~tmh/).}
-#'   \item{DiffVal1}{A `matrix` with the DiffVal1 of each taxon (see http://home.isa.utl.pt/~tmh/).}
-#'   \item{TotDiffVal1}{A `numeric` with the TotDiffVal1 of matrix `m` given the partition `p` (see http://home.isa.utl.pt/~tmh/).}
+#'   \item{ifp}{A `matrix` with the \eqn{\frac{a}{b}}{a/b} values for each taxon in each group, for short called the 'inner frequency of presences'.}
+#'   \item{ofda}{A `matrix` with the \eqn{\frac{c}{d}}{c/d} values for each taxon in each group, for short called the 'outer frequency of differentiating absences'.}
+#'   \item{e}{A `vector` with the \eqn{e} values for each taxon, i.e. the number of groups containing that taxon.}
+#'   \item{diffval}{A `matrix` with the \eqn{DiffVal} for each taxon.}
+#'   \item{tdv}{A `numeric` with the TDV of matrix `m,` given the partition `p`.}
 #' }
 #'
-#' If `output.type` = "full", some extra components are added to the output: afg, t1, t2, t3. These are intermediate matrices used in the computation of TotDiffVal (or TotDiffVal1).
+#' If `output.type` = "full", some extra components are added to the output: afg, empty.size, gct (= \eqn{e}), i.mul. These are intermediate matrices used in the computation of TDV.
 #'
-#' If `output.type` = "fast", only the value of the selected index is returned and no pre-validations are done.
+#' If `output.type` = "fast", only TDV is returned and no pre-validations are done.
+#'
+#' @references
+#' Monteiro-Henriques T. & Bellu A. 2014. *An optimization approach to the production of differentiated tables based on new differentiability measures*. 23rd EVS European Vegetation Survey. Presented orally. Ljubljana, Slovenia.
+#'
+#' Monteiro-Henriques T. 2016. *A bunch of R functions to assist phytosociological tabulation*. 25th Meeting of European Vegetation Survey. Presented in poster. Rome. Italy.
+#'
+#' Mueller-Dombois D. & Ellenberg H. 1974. *Aims and Methods of Vegetation Ecology*. New York: John Wiley & Sons.
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
+#' @examples
+#'
+#' #getting a phytosociological matrix from Portela-Pereira et al. (2021)
+#' data(taxus_bin)
+#' #creating a group partition, as presented in Portela-Pereira et al.
+#' groups <- rep(c(1,2,3), c(3,11,19))
+#'
+#' #removing taxa occurring in only one relevé in order to
+#' #reproduce exactly the example in Portela-Pereira et al.
+#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+#'
+#' #calculating TDV
+#' result <- tdv(taxus_bin_wmt, groups)
+#'
+#' #this is the TDV
+#' result$tdv
+#' #this is TDV1, reproducing exactly the value from Portela-Pereira et al.
+#' sum(result$diffval/result$e)/nrow(taxus_bin_wmt)
+#'
 #' @export
 #'
-tdv <- function (m, p, index = "TotDiffVal", output.type = "normal") {
+tdv <- function (m, p, output.type = "normal") {
   if (output.type == "fast") {
     k <- max(p)
   } else {
@@ -46,74 +110,107 @@ tdv <- function (m, p, index = "TotDiffVal", output.type = "normal") {
   }
   mt <- t(m)
   ns <- ncol(mt) #no. of taxa
-  tp <- tabulate(p)
-  tpb <- length(p)-tp
-  ad <- af <- matrix(0L, k, ns)
-  afg <- rowsum(mt, group=p) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
-  t1 <- (afg == 0)*tp #no. of relevés of each group, when the taxon is not present
-  t2 <- colSums(afg>0) #no. of groups containing the taxon [e]
-  t3 <- t2 > 1 #indices of the taxa occurring in more than one group (they must occur in at least one)
-  for (i in 1:k) { #fills matrices ad [c/d] and af [a/b], only when the taxon is present in the group!
-    spe.i <- afg[i,] > 0 #indices of the taxa present in the group (in any of its columns)
-    ad[i, spe.i & !t3] <- 1 #ad is 1 for the taxa occurring in one group only!
-    if (sum(t3) > 0) { #if taxa occurring in more than one group do exist
-      t4 <- spe.i & t3 #taxa of group k occurring also in other group ≠k
-      ad[i, t4] <- colSums(t1[-i, t4, drop = FALSE]/tpb[i])
+  tp <- tabulate(p) #size of each group (inner)
+  outer.size <- length(p) - tp #sum of the sizes of the outer groups
+  ofda <- ifp <- matrix(0, k, ns) #matrices to store [a/b], i.e. the inner frequency of presences (ifp) and [c/d], i.e. the outer frequency of differenciating absences (ofda)
+  afg <- rowsum(mt, group = p) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
+  empty.size <- (afg == 0) * tp #no. of relevés of each group (group size), when the taxon is not present
+  gct <- colSums(afg > 0) #no. of groups containing the taxon [e]
+  i.mul <- gct > 1 #indices of the taxa occurring in more than one group (taxa must occur in at least one group)
+  for (g in 1:k) { #fills matrices ofda [c/d] and ifp [a/b], only when the taxon is present in the group!
+    i.tx <- afg[g,] > 0 #indices of the taxa present in the group g
+    ofda[g, i.tx & !i.mul] <- 1 #ofda is 1 for the taxa occurring in one group only!
+    if (sum(i.mul) > 0) { #if there are taxa occurring in more than one group
+      i.tx.mul <- i.tx & i.mul #taxa of group g occurring also in other group than g
+      ofda[g,i.tx.mul] <- colSums(empty.size[-g,i.tx.mul,drop = FALSE] / outer.size[g]) #size of outer empty groups divided by the sum of the sizes of the outer groups [c/d]
     }
-    af[i, spe.i] <- afg[i, spe.i]/tp[i]
+    ifp[g,i.tx] <- afg[g,i.tx] / tp[g] #presences inside group g divided by the group g size [a/b]
   }
-
   if (output.type == "fast") {
-    if (index == "TotDiffVal") {
-      return(sum(colSums(af*ad)/t2)/ns)
-    }
-    if (index == "TotDiffVal1") {
-      return(sum(colSums(af*ad)/t2^2)/ns)
-    }
-    if (index == "both") {
-      stop('Arguments combination output.type = "fast" and index = "both" is not implemented.')
-    }
+    return(tdv = sum(colSums(ifp * ofda) / gct) / ns) #for TDV1 replace gct by gct^2
   }
-
+  colnames(ofda) <- colnames(ifp) <- colnames(mt)
+  rownames(ofda) <- rownames(ifp) <- 1:k
+  DV <- colSums(ifp * ofda) / gct
   if (output.type == "normal") {
-    colnames(ad) <- colnames(af) <- colnames(mt)
-    rownames(ad) <- rownames(af) <- 1:k
-    arf <- af/t2
-    adp <- ad/t2
-    if (index == "TotDiffVal") {
-      DV <- colSums(af*ad)/t2
-      return(list(arf = t(arf), adp = t(adp), DiffVal = matrix(DV, ns, 1, dimnames = list(colnames(af), c("diff.val"))), TotDiffVal = sum(DV)/ns))
-    }
-    if (index == "TotDiffVal1") {
-      DV1 <- colSums(arf*adp)
-      return(list(arf = t(arf), adp = t(adp), DiffVal1=matrix(DV1, ns, 1, dimnames = list(colnames(arf), c("diff.val1"))), TotDiffVal1 = sum(DV1)/ns))
-    }
-    if (index == "both") {
-      DV <- colSums(af*ad)/t2
-      DV1 <- colSums(arf*adp)
-      return(list(arf = t(arf), adp = t(adp), DiffVal1=matrix(DV1, ns, 1, dimnames = list(colnames(arf), c("diff.val1"))), TotDiffVal1 = sum(DV1)/ns))
-    }
-    return(list(arf=t(arf),adp=t(adp), DiffVal = matrix(DV, ns, 1, dimnames = list(colnames(af), c("diff.val"))), DiffVal1=matrix(DV1, ns, 1, dimnames=list(colnames(arf),c("diff.val1"))), TotDiffVal = sum(DV)/ns, TotDiffVal1 = sum(DV1)/ns))
+    return(list(ifp = t(ifp), ofda = t(ofda), e = gct, diffval = matrix(DV, ns, 1, dimnames = list(colnames(ifp), c("DiffVal"))), tdv = sum(DV) / ns))
   }
-
   if (output.type == "full") {
-    colnames(ad) <- colnames(af) <- colnames(mt)
-    rownames(ad) <- rownames(af) <- 1:k
-    arf <- af/t2
-    adp <- ad/t2
-    if (index == "TotDiffVal") {
-      DV <- colSums(af*ad)/t2
-      return(list(afg = afg, t1 = t1, t2 = t2, t3 = t3, arf = arf, adp = adp, DiffVal = matrix(DV, ns, 1, dimnames = list(colnames(af), c("diff.val"))), TotDiffVal = sum(DV)/ns))
+    return(list(afg = afg, empty.size = empty.size, gct = gct, i.mul = i.mul, diffval = matrix(DV, ns, 1, dimnames = list(colnames(ifp), c("DiffVal"))), tdv = sum(DV) / ns))
+  }
+  stop('Argument output.type must be "fast", "normal" or "full".')
+}
+
+
+#some auxiliary functions aiming at efficiency of the optimization functions
+
+#auxiliary function for direct tdv calculation
+tdv.aux <- function (mt, p, tp = NULL, k, ns, nr) {
+  if (is.null(tp)) {
+    tp <- tabulate(p) #size of each group (inner)
+  }
+  outer.size <- nr - tp #sum of the sizes of the outer groups
+  ofda <- ifp <- matrix(0, k, ns) #matrices to store [a/b], i.e. the inner frequency of presences (ifp) and [c/d], i.e. the outer frequency of differenciating absences (ofda)
+  afg <- rowsum(mt, group = p) #no. of relevés containing the taxon, within each group (absolute frequency in each group)
+  empty.size <- (afg == 0) * tp #no. of relevés of each group (group size), when the taxon is not present
+  gct <- colSums(afg > 0) #no. of groups containing the taxon [e]
+  i.mul <- gct > 1 #indices of the taxa occurring in more than one group (taxa must occur in at least one group)
+  for (g in 1:k) { #fills matrices ofda [c/d] and ifp [a/b], only when the taxon is present in the group!
+    i.tx <- afg[g,] > 0 #indices of the taxa present in the group g
+    ofda[g, i.tx & !i.mul] <- 1 #ofda is 1 for the taxa occurring in one group only!
+    if (sum(i.mul) > 0) { #if there are taxa occurring in more than one group
+      i.tx.mul <- i.tx & i.mul #taxa of group g occurring also in other group than g
+      ofda[g,i.tx.mul] <- colSums(empty.size[-g,i.tx.mul,drop = FALSE] / outer.size[g]) #size of outer empty groups divided by the sum of the sizes of the outer groups [c/d]
     }
-    if (index == "TotDiffVal1") {
-      DV1 <- colSums(arf*adp)
-      return(list(afg = afg, t1 = t1, t2 = t2, t3 = t3, arf = arf, adp = adp, DiffVal1 = matrix(DV1, ns, 1, dimnames = list(colnames(arf), c("diff.val1"))), TotDiffVal1=sum(DV1)/ns))
-    }
-    if (index == "both") {
-      DV <- colSums(af*ad)/t2
-      DV1 <- colSums(arf*adp)
-      return(list(afg = afg, t1 = t1, t2 = t2, t3 = t3, arf = arf, adp = adp, DiffVal = matrix(DV, ns, 1, dimnames = list(colnames(af), c("diff.val"))), DiffVal1 = matrix(DV1, ns, 1, dimnames = list(colnames(arf), c("diff.val1"))), TotDiffVal = sum(DV)/ns, TotDiffVal1=sum(DV1)/ns))
+    ifp[g,i.tx] <- afg[g,i.tx] / tp[g] #presences inside group g divided by the group g size [a/b]
+  }
+  return(sum(colSums(ifp * ofda) / gct) / ns) #for TDV1 replace gct by gct^2
+}
+
+
+
+#auxiliary function for tdv calculation (of a 1-neighbour partition, pn) having as starting point a partition p
+#tp, ofda, ifp, afg, empty.size, gct, i.mul and DV relate to partition p
+#kc gives the pair of swapping groups
+
+tdv.neig <- function (mt, tp, k, ns, nr, ofda, ifp, afg, empty.size, gct, i.mul, DV, pn, kc) {
+  tp.n <- tabulate(pn) #size of each group (inner) in neighbour partition
+  outer.size.n <- nr - tp.n #sum of the sizes of the outer groups in neighbour partition
+
+  #updating ofda, ifp, afg, empty.size and gct (not changing their names)
+  for (i in kc) { #(updates afg) no. of relevés containing the taxa, within each group (absolute frequency in each group), only for the two groups that changed a relevé!
+    afg[i,] <- colSums(mt[which(pn == i),,drop = FALSE])
+  }
+  i.aff.tx <- afg[kc,][1,] > 0 | afg[kc,][2,] > 0 #taxa affected by the swap of groups (i.e. present in at least one of the swapping groups)
+  empty.size[kc,] <- (afg == 0)[kc,] * tp.n[kc] #(updates empty.size) no. of relevés of each group, when the taxon is not present #i.aff.tx must not be used here!
+  gct[i.aff.tx] <- colSums(afg > 0)[i.aff.tx] #(updates gct) no. of groups containing the taxon [e]
+  i.mul[i.aff.tx] <- (gct > 1)[i.aff.tx] #(updates i.mul) indices of the taxa occurring in more than one group (they must occur in at least one)
+  for (g in 1:k) { #fills matrices ofda [c/d] and ifp [a/b], only when the taxon is present in the group and only for the affected taxa!
+    i.tx <- afg[g,] > 0 #indices of the taxa present in the group g
+    if (sum(i.tx & i.aff.tx) > 0) { #in the case that the group g has affected taxa
+      ofda[g,i.tx & !i.mul] <- 1 #ofda is 1 for the taxa occurring in one group only!
+      if (sum(i.mul) > 0) { #if there are taxa occurring in more than one group
+        i.tx.mul <- i.tx & i.mul #taxa of group g occurring also in other group than g
+        ofda[g,i.tx.mul] <- colSums(empty.size[-g,i.tx.mul,drop = FALSE] / outer.size.n[g]) #size of outer empty groups divided by the sum of the sizes of the outer groups [c/d]
+      }
+      ofda[g,i.aff.tx & !i.tx] <- 0 #inserts a zero to the affected taxa that is no more present in the group!
+      ifp[g,i.aff.tx] <- afg[g,i.aff.tx] / tp.n[g] #presences inside group g divided by the group g size [a/b]
     }
   }
-  stop("Maybe arguments index and/or output.type were not well defined?")
+  DV <- colSums(ifp[,i.aff.tx,drop = FALSE] * ofda[,i.aff.tx,drop = FALSE]) / gct[i.aff.tx]
+  return(sum(DV)/ns)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,21 +4,23 @@
 \alias{explore_tabulation}
 \title{Interactively explore a tabulation of a phytosociologic matrix.}
 \usage{
-explore_tabulation(x, palette = "Vik")
+explore_tabulation(tab, palette = "Vik")
 }
 \arguments{
-\item{x}{A \code{list} as returned by the \code{\link{tabulation}} function.}
+\item{tab}{A \code{list} as returned by the \code{\link{tabulation}} function.}
 
 \item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
 }
 \value{
-Returns invisibly, although it plots taxa names on the console upon the user click.
+Returns invisibly, although it prints taxa names on the console upon the user click on the figure.
 }
 \description{
 This function plots an interactive image of a tabulation.
 }
 \details{
-The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on the console.
+The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image
+of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on
+the console.
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

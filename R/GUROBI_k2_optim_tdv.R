@@ -1,34 +1,46 @@
 # GUROBI_k2_optim_tdv.R
 #'
-#' @title TotDiffVal (or TotDiffVal1) optimization using GUROBI
+#' @title Total Differential Value optimization using GUROBI
 #'
-#' @description This function finds the partition of the columns of a given matrix that maximizes the TotDiffVal (or TotDiffVal1) index.
+#' @description Given a phytosociological matrix, this function finds the partition of its columns that maximizes the Total Differential Value (TDV).
 #'
 #' @param m A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
-#' @param formulation A `character`,  of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups). By default, "random", generates a random initial partition.
-#' @param index A `character`, selecting which index to optimize "TotDiffVal", or "TotDiffVal1". #STILL TODO
-#' @param TimeLimit A `numeric` ("double") with the time limit (in seconds) to be passed as a parameter to GUROBI, Defaults to `Inf`, but see Details.
+#' @param formulation A `character` selecting wich formulation to use. Possible values are "t-dependent" (the default) or "t-independent". See Details.
+#' @param TimeLimit A `numeric` ("double") with the time limit (in seconds) to be passed as a parameter to GUROBI, Defaults to 5 seconds, but see Details.
 #'
-#' @details Given a phytosociological table `m` (rows corresponding to taxa and columns corresponding to relevés) this function finds a 2-partition (a partition in two groups) that maximizes TotDiffVal (or TotDiffVal1) index (see http://home.isa.utl.pt/~tmh/), i.e. finds, using the GUROBI otpimizer (see \code{\link[gurobi]{gurobi}}). This partition is a global maximum of TotDiffVal (or TotDiffVal1) for any 2-partitions of the dataset.
+#' @details Given a phytosociological table `m` (rows corresponding to taxa and columns corresponding to relevés) this function finds a 2-partition (a
+#' partition in two groups) that maximizes TDV, using the GUROBI otpimizer (see \code{\link[gurobi]{gurobi}}).
+#' When successful, this partition is a global maximum of TDV for any 2-partitions of the columns on `m`.
 #'
-#' For medium-sized matrices the computation time might became prohibitive, thus the use of a time limit (`TimeLimit`) is very advisable.
+#' See \code{\link{tdv}} for an explanation on the Total Differential Value of a phytosociological table.
 #'
-#' @return A `list` with the following components:
+#' The function implements two different mixed linear programming formulations of the problem. The formulations differ as one is independent of the size
+#' of the obtained groups (t-independent), while the other formulation fixes the size of the obtained groups (t-dependent). The t-dependent formulation is
+#' implemented to run GUROBI as many times as necessary to cover all possible group sizes; this approach can result in faster total computation time.
+#'
+#' For medium-sized matrices the computation time might become already prohibitive, thus the use of a time limit (`TimeLimit`) is advisable.
+#'
+#' @return For `formulation = "t-dependent"`, a `list` with the following components:
 #'
 #' \describe{
-#'   \item{par}{A `vector` with the 2-partition that maximizes TotDiffVal (or TotDiffVal1). A global maximum.}
-#'   \item{objval}{A `numeric` with the maximum TotDiffVal (or TotDiffVal1) found.}
+#'   \item{status.runs}{A `character` with GUROBI output status for all the runs.}
+#'   \item{objval}{A `numeric` with the maximum TDV found by GUROBI.}
+#'   \item{par}{A `vector` with the 2-partition corresponding to the the maximum TDV found by GUROBI.}
+#' }
+#'
+#' For `formulation = "t-independent"`, a `list` with the following components:
+#'
+#' \describe{
+#'   \item{status}{A `character` with GUROBI output status.}
+#'   \item{objval}{A `numeric` with the maximum TDV found by GUROBI.}
+#'   \item{par}{A `vector` with the 2-partition corresponding to the the maximum TDV found by GUROBI.}
 #' }
 #'
 #' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
 #' @export
 #'
-####
-#### GUROBI_k2_optim_tdv
-####
-
-GUROBI_k2_optim_tdv <- function(m, formulation = c("t-independent", "t-dependent"), index = "TotDiffVal1", TimeLimit = Inf) {
+GUROBI_k2_optim_tdv <- function(m, formulation = "t-dependent", TimeLimit = 5) {
   n <- ncol(m)
   ns <- nrow(m)
   alphai <- rowSums(m) #number of ones in each row
@@ -61,9 +73,9 @@ GUROBI_k2_optim_tdv <- function(m, formulation = c("t-independent", "t-dependent
     }
     #return(list(objval_1 = res_objval_1, par_1 = res_par_1))
     max.sol <- which.max(res_objval_1)
-    return(list(status.all = res_status_1, status.max = res_status_1[[max.sol]], par = res_par_1[[max.sol]], objval = res_objval_1[[max.sol]]))
+    return(list(status.runs = res_status_1, par = res_par_1[[max.sol]], objval = res_objval_1[[max.sol]]))
   }
-  stop("In GUROBI_k2_optim_tdv, formulation must be 't-independent' or 't-dependent'.")
+  stop('In GUROBI_k2_optim_tdv, formulation must be "t-independent" or "t-dependent".')
 }
 
 ####
@@ -73,12 +85,11 @@ GUROBI_k2_optim_tdv <- function(m, formulation = c("t-independent", "t-dependent
 #Function to prepare all necessary objects to pass to Gurobi (t dependent) solver from a binary table (e.g. a binary phytosociological table)
 
 #table 		a binary matrix
-#t			 	the number of groups
+#t			 	the size of one of the groups
 
 optim_tdv_gurobi_td <- function (table, t, n, alphai) {
 
   m <- nrow(table) #i index
-  #n <- ncol(table) #j index #this is now given as a function parameter
 
   #number of lines for each restriction
   num.restr_1 <- 1
@@ -154,7 +165,6 @@ optim_tdv_gurobi_td <- function (table, t, n, alphai) {
 
 optim_tdv_gurobi_ti <- function (table, n, alphai) {
   m <- nrow(table) #i index
-  #n <- ncol(table) #j index #this is now given as a function parameter
 
   #rows of restrictions matrix
   n.restr1 <- 1					#sum x_j >= 1
@@ -163,17 +173,15 @@ optim_tdv_gurobi_ti <- function (table, n, alphai) {
   n.restr4 <- n.restr3			#x_{j} - G2_{i} ≥ 0 #for a_i_j = 1
   n.restr5 <- n*m				#Y1_{i} - Z1_{ij} >= 0
   n.restr6 <- n.restr5			#x_{j} - Z1_{ij} >= 0
-  #n.restr7 <- n.restr5		#-1/(n-1)x_{j} + Z1_{ij} >= 0
+  #restriction 7 was abandoned
   n.restr8 <- n.restr5			#x_{j} + Y1_{i} - Z1_{ij} <= 1
   n.restr9 <- m					#alpha_{i}*G1_{i} - sum_{j}(Z1_{i,j}) = 0
   n.restr10 <- n.restr5		#Y2_{i} - Z2_{ij} >= 0
   n.restr11 <- n.restr5		#x_{j} - Z2_{ij} >= 0
-  #n.restr11 <- n.restr5		#x_{j} + Z2_{ij} <= 1
-  #n.restr12 <- n.restr5		#-1/(n-1)x_{j} + Z2_{ij} >= 0
+  #restriction 12 was abandoned
   n.restr13 <- n.restr5		#x_{j} + Y2_{i} - Z2_{ij} <= 1
   n.restr14 <- m					#alpha_{i}*G2_{i} - n * Y2_{i} + sum_{j}(Z2_{i,j}) = 0
 
-  #total.rest.rows <- 2 * n.restr1 + 2 * n.restr3 + 8 * n.restr5 + 2 * m
   total.rest.rows <- 2 * n.restr1 + 2 * n.restr3 + 6 * n.restr5 + 2 * m
 
   #columns of  restrictions matrix
@@ -254,19 +262,6 @@ optim_tdv_gurobi_ti <- function (table, n, alphai) {
     }
   }
 
-  # #RESTRICTION 7
-  # #-1/(n-1)x_{j} + Z1_{ij} >= 0
-  # coef_r7 <- -1/(n-1)
-  # for (i in 1:m) {
-  # for (j in 1:n) {
-  # nlinha <- nlinha + 1
-  # mat[nlinha, c(
-  # j,
-  # col_ini_Z1 + j + n * (i - 1)
-  # )] <- c(coef_r7, 1)
-  # }
-  # }
-
   #RESTRICTION 8
   #x_{j} + Y1_{i} - Z1_{ij} <= 1
   for (i in 1:m) {
@@ -315,19 +310,6 @@ optim_tdv_gurobi_ti <- function (table, n, alphai) {
     }
   }
 
-  # #RESTRICTION 12
-  # #-1/(n-1)x_{j} + Z2_{ij} >= 0
-  # coef_r12 <- -1/(n-1)
-  # for (i in 1:m) {
-  # for (j in 1:n) {
-  # nlinha <- nlinha + 1
-  # mat[nlinha, c(
-  # j,
-  # col_ini_Z2 + j + n * (i - 1)
-  # )] <- c(coef_r12, 1)
-  # }
-  # }
-
   #RESTRICTION 13
   #x_{j} + Y2_{i} - Z2_{ij} <= 1
   for (i in 1:m) {
@@ -349,41 +331,6 @@ optim_tdv_gurobi_ti <- function (table, n, alphai) {
     mat[nlinha, (col_ini_Z2 + 1 + n * (i - 1)):(col_ini_Z2 + n + n * (i - 1))] <- 1
   }
 
-
-  # #rows of restrictions matrix
-  # n.restr1 <- 1			#sum x_j >= 1
-  # n.restr2 <- n.restr1		#sum x_j <= n-1
-  # n.restr3 <- sum(table)	#x_{j} + G1_{i} ≤ 1 #for a_i_j = 1
-  # n.restr4 <- n.restr3		#x_{j} - G2_{i} ≥ 0 #for a_i_j = 1
-  # n.restr5 <- n*m			#Y1_{i} - Z1_{ij} >= 0
-  # n.restr6 <- n.restr5		#x_{j} - Z1_{ij} >= 0
-  # n.restr7 <- n.restr5		#-1/(n-1)x_{j} + Z1_{ij} >= 0
-  # n.restr8 <- n.restr5		#x_{j} + Y1_{i} - Z1_{ij} <= 1
-  # n.restr9 <- m			#alpha_{i}*G1_{i} - sum_{j}(Z1_{i,j}) = 0
-  # n.restr10 <- n.restr5		#Y2_{i} - Z2_{ij} >= 0
-  # n.restr11 <- n.restr5		#x_{j} - Z2_{ij} >= 0
-  # n.restr12 <- n.restr5		#-1/(n-1)x_{j} + Z2_{ij} >= 0
-  # n.restr13 <- n.restr5		#x_{j} + Y2_{i} - Z2_{ij} <= 1
-  # n.restr14 <- m			#alpha_{i}*G2_{i} - n * Y2_{i} + sum_{j}(Z2_{i,j}) = 0
-
-
-  # #right hand side vector
-  # rhs <- rep(0, total.rest.rows)
-  # rhs[n.restr1] <- 1
-  # rhs[n.restr1 + n.restr2] <- n - 1
-  # rhs[n.restr1 + n.restr2 + (1:n.restr3)] <- 1
-  # rhs[n.restr1 + n.restr2 + n.restr3 + (1:n.restr4)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + (1:n.restr5)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + (1:n.restr6)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + (1:n.restr7)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + (1:n.restr8)] <- 1
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + (1:n.restr9)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + n.restr9 + (1:n.restr10)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + n.restr9 + n.restr10 + (1:n.restr11)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + n.restr9 + n.restr10 + n.restr11 + (1:n.restr12)] <- 0
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + n.restr9 + n.restr10 + n.restr11 + n.restr12 + (1:n.restr13)] <- 1
-  # rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr7 + n.restr8 + n.restr9 + n.restr10 + n.restr11 + n.restr12 + n.restr13 + (1:n.restr14)] <- 0
-
   #right hand side vector
   rhs <- rep(0, total.rest.rows)
   rhs[n.restr1] <- 1
@@ -396,24 +343,8 @@ optim_tdv_gurobi_ti <- function (table, n, alphai) {
   rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + (1:n.restr9)] <- 0
   rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + n.restr9 + (1:n.restr10)] <- 0
   rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + n.restr9 + n.restr10 + (1:n.restr11)] <- 0
-  #rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + n.restr9 + n.restr10 + (1:n.restr11)] <- 1
   rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + n.restr9 + n.restr10 + n.restr11 + (1:n.restr13)] <- 1
   rhs[n.restr1 + n.restr2 + n.restr3 + n.restr4 + n.restr5 + n.restr6 + n.restr8 + n.restr9 + n.restr10 + n.restr11 + n.restr13 + (1:n.restr14)] <- 0
-
-
-
-  # #directions vector/sense
-  # sense <- c(
-  # rep(">=", n.restr1),
-  # rep("<=", n.restr2),
-  # rep("<=", n.restr3),
-  # rep(">=", n.restr4 + n.restr5 + n.restr6 + n.restr7),
-  # rep("<=", n.restr8),
-  # rep("=", n.restr9),
-  # rep(">=", n.restr10 + n.restr11 + n.restr12),
-  # rep("<=", n.restr13),
-  # rep("=", n.restr14)
-  # )
 
   #directions vector/sense
   sense <- c(

@@ -2,40 +2,104 @@
 % Please edit documentation in R/tdv.R
 \name{tdv}
 \alias{tdv}
-\title{The total differential value of a phytosociological table}
+\title{The Total Differential Value of a phytosociological table}
 \usage{
-tdv(m, p, index = "TotDiffVal", output.type = "normal")
+tdv(m, p, output.type = "normal")
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
-\item{p}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).}
+\item{p}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of \code{m}, ascribing each relevé to one of the k groups).}
 
-\item{index}{A \code{character} selecting which index is calculated: "TotDiffVal", "TotDiffVal1" or "both". If \code{output.type = "fast"}, "both" can not be selected.}
-
-\item{output.type}{A \code{character}, determining the amount of information returned by the function and also pre-validations (defaults to "normal").}
+\item{output.type}{A \code{character}, determining the amount of information returned by the function and also the amount of pre-validations. Possible values are "normal" (the default), "fast" and "full".}
 }
 \value{
 If \code{output.type} = "normal" (the default) pre-validations are done and a \code{list} is returned, with the following components:
 
 \describe{
-\item{arf}{A \code{matrix} with the adjusted relative frequency (a/b/e) of each taxon in each group (see http://home.isa.utl.pt/~tmh/).}
-\item{adp}{A \code{matrix} with the adjusted differential proportion (c/d/e) of each taxon in each group (see http://home.isa.utl.pt/~tmh/).}
-\item{DiffVal1}{A \code{matrix} with the DiffVal1 of each taxon (see http://home.isa.utl.pt/~tmh/).}
-\item{TotDiffVal1}{A \code{numeric} with the TotDiffVal1 of matrix \code{m} given the partition \code{p} (see http://home.isa.utl.pt/~tmh/).}
+\item{ifp}{A \code{matrix} with the \eqn{\frac{a}{b}}{a/b} values for each taxon in each group, for short called the 'inner frequency of presences'.}
+\item{ofda}{A \code{matrix} with the \eqn{\frac{c}{d}}{c/d} values for each taxon in each group, for short called the 'outer frequency of differentiating absences'.}
+\item{e}{A \code{vector} with the \eqn{e} values for each taxon, i.e. the number of groups containing that taxon.}
+\item{diffval}{A \code{matrix} with the \eqn{DiffVal} for each taxon.}
+\item{tdv}{A \code{numeric} with the TDV of matrix \verb{m,} given the partition \code{p}.}
 }
 
-If \code{output.type} = "full", some extra components are added to the output: afg, t1, t2, t3. These are intermediate matrices used in the computation of TotDiffVal (or TotDiffVal1).
+If \code{output.type} = "full", some extra components are added to the output: afg, empty.size, gct (= \eqn{e}), i.mul. These are intermediate matrices used in the computation of TDV.
 
-If \code{output.type} = "fast", only the value of the selected index is returned and no pre-validations are done.
+If \code{output.type} = "fast", only TDV is returned and no pre-validations are done.
 }
 \description{
-Calculates TotDiffVal index (or TotDiffVal1) given a phytosociological table (see http://home.isa.utl.pt/~tmh/).
+Given a phytosociological table and a partition of its columns, this function calculates the respective Total Differential Value (TDV).
 }
 \details{
-The function accepts a phytosociological table (\code{m}) and a k-partition of its columns (\code{p}), returning the respective TotDiffVal (or TotDiffVal1) index.
-TotDiffVal was proposed by Monteiro-Henriques and Bellu (2014). Monteiro-Henriques (2016) proposed TotDiffVal1, modifying the previous index slightly with the objective of ensuring the index to be bounded between 0 and 1. Yet, TotDiffVal is already bounded between 0 and 1.
-In practice, both indices are bounded between 0 and 1, but TotDiffVal1 reduces further the contribution of differential taxa present in more than one group.
+The function accepts a phytosociological table (\code{m}) and a k-partition of its columns (\code{p}), returning the corresponding TDV.
+TDV was proposed by Monteiro-Henriques and Bellu (2014). Monteiro-Henriques (2016) proposed TDV1, modifying TDV slightly with the objective of ensuring a value from 0 to 1. Yet, TDV is always within that range.
+In practice, both TDV and TDV1 have 0 as possible minimum value and 1 as possible maximum value, but TDV1 reduces further the contribution of differential taxa present in more than one group. TDV is then implemented here, for parsimony.
+
+TDV is calculated using the \eqn{DiffVal} index for each (and all) of the taxa present in a tabulated phytosociological table (also called sorted table).
+\eqn{DiffVal} index aims at characterizing how well a taxon works as a differential taxon in a tabulated phytosociological table (for more information on differential taxa
+see Mueller-Dombois & Ellenberg, 1974).
+An archetypal differential taxon of a certain group \eqn{g} of the partition \eqn{p} is the one present in all relevés of group \eqn{g}, and absent from all the other
+groups of that partition. Therefore, \eqn{DiffVal} has two components, an inner one (\eqn{\frac{a}{b}}{a/b}), which measures the presence of the taxon inside each of the groups,
+and an outer one (\eqn{\frac{c}{d}}{c/d}), which measures the relevant absences of the taxon outside of each of the groups. Specifically, given a partition \eqn{p} with \eqn{k} groups, \eqn{DiffVal} is
+calculated for each taxon \eqn{s} as:
+
+\deqn{DiffVal_{s,p} = \frac{1}{e}\sum_{g=1}^k{\frac{a}{b}\frac{c}{d}}}{DiffVal of taxon s, given the partition p = the summation of [(a/b)*(c/d)]/e, obtained for each group g, from g = 1 to k}
+where,
+
+\itemize{
+\item{\eqn{a}, is the total number of presences of taxon \eqn{s} within group \eqn{g}}
+\item{\eqn{b}, is the total number of relevés of group \eqn{g}}
+\item{\eqn{c}, is the total number of differentiating absences of taxon \eqn{s}, i.e. absences coming from the groups other than \eqn{g} from which the taxon \eqn{s} is completely absent}
+\item{\eqn{d}, is the total number of relevés of all groups but \eqn{g} (i.e., the total number of relevés in the table - \eqn{b})}
+\item{\eqn{e}, is the total number of groups in which the taxon \eqn{s} occurs at least once}
+}
+
+Therefore, for each taxon \eqn{s} and for each group \eqn{g}, the \eqn{DiffVal} index evaluates:
+\itemize{
+\item{\eqn{\frac{a}{b}}{a/b}, i.e., the frequency of the presences of taxon \eqn{s}, relative to the size of group \eqn{g}; commonly called 'relative frequency.' \eqn{\frac{a}{b}}{a/b} is only 1 if and only if taxon \eqn{s} occures in all the relevés of group \eqn{g}.}
+\item{\eqn{\frac{c}{d}}{c/d}, i.e., the frequency of the differentiating absences of taxon \eqn{s} outside group \eqn{g}, relative to the sum of sizes of all groups but \eqn{g}. \emph{Nota bene}: absences in \eqn{c} are counted outside the group \eqn{g} but only in the groups from which taxon \eqn{s} is completely absent (these are the relevant absences, which produce differentiation among groups); in practice \eqn{c} corresponds to the sum of the sizes of all groups other than \eqn{g} that are empty. \eqn{\frac{c}{d}}{c/d} is 1 if and only if the taxon \eqn{s} is absent from all groups but \eqn{g}.}
+}
+
+Finally, \eqn{\frac{1}{e}}{1/e} ensures that \eqn{DiffVal} is a value from 0 to 1.
+
+The Total Differential Value (TDV or \eqn{TotDiffVal}) of a phytosociological table \eqn{m} tabulated/sorted by the partition \eqn{p} is:
+
+\deqn{TDV_{m,p} = \frac{1}{n}\sum_{i=1}^n{Diffval_{i,p}}}{TDV of table m, given the partition p = the summation of the DiffVal of all taxa in the table, divided by n}
+where,
+
+\itemize{
+\item{\eqn{n}, is the number of taxa in table \eqn{m}}
+}
+
+The division by the number of taxa present in the \code{m} ensures that TDV remains in the [0,1] interval (as \eqn{DiffVal} is also in the same interval).
+}
+\examples{
+
+#getting a phytosociological matrix from Portela-Pereira et al. (2021)
+data(taxus_bin)
+#creating a group partition, as presented in Portela-Pereira et al.
+groups <- rep(c(1,2,3), c(3,11,19))
+
+#removing taxa occurring in only one relevé in order to
+#reproduce exactly the example in Portela-Pereira et al.
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+
+#calculating TDV
+result <- tdv(taxus_bin_wmt, groups)
+
+#this is the TDV
+result$tdv
+#this is TDV1, reproducing exactly the value from Portela-Pereira et al.
+sum(result$diffval/result$e)/nrow(taxus_bin_wmt)
+
+}
+\references{
+Monteiro-Henriques T. & Bellu A. 2014. \emph{An optimization approach to the production of differentiated tables based on new differentiability measures}. 23rd EVS European Vegetation Survey. Presented orally. Ljubljana, Slovenia.
+
+Monteiro-Henriques T. 2016. \emph{A bunch of R functions to assist phytosociological tabulation}. 25th Meeting of European Vegetation Survey. Presented in poster. Rome. Italy.
+
+Mueller-Dombois D. & Ellenberg H. 1974. \emph{Aims and Methods of Vegetation Ecology}. New York: John Wiley & Sons.
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
