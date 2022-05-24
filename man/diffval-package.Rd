@@ -4,12 +4,22 @@
 \name{diffval-package}
 \alias{diffval}
 \alias{diffval-package}
-\title{diffval: Using the DiffVal Index to Classify Vegetation Data}
+\title{diffval: Using the Differential Value to Classify Vegetation Data}
 \description{
-This package contains functions to explore vegetation data aiming at obtaining classifications based on differential taxa.
+Obtaining classifications of vegetation data based on differential taxa, as in the traditional phytosociological approach.
 }
 \author{
 \strong{Maintainer}: Tiago Monteiro-Henriques \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
+
+Authors:
+\itemize{
+  \item Jorge Orestes Cerdeira \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Fundação para a Ciência e a Tecnologia, Portugal \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID}) [funder]
+}
 
 }
 \keyword{internal}

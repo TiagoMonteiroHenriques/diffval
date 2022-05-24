@@ -1,25 +1,22 @@
 Package: diffval
-Title: Using the DiffVal Index to Classify Vegetation Data
+Title: Using the Differential Value to Classify Vegetation Data
 Version: 0.0.0.9014
 Authors@R: 
-    person(given = "Tiago",
-           family = "Monteiro-Henriques",
-           role = c("aut", "cre"),
+    person(given = list("Tiago", "Jorge Orestes", "Fundação para a Ciência e a Tecnologia, Portugal"),
+           family = list("Monteiro-Henriques", "Cerdeira", NULL),
+           role = list(c("aut", "cre"), "aut", "fnd"),
            email = "tiagomonteirohenriques@gmail.com",
            comment = c(ORCID = "https://orcid.org/0000-0002-4206-0699"))
-Description: This package contains functions to explore vegetation data aiming at obtaining classifications based on differential taxa.
+Description: Obtaining classifications of vegetation data based on differential taxa, as in the traditional phytosociological approach.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Imports: 
-    graphics,
-    grDevices,
-    gurobi,
-    maniphyt (>= 0.0.0.9001),
-    stats
-Remotes: 
-    gitlab::point-veg/maniphyt
 Depends: 
     R (>= 2.10)
+Enhances: 
+    gurobi
+Imports: 
+    graphics,
+    stats
