@@ -6,19 +6,27 @@
 \alias{diffval-package}
 \title{diffval: Using the Differential Value to Classify Vegetation Data}
 \description{
-Obtaining classifications of vegetation data based on differential taxa, as in the traditional phytosociological approach.
+Find, visualize and explore patterns of differential taxa in a phytosociological table (vegetation data), using the Differential Value (DiffVal) index. The patterns are searched through mathematical optimization algorithms, maximizing the sum of the DiffVal index for all the taxa in the table, i.e. the Total Differential Value (TotDiffVal or TDV). Ultimately, the TDV optimization aims at obtaining classifications of vegetation data based on differential taxa, i.e. taxa that are exclusive of a certain group (or exclusive of some of the groups), as in the traditional phytosociological (or geobotanical) approach.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://gitlab.com/point-veg/diffval}
+  \item Report bugs at \url{https://gitlab.com/point-veg/diffval/-/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Tiago Monteiro-Henriques \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
 
 Authors:
 \itemize{
-  \item Jorge Orestes Cerdeira \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
+  \item Jorge Orestes Cerdeira (\href{https://orcid.org/0000-0002-3814-7660}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Fundação para a Ciência e a Tecnologia, Portugal \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID}) [funder]
+  \item Fundação para a Ciência e a Tecnologia, Portugal [funder]
 }
 
 }

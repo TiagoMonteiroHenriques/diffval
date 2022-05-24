@@ -1,22 +1,34 @@
 Package: diffval
 Title: Using the Differential Value to Classify Vegetation Data
 Version: 0.0.0.9015
-Authors@R: 
-    person(given = list("Tiago", "Jorge Orestes", "Fundação para a Ciência e a Tecnologia, Portugal"),
-           family = list("Monteiro-Henriques", "Cerdeira", NULL),
-           role = list(c("aut", "cre"), "aut", "fnd"),
-           email = "tiagomonteirohenriques@gmail.com",
-           comment = c(ORCID = "https://orcid.org/0000-0002-4206-0699"))
-Description: Obtaining classifications of vegetation data based on differential taxa, as in the traditional phytosociological approach.
+Authors@R: c(
+    person("Tiago", "Monteiro-Henriques", , "tiagomonteirohenriques@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0002-4206-0699")),
+    person("Jorge Orestes", "Cerdeira", role = "aut",
+           comment = c(ORCID = "https://orcid.org/0000-0002-3814-7660")),
+    person("Fundação para a Ciência e a Tecnologia, Portugal", role = "fnd")
+  )
+Description: Find, visualize and explore patterns of differential taxa in
+    a phytosociological table (vegetation data), using the Differential
+    Value (DiffVal) index. The patterns are searched through mathematical
+    optimization algorithms, maximizing the sum of the DiffVal index for
+    all the taxa in the table, i.e. the Total Differential Value
+    (TotDiffVal or TDV).  Ultimately, the TDV optimization aims at
+    obtaining classifications of vegetation data based on differential
+    taxa, i.e. taxa that are exclusive of a certain group (or exclusive of
+    some of the groups), as in the traditional phytosociological (or
+    geobotanical) approach.
 License: GPL (>= 3)
+URL: https://gitlab.com/point-veg/diffval
+BugReports: https://gitlab.com/point-veg/diffval/-/issues
+Depends: 
+    R (>= 2.10)
+Imports: 
+    graphics,
+    stats
+Enhances: 
+    gurobi
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Depends: 
-    R (>= 2.10)
-Enhances: 
-    gurobi
-Imports: 
-    graphics,
-    stats
