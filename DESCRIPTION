@@ -1,6 +1,6 @@
 Package: diffval
 Title: Using the Differential Value to Classify Vegetation Data
-Version: 0.0.0.9014
+Version: 0.0.0.9015
 Authors@R: 
     person(given = list("Tiago", "Jorge Orestes", "Fundação para a Ciência e a Tecnologia, Portugal"),
            family = list("Monteiro-Henriques", "Cerdeira", NULL),
