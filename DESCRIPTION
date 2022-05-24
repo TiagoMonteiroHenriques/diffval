@@ -1,6 +1,6 @@
 Package: diffval
 Title: Using the Differential Value to Classify Vegetation Data
-Version: 0.0.0.9015
+Version: 0.0.0.9016
 Authors@R: c(
     person("Tiago", "Monteiro-Henriques", , "tiagomonteirohenriques@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-4206-0699")),
