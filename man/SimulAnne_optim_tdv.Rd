@@ -2,14 +2,14 @@
 % Please edit documentation in R/SimulAnne_optim_tdv.R
 \name{SimulAnne_optim_tdv}
 \alias{SimulAnne_optim_tdv}
-\title{Total Differential Value optimization using a simulated annealing (and GRASP) algorithm(s)}
+\title{Total Differential Value optimization using a Simulated Annealing (and GRASP) algorithm(s)}
 \usage{
 SimulAnne_optim_tdv(
-  m,
+  m.bin,
   k,
   p.initial = NULL,
   n.runs = 10,
-  n.sol = 5,
+  n.sol = 1,
   T_inic = 0.3,
   T_final = 1e-06,
   alpha = 0.05,
@@ -20,15 +20,15 @@ SimulAnne_optim_tdv(
 )
 }
 \arguments{
-\item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
+\item{m.bin}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
 
 \item{k}{A \code{numeric} giving the number of desired groups.}
 
-\item{p.initial}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a \code{k}-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups), to be used as initial partition in the simulated annealing. For a random partition use \code{p.initial = "random"}. This argument is ignored if \code{use.GRASP = TRUE}.}
+\item{p.initial}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a \code{k}-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of \code{m.bin}, ascribing each relevé to one of the k groups), to be used as initial partition in the Simulated Annealing. For a random partition use \code{p.initial = "random"}. This argument is ignored if \code{use.GRASP = TRUE}.}
 
 \item{n.runs}{A \code{numeric} giving the number of runs. Defaults to 10.}
 
-\item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output (only used if \code{full.output} is \code{FALSE}; if \code{full.output} is \code{TRUE} all runs will produce an output). Defaults to 5.}
+\item{n.sol}{A \code{numeric}, giving the number of best solutions to keep in the final output (only used if \code{full.output} is \code{FALSE}; if \code{full.output} is \code{TRUE} all runs will produce an output). Defaults to 1.}
 
 \item{T_inic}{A \code{numeric} giving the initial temperature. Must be greater than 0 and maximum admitted value is 1. Defaults to 0.3.}
 
@@ -38,9 +38,9 @@ SimulAnne_optim_tdv(
 
 \item{n.iter}{A \code{numeric} giving the initial temperature. Defaults to 1000}
 
-\item{use.GRASP}{A \code{logical}. Defaults to \code{TRUE}. IF \code{TRUE}, a GRASP is used to obtain the initial partitions for the simulated annealing. If \code{FALSE} the user should provide an initial partition or use or use \code{p.initial = "random"} for a random one.}
+\item{use.GRASP}{A \code{logical}. Defaults to \code{TRUE}. IF \code{TRUE}, a GRASP is used to obtain the initial partitions for the Simulated Annealing. If \code{FALSE} the user should provide an initial partition or use or use \code{p.initial = "random"} for a random one.}
 
-\item{thr}{A \code{numeric} giving a threshold value (from 0 to 1 ) with the probability used to compute the sample quantile, in order to get the best \code{m} columns from which to select one to be include in the GRASP solution (in each step of the procedure). Only needed if \code{use.GRASP} is \code{TRUE}.}
+\item{thr}{A \code{numeric} giving a threshold value (from 0 to 1 ) with the probability used to compute the sample quantile, in order to get the best \code{m.bin} columns from which to select one to be include in the GRASP solution (in each step of the procedure). Only needed if \code{use.GRASP} is \code{TRUE}.}
 
 \item{full.output}{A \code{logical}. Defaults to \code{FALSE}. IF \code{TRUE} extra information is presented in the output. See Value.}
 }
@@ -50,14 +50,14 @@ If \code{full.output = FALSE} (the default), a \code{list} with the following co
 \describe{
 \item{GRASP}{A \code{list} with at most \code{n.sol} components, each one containing also a \code{list} with two components:
 \itemize{
-\item{'par', containing the partition obtained by GRASP;}
-\item{'tdv', with the value of TDV of the above partition.}
+\item{'par', a \code{vector} with the partition of highest TDV obtained by GRASP;}
+\item{'tdv', a \code{numeric} with the TDV of \code{par}.}
 }
 }
 \item{SANN}{A \code{list} with at most \code{n.sol} components, each one containing also a \code{list} with two components:
 \itemize{
-\item{'par', containing the partition with highest value of TDV, obtained by the SANN algorithm;}
-\item{'tdv', with the value of TDV of the above partition.}
+\item{'par', a \code{vector} with the partition of highest TDV obtained by the (GRASP +) SANN algorithm(s);}
+\item{'tdv', a \code{numeric} with the TDV of \code{par}.}
 }
 }
 }
@@ -67,35 +67,35 @@ If \code{full.output = TRUE}, a \code{list} with the following components (the G
 \describe{
 \item{GRASP}{A \code{list} with \code{n.runs} components, each one containing also a \code{list} with two components:
 \itemize{
-\item{'par', containing the partition obtained by GRASP;}
-\item{'tdv', with the value of TDV of the above partition.}
+\item{'par', a \code{vector} with the partition of highest TDV obtained by GRASP;}
+\item{'tdv', a \code{numeric} with the TDV of \code{par}.}
 }
 }
 \item{SANN}{A \code{list} with \code{n.runs} components, each one containing also a \code{list} with six components:
 \itemize{
-\item{'par', containing the partition with highest value of TDV, obtained by the SANN algorithm;}
-\item{'tdv', with the value of TDV of the above partition;}
 \item{'current.tdv', a \code{vector} of length \code{n.iter} with the current TDV of each SANN iteration;}
 \item{'alternative.tdv', a \code{vector} of length \code{n.iter} with the alternative TDV used in each SANN iteration;}
 \item{'probability', a \code{vector} of length \code{n.iter} with the probability used in each SANN iteration;}
 \item{'temperature', a \code{vector} of length \code{n.iter} with the temperature of each SANN iteration.}
+\item{'par', a \code{vector} with the partition of highest TDV obtained by the (GRASP +) SANN algorithm(s);}
+\item{'tdv', a \code{numeric} with the TDV of \code{par};}
 }
 }
 }
 }
 \description{
 This function searches for \code{k}-partitions of the columns of a given matrix (i.e. a partition of the columns in \code{k} groups), optimizing
-the Total Differential Value (TDV) using a stochastic global optimization method called simulated annealing (SANN) algorithm. Optionally, a Greedy
+the Total Differential Value (TDV) using a stochastic global optimization method called Simulated Annealing (SANN) algorithm. Optionally, a Greedy
 Randomized Adaptive Search Procedure (GRASP) can be used to find a initial partition (seed) to be passed to the SANN algorithm.
 }
 \details{
-Given a phytosociological table (\code{m}, with rows corresponding to taxa and columns corresponding to relevés) this function searches
+Given a phytosociological table (\code{m.bin}, with rows corresponding to taxa and columns corresponding to relevés) this function searches
 for a k-partition (\code{k}, defined by the user) optimizing TDV, i.e. searches, using a SANN algorithm (optionally working upon GRASP solutions), for
 the global maximum of TDV (by rearranging the relevés into \code{k} groups).
 
 This function uses two main algorithms:
 \enumerate{
-\item An optional GRASP, which is used to obtain initial solutions (partitions of \code{m}) using function \code{\link{GRASP_partition_tdv}}. Such initial
+\item An optional GRASP, which is used to obtain initial solutions (partitions of \code{m.bin}) using function \code{\link{GRASP_partition_tdv}}. Such initial
 solutions are then submitted to the SANN algorithm.
 \item The (main) SANN algorithm, which is used to search for the global maximum of TDV. The initial partition for each run of SANN can be a partition
 obtained from GRASP (if \code{use.GRASP = TRUE}) or, (if \code{use.GRASP = FALSE}), a partition given by the user (using \code{p.initial}) or a random partition
@@ -117,6 +117,44 @@ behaviour of \code{current.tdv} and check if convergence fails.
 Generally, convergence failure can be spotted when final SANN TDV values are similar to the initial \code{current.tdv}, specially when coming
 from random partitions.
 In such cases, as a rule of thumb, it is advisable to decrease \code{T_final}.
+}
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+
+#removing taxa occurring in only one relevé, trying to
+#reproduce the example in the original article of the data set
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+
+#obtaining a partition that maximizes TDV using the Simulated Annealing
+#algorithm
+result <- SimulAnne_optim_tdv(taxus_bin_wmt, k = 3, p.initial = "random",
+  n.runs = 5, n.sol = 5, use.GRASP = FALSE, full.output = TRUE)
+
+#inspect the result
+#the TDV of each run
+sapply(result[["SANN"]], function (x) x$tdv)
+#the best partition that was found (i.e. with highest TDV)
+result[["SANN"]][[1]]$par
+
+#a TDV of 0.1958471 indicates you are probably reproducing the three
+#groups (Estrela, Gerês and Galicia) from the original article;
+#a solution with 0.2005789 might also occur, but note that one group
+#has only two elements; for now, min.g.size is not implemented in function
+#SimulAnne_optim_tdv as it is in the function HillClimb_optim_tdv.
+
+#inspect how the optimization progressed (should increase towards the right)
+plot(result[["SANN"]][[1]]$current.tdv, type = "l", xlab = "Run number",
+  ylab = "TDV of the currently accepted solution")
+for (run in 2:length(result[["SANN"]])) {
+lines(result[["SANN"]][[run]]$current.tdv)
+}
+
+#plot the sorted (or tabulated) phytosociological table, using the best
+#partition that was found
+tabul <- tabulation(taxus_bin_wmt, result[["SANN"]][[1]]$par, rownames(taxus_bin_wmt), "normal")
+
 }
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

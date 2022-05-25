@@ -17,4 +17,9 @@ taxus_bin
 \description{
 A binary phytosociological table containing relevés of Taxus baccata forests, in the northwest of the Iberian Peninsula.
 }
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+}
 \keyword{datasets}

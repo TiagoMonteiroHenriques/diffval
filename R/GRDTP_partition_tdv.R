@@ -24,6 +24,14 @@
 #'
 #' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
+#' @examples
+#'
+#' #getting the Taxus baccata forests data set
+#' data(taxus_bin)
+#'
+#' #obtaining a partiton based on a Greedy-type algorithm
+#' GRDTP_partition_tdv(taxus_bin, 3)
+#'
 #' @export
 #'
 GRDTP_partition_tdv <- function(m, k, verify = TRUE) {

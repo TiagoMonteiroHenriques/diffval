@@ -32,6 +32,15 @@ Being a simplified version of the Greedy algorithm, it is expected to perform fa
 returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{GRASP_partition_tdv}}.
 See \code{\link{tdv}} for an explanation on the TDV of a phytosociological table.
 }
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+
+#obtaining a partiton based on a Greedy-type algorithm
+GRDTP_partition_tdv(taxus_bin, 3)
+
+}
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
 }

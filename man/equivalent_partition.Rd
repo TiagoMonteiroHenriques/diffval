@@ -21,6 +21,19 @@ Checks if two k-partitions are equivalent.
 The function checks if the two given k-partitions are equivalent, i.e. if their groupings are the same (useful
 in the case that the partitions have a divergent group numbering).
 }
+\examples{
+
+#creating three 2-partitions
+par1 <- c(1,1,2,2,2)
+par2 <- c(2,2,1,1,1)
+par3 <- c(1,1,1,2,2)
+
+#Are they equivalent?
+equivalent_partition(par1, par2) #TRUE
+equivalent_partition(par1, par3) #FALSE
+equivalent_partition(par2, par3) #FALSE
+
+}
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
 }

@@ -14,6 +14,18 @@
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
+#' @examples
+#'
+#' #creating three 2-partitions
+#' par1 <- c(1,1,2,2,2)
+#' par2 <- c(2,2,1,1,1)
+#' par3 <- c(1,1,1,2,2)
+#'
+#' #Are they equivalent?
+#' equivalent_partition(par1, par2) #TRUE
+#' equivalent_partition(par1, par3) #FALSE
+#' equivalent_partition(par2, par3) #FALSE
+#'
 #' @export
 #'
 equivalent_partition <- function(p1,p2) {

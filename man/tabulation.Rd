@@ -27,16 +27,43 @@ If \code{plot.im} = \code{NULL}, a \code{list} with the following components:
 \item{condensed}{The matrix used to create the "condensed" image.}
 }
 
-If \code{plot.im} = "normal", it returns the above list and, additionally, plots an image of the tabulated matrix.
-If \code{plot.im} = "condensed", it returns the above list and, additionally, plots an image of the tabulated matrix, but presenting the sets of differential taxa as solid coloured blocks.
+If \code{plot.im} = "normal", it returns the above list and, additionally, plots
+an image of the tabulated matrix.
+If \code{plot.im} = "condensed", it returns the above list and, additionally,
+plots an image of the tabulated matrix, but presenting the sets of
+differential taxa as solid coloured blocks of equal width.
 }
 \description{
-This function reorders a phytosociological table rows based on, firstly, the number of groups in which a taxon occurs in, and secondly,
-on the within-group relative frequency. The columns are reordered using the given k-partition \code{p}.
+This function reorders a phytosociological table rows using,
+firstly, the increasing number of groups in which a taxon occurs, and
+secondly, the decreasing sum of the inner frequency of presences of each
+taxon (see \code{\link{tdv}}).
+The columns are also reordered, simply using the increasing number of the
+respective group membership.
 }
 \details{
 The function accepts a phytosociological table (\code{m}), a k-partition of its columns (\code{p}) and the names of the taxa (corresponding to
 the rows of \code{m}), returning a rearranged/reordered matrix (and plotting optionally).
+}
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+#creating a group partition, as presented in the original article of the data set
+groups <- rep(c(1,2,3), c(3,11,19))
+
+#removing taxa occurring in only one relevé in order to
+#reproduce exactly the example in the original article of the data set
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+
+#sorts the phytosociological table, putting exclusive taxa in the top and
+#plots an image of it
+tabul <- tabulation(taxus_bin_wmt, groups, taxa.names = rownames(taxus_bin_wmt), plot.im = "normal")
+
+#inspect the first rows and columns of the reordered phytosociological table
+tabul$tabulated[1:6, 1:10]
+
+
 }
 \author{
 Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

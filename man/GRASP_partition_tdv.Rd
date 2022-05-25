@@ -31,6 +31,15 @@ TDV of a phytosociological table.
 
 With \code{thr = 1}, the algorithm corresponds to the Greedy algorithm.
 }
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+
+#obtaining a partiton based on the GRASP algorithm
+GRASP_partition_tdv(taxus_bin, 3)
+
+}
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
 }

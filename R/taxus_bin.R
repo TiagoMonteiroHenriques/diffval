@@ -6,5 +6,9 @@
 #' to a taxon. Values in the matrix denote presences (1) and absences (0).
 #'
 #' @source Portela-Pereira E., Monteiro-Henriques T., Casas C., Forner N., Garcia-Cabral I., Fonseca J.P. & Neto C. 2021. *Teixedos no noroeste da Península Ibérica*. Finisterra 56(117): 127‐150. doi:10.18055/FINIS18102.
-
+#'
+#' @examples
+#'
+#' #getting the Taxus baccata forests data set
+#' data(taxus_bin)
 "taxus_bin"

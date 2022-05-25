@@ -75,13 +75,13 @@
 #'
 #' @examples
 #'
-#' #getting a phytosociological matrix from Portela-Pereira et al. (2021)
+#' #getting the Taxus baccata forests data set
 #' data(taxus_bin)
-#' #creating a group partition, as presented in Portela-Pereira et al.
+#' #creating a group partition, as presented in original article of the data set
 #' groups <- rep(c(1,2,3), c(3,11,19))
 #'
 #' #removing taxa occurring in only one relevé in order to
-#' #reproduce exactly the example in Portela-Pereira et al.
+#' #reproduce exactly the example in the original article of the data set
 #' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
 #'
 #' #calculating TDV
@@ -89,7 +89,7 @@
 #'
 #' #this is the TDV
 #' result$tdv
-#' #this is TDV1, reproducing exactly the value from Portela-Pereira et al.
+#' #this is TDV1, reproducing exactly the value from the original article
 #' sum(result$diffval/result$e)/nrow(taxus_bin_wmt)
 #'
 #' @export
@@ -136,7 +136,7 @@ tdv <- function (m, p, output.type = "normal") {
     return(list(ifp = t(ifp), ofda = t(ofda), e = gct, diffval = matrix(DV, ns, 1, dimnames = list(colnames(ifp), c("DiffVal"))), tdv = sum(DV) / ns))
   }
   if (output.type == "full") {
-    return(list(afg = afg, empty.size = empty.size, gct = gct, i.mul = i.mul, diffval = matrix(DV, ns, 1, dimnames = list(colnames(ifp), c("DiffVal"))), tdv = sum(DV) / ns))
+    return(list(ifp = ifp, ofda = ofda, e = gct, afg = afg, empty.size = empty.size, gct = gct, i.mul = i.mul, diffval = matrix(DV, ns, 1, dimnames = list(colnames(ifp), c("DiffVal"))), tdv = sum(DV) / ns))
   }
   stop('Argument output.type must be "fast", "normal" or "full".')
 }

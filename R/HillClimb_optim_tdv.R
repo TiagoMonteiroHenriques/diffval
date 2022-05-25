@@ -7,14 +7,15 @@
 #' @param m.bin A `matrix`, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.
 #' @param p.initial A `vector` or a `character`. A `vector` of integer numbers with the initial partition of the relevés (i.e. a vector with values from 1 to k, with length equal to the number of columns of `m.bin`, ascribing each relevé to one of the k groups). By default, `p.initial = "random"`, generates a random initial partition.
 #' @param k A `numeric`, giving the number of desired groups.
-#' @param n.starts A `numeric`, giving the number of starts to perform.
+#' @param n.runs A `numeric`, giving the number of runs to perform.
 #' @param n.sol A `numeric`, giving the number of best solutions to keep in the final output. Defaults to 1.
 #' @param maxit A `numeric` giving the number of iterations of the Hill-climbing optimization.
 #' @param min.g.size A `numeric` The minimum number of relevés that a group can contain (must be 1 or higher).
-#' @param random.first A `logical`. `FALSE` (the default), performs only Hill-climbing on the 1-neighbours; `TRUE` first, performs a Stochastic Hill-climbing on `n`-neighbours (`n` is definded by the parameter `rf.neigh.size`), and only after runs the Hill-climbing search on the 1-neighbours; see description above.
-#' @param rf.neigh.size	A `numeric`, giving the size (`n`) of the `n`-neighbour for the Stochastic Hill-climbing; only used if `random.first` = `TRUE`.
-#' @param rf.maxit A `numeric`, giving the number of iterations of the Hill-climbing optimization; only used if `random.first` = `TRUE`.
+#' @param stoch.first A `logical`. `FALSE` (the default), performs only Hill-climbing on the 1-neighbours; `TRUE` first, performs a Stochastic Hill-climbing on `n`-neighbours (`n` is definded by the parameter `stoch.neigh.size`), and only after runs the Hill-climbing search on the 1-neighbours; see description above.
+#' @param stoch.neigh.size	A `numeric`, giving the size (`n`) of the `n`-neighbour for the Stochastic Hill-climbing; only used if `stoch.first` = `TRUE`. Defaults to 1.
+#' @param stoch.maxit A `numeric`, giving the number of iterations of the Hill-climbing optimization; only used if `stoch.first` = `TRUE`. Defaults to 100.
 #' @param full.output A `logical`. If `FALSE` (the default) the best `n.sol` partitions and respective indices are returned. If `TRUE` (only available for `n.sols = 1`) the output will also contain information on the optimization steps (see below).
+#' @param verbose A `logical`. If `FALSE` nothing is printed during the runs. If `TRUE`, after each run, the run number is printed as well as and indication if the found partition is a 1-neighbour local maximum.
 #'
 #' @details Given a phytosociological table (`m.bin`, rows corresponding to taxa and columns corresponding to relevés) this function searches for
 #' a k-partition (`k` defined by the user) optimizing TDV, i.e. searches, using a Hill-climbing algorithm, for patterns of differential taxa by
@@ -27,12 +28,12 @@
 #' 1-neighbour of a given partition is another partition obtained by changing 1 relevé (of the original partition) to a different group. A n-neighbour
 #' is obtained, equivalently, ascribing n relevés to different groups.
 #'
-#' Optionally, a faster search (Stochastic Hill-climbing) can be performed in a first step (`random.first` = `TRUE`), consisting on searching for
-#' TDV improvements, by randomly selecting n-neighbours (n defined by the user with the parameter `rf.neigh.size`), accepting that neighour partition
-#' as a better solution if it improves TDV. This is repeated until a given number of maximum iterations (`rf.maxit`) is reached. Stochastic Hill-climbing
+#' Optionally, a faster search (Stochastic Hill-climbing) can be performed in a first step (`stoch.first` = `TRUE`), consisting on searching for
+#' TDV improvements, by randomly selecting n-neighbours (n defined by the user with the parameter `stoch.neigh.size`), accepting that neighour partition
+#' as a better solution if it improves TDV. This is repeated until a given number of maximum iterations (`stoch.maxit`) is reached. Stochastic Hill-climbing
 #' might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
 #'
-#' Several runs of HillClimb_optim_tdv (multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
+#' Several runs of HillClimb_optim_tdv (i.e. multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
 #' algorithm converges easily to local maxima.
 #'
 #' Trimming your table by a 'constancy' range or using the result of other cluster methodologies as input, might help finding interesting partitions.
@@ -45,28 +46,56 @@
 #'
 #' \describe{
 #'   \item{local_maximum}{A `logical` indicating if `par` is a 1-neighbour local maximum.}
-#'   \item{par}{A `vector` with the best partition found after the Hill-climbing phase.}
-#'   \item{max.tdv}{A `numeric` with the maximum TDV found in the respective run.}
+#'   \item{par}{A `vector` with the partition of highest TDV obtained by the Hill-climbing algorithm(s).}
+#'   \item{tdv}{A `numeric` with the TDV of `par`.}
 #' }
 #'
-#' If `full.output = TRUE`, a `list` with the following components:
+#' If `full.output = TRUE`, a `list` with just one component (one run only), containing also a list with the following components:
 #'
 #' \describe{
-#'   \item{res.rf}{A `matrix` with the iteration number (of the Stochastic Hill-climbing phase), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-#'   \item{par.rf}{A `vector` with the best partition found in the Stochastic Hill-climbing phase.}
-#'   \item{max.tdv.rf}{A `numeric` showing the maximum TDV found in the Stochastic Hill-climbing phase (if selected).}
-#'   \item{res}{A `matrix` with the iteration number (of the Hill-climbing), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours; a first line of zeros is being added at the beginning of the matrix, which should be removed in future.}
-#'   \item{par}{A `vector` with the best partition found after the Hill-climbing phase.}
+#'   \item{res.stoch}{A `matrix` with the iteration number (of the Stochastic Hill-climbing phase), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours.}
+#'   \item{par.stoch}{A `vector` with the best partition found in the Stochastic Hill-climbing phase.}
+#'   \item{tdv.stoch}{A `numeric` showing the maximum TDV found in the Stochastic Hill-climbing phase (if selected).}
+#'   \item{res}{A `matrix` with the iteration number (of the Hill-climbing), the maximum TDV found until that iteration, and the higher TDV among all 1-neighbours.}
 #'   \item{local_maximum}{A `logical` indicating if `par` is a 1-neighbour local maximum.}
-#'   \item{time}{The total amount of time of the run (from function \code{\link[base]{Sys.time}}).}
-#'   \item{max.tdv}{A `numeric` with the maximum TDV found in the respective run.}
+#'   \item{par}{A `vector` with the partition of highest TDV obtained by the Hill-climbing algorithm(s).}
+#'   \item{tdv}{A `numeric` with the TDV of `par`.}
 #' }
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
 #'
+#' @examples
+#'
+#' #getting the Taxus baccata forests data set
+#' data(taxus_bin)
+#'
+#' #removing taxa occurring in only one relevé in order to
+#' #try reproducing the example in the original article of the data set
+#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+#'
+#' #obtaining a partition that maximizes TDV using the Stochastic Hill-climbing
+#' #and the Hill-climbing algorithms
+#'
+#' result <- HillClimb_optim_tdv(taxus_bin_wmt, k = 3, n.runs = 7, n.sol = 2,
+#'   min.g.size = 3, stoch.first = TRUE, stoch.maxit = 500, verbose = TRUE)
+#'
+#' #inspect the result
+#' #the highest TDV found in the runs
+#' result[[1]]$tdv
+#' #if result[[1]]$tdv is 0.1958471 you are probably reproducing the three
+#' #groups (Estrela, Gerês and Galicia) from the original article; if not
+#' #try again the HillClimb_optim_tdv function (maybe increasing n.runs)
+#'
+#' #plot the sorted (or tabulated) phytosociological table
+#' tabul1 <- tabulation(taxus_bin_wmt, result[[1]]$par, rownames(taxus_bin_wmt), "normal")
+#'
+#' #plot the sorted (or tabulated) phytosociological table, also including
+#' #taxa with occurring just once in the matrix
+#' tabul2 <- tabulation(taxus_bin, result[[1]]$par, rownames(taxus_bin), "normal")
+#'
 #' @export
 #'
-HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.starts = 1, n.sol = 1, maxit = 10, min.g.size = 1, random.first = FALSE, rf.neigh.size = 1, rf.maxit = 500, full.output = FALSE) {
+HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.runs = 1, n.sol = 1, maxit = 10, min.g.size = 1, stoch.first = FALSE, stoch.neigh.size = 1, stoch.maxit = 100, full.output = FALSE, verbose = FALSE) {
   stopifnot(is.matrix(m.bin))
   mode(m.bin) <- "integer"
   if (!identical(c(0L,1L), sort(unique(as.vector(m.bin))))) {stop("Matrix m.bin should contain only 0's and 1's.")}
@@ -95,20 +124,18 @@ HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.starts = 1, n.
       stop(paste0("At least one group of the provided partition has to have more than ", mgs, " elements"))
     }
   }
-  if (n.sol > n.starts) {
-    stop("The number of starts ('n.starts') should not be lower than the desired number of best solutions ('n.sol').")
+  if (n.sol > n.runs) {
+    stop("The number of runs ('n.runs') should not be lower than the desired number of best solutions ('n.sol').")
   }
-  if ((n.sol != 1 | n.starts != 1) & full.output == TRUE) {
-    stop("The option 'full.output = TRUE' is only available for 'n.sol == 1' and 'n.starts = 1'.")
+  if ((n.sol != 1 | n.runs != 1) & full.output == TRUE) {
+    stop("The option 'full.output = TRUE' is only available for 'n.runs == 1' and 'n.sol = 1'.")
   }
 
-  #SPECIAL CASE OF n.sol == 1 & n.starts == 1 & full.output == TRUE
-  if (full.output == TRUE) {
-    t <- Sys.time()
-  } else {
+  #SPECIAL CASE OF n.sol == 1 & n.runs == 1 & full.output == TRUE
+  if (!full.output) {
     res.list <- list()
   }
-  for (n.run in 1:n.starts) {
+  for (n.run in 1:n.runs) {
     if (p.initial[1] == "random") {
       p.ini <- sample(c(rep(1:k, mgs), sample(k, nr - mgs * k, replace = TRUE)))
       tp <- tabulate(p.ini) #size of each group (inner)
@@ -137,30 +164,30 @@ HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.starts = 1, n.
     curr.val <- sum(DV) / ns
     #curr.val <- tdv.aux(mt = mt, p = p.ini, tp = tp, k = k, ns = ns, nr = nr)
 
-    res.rf <- NULL
-    par.rf <- NULL
-    curr.val.rf <- NULL
+    res.stoch <- NULL
+    par.stoch <- NULL
+    curr.val.stoch <- NULL
 
-    if (random.first == TRUE) { #STOCHASTIC HILL CLIMBING (random.first = TRUE)
+    if (stoch.first == TRUE) { #STOCHASTIC HILL CLIMBING (stoch.first = TRUE)
       p.curr <- p.ini
       if (full.output == TRUE) {
-        res.rf <- matrix(0, rf.maxit, 3)
+        res.stoch <- matrix(0, stoch.maxit, 3)
       }
-      for (iter in 1:rf.maxit) {
-        p.neig <- random.neighbour(p = p.curr, k = k, mgs = mgs, rf.neigh.size = rf.neigh.size)
+      for (iter in 1:stoch.maxit) {
+        p.neig <- random.neighbour(p = p.curr, k = k, mgs = mgs, stoch.neigh.size = stoch.neigh.size)
         neig.val <- tdv.aux(mt = mt, p = p.neig, k = k, ns = ns, nr = nr)
         if (neig.val >= curr.val) {
           p.curr <- p.neig
           curr.val <- neig.val
         }
         if (full.output == TRUE) {
-          res.rf[iter,] <- c(iter, curr.val, neig.val)
+          res.stoch[iter,] <- c(iter, curr.val, neig.val)
         }
       }
       p.ini <- p.curr
       if (full.output == TRUE) {
-        par.rf <- p.curr
-        curr.val.rf <- curr.val
+        par.stoch <- p.curr
+        curr.val.stoch <- curr.val
       }
 
       #replacing the intermediate steps of the tdv calculation, for p.ini/p.curr coming from Stochastic Hill-climbing (it is calculating again, actually, but it is preferable this way)
@@ -202,48 +229,54 @@ HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.starts = 1, n.
         temp <- max.tdv.neighbour(mt = mt, p = p.curr, k = k, ns = ns, nr = nr, mgs = mgs, ofda = ofda, ifp = ifp, afg = afg, empty.size = empty.size, gct = gct, i.mul = i.mul, DV = DV)
         p.neig <- temp$p
         neig.val <- temp$tdv
+        if (full.output == TRUE) {
+          res[iter,] <- c(iter, curr.val, neig.val)
+        }
         if (neig.val > curr.val) {
           p.curr <- p.neig
           curr.val <- neig.val
         } else {
           loc_max <- TRUE
+          if (full.output == TRUE) {
+            res[iter, 3] <- curr.val
+          }
           break
         }
-        if (full.output == TRUE) {
-          res[iter,] <- c(iter, curr.val, neig.val)
-        }
       }
-      cat(paste("Run number: ", n.run," Confirmed local maximum: ", loc_max, "\n"))
+      if (verbose) {
+        cat("Run number:", n.run,"Confirmed local maximum:", loc_max, "\n")
+      }
     }
     if (full.output == TRUE) {
       if (!is.null(res)) {
         rows.not.zero <- apply(res, 1, function (x) {any(as.logical(x))})
         res <- res[rows.not.zero,,drop = FALSE]
       }
-      res.t <- Sys.time() - t
-      return(list(res.rf = res.rf, par.rf = par.rf, max.tdv.rf = curr.val.rf, res = res, par = p.curr, local_maximum = loc_max, time = res.t, max.tdv = curr.val))
+      res.list <- list()
+      res.list[[1]] <- list(res.stoch = res.stoch, par.stoch = par.stoch, tdv.stoch = curr.val.stoch, res = res, local_maximum = loc_max, par = p.curr, tdv = curr.val)
+      return(res.list)
     } else { # full.output == FALSE
       #keeping only (at most) n.sol best solutions (deleting repeated ones)
       if (n.run == 1) {
-        res.list[[1]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
+        res.list[[1]] <- list(local_maximum = loc_max, par = p.curr, tdv = curr.val)
       } else {
         already.in.bestsol <- any(sapply(res.list, function (x) {
           equivalent_partition(x$par, p.curr)
         }))
         if (!already.in.bestsol) {
           if (length(res.list) < n.sol) {
-            res.list[[length(res.list) + 1]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
+            res.list[[length(res.list) + 1]] <- list(local_maximum = loc_max, par = p.curr, tdv = curr.val)
           } else { #already n.sol components in res.list
-            best.sol.values <- sapply(res.list, function (x) {x$max.tdv})
+            best.sol.values <- sapply(res.list, function (x) {x$tdv})
             if (curr.val >  min(best.sol.values)) {
               worse.bestsol <- which(best.sol.values == min(best.sol.values))[1] #selects one, in case of ties!
-              res.list[[worse.bestsol]] <- list(local_maximum = loc_max, par = p.curr, max.tdv = curr.val)
+              res.list[[worse.bestsol]] <- list(local_maximum = loc_max, par = p.curr, tdv = curr.val)
             }
           }
         }
       }
     }
   }
-  ind.order <- order(sapply(res.list, function (x) {x$max.tdv}), decreasing = TRUE)
+  ind.order <- order(sapply(res.list, function (x) {x$tdv}), decreasing = TRUE)
   return(res.list[ind.order])
 }

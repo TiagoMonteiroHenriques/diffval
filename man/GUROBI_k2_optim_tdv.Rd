@@ -40,11 +40,24 @@ When successful, this partition is a global maximum of TDV for any 2-partitions 
 
 See \code{\link{tdv}} for an explanation on the Total Differential Value of a phytosociological table.
 
-The function implements two different mixed linear programming formulations of the problem. The formulations differ as one is independent of the size
+The function implements two different mixed-integer linear programming formulations of the problem. The formulations differ as one is independent of the size
 of the obtained groups (t-independent), while the other formulation fixes the size of the obtained groups (t-dependent). The t-dependent formulation is
 implemented to run GUROBI as many times as necessary to cover all possible group sizes; this approach can result in faster total computation time.
 
 For medium-sized matrices the computation time might become already prohibitive, thus the use of a time limit (\code{TimeLimit}) is advisable.
+}
+\examples{
+
+#getting the Taxus baccata forests data set
+data(taxus_bin)
+
+#obtaining the 2-partition that maximizes TDV using the GUROBI solver, by
+#mixed-integer linear programming
+\dontrun{
+#requires the suggested package 'gurobi'
+GUROBI_k2_optim_tdv(taxus_bin)
+}
+
 }
 \author{
 Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.

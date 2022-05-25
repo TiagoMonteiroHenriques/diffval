@@ -1,6 +1,6 @@
 # explore_tabulation.R
 #'
-#' @title Interactively explore a tabulation of a phytosociologic matrix.
+#' @title Interactively explore a tabulation of a phytosociological matrix.
 #'
 #' @description This function plots an interactive image of a tabulation.
 #'
@@ -14,6 +14,27 @@
 #' @return Returns invisibly, although it prints taxa names on the console upon the user click on the figure.
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#'
+#' @examples
+#'
+#' #getting the Taxus baccata forests data set
+#' data(taxus_bin)
+#' #creating a group partition, as presented in the original article of the data set
+#' groups <- rep(c(1,2,3), c(3,11,19))
+#'
+#' #removing taxa occurring in only one relevé in order to
+#' #reproduce exactly the example in the original article of the data set
+#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+#'
+#' #sorts the phytosociological table, putting exclusive taxa at the top and
+#' #plots an image of it
+#' tabul <- tabulation(taxus_bin_wmt, groups, taxa.names = rownames(taxus_bin_wmt),
+#'  plot.im = "normal", palette = "Zissou 1")
+#'
+#' \dontrun{
+#' #this creates an interactive plot (where you can click)
+#' explore_tabulation(tabul, palette = "Zissou 1")
+#' }
 #'
 #' @export
 #'
