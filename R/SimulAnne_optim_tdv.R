@@ -165,7 +165,7 @@ SimulAnne_optim_tdv <- function(m.bin, k, p.initial = NULL, n.runs = 10, n.sol =
           RES.SANN[[1]] <- SANN_result
         } else {
           already.in.bestsol <- any(sapply(RES.SANN, function (x) {
-            equivalent_partition(x$par, SANN_result$par)
+            identical_partition(x$par, SANN_result$par)
           }))
           if (!already.in.bestsol) {
             if (length(RES.SANN) < n.sol) {
@@ -246,7 +246,7 @@ SimulAnne_optim_tdv <- function(m.bin, k, p.initial = NULL, n.runs = 10, n.sol =
       if (i == 1) {
         RES.SANN[[1]] <- list(par = best.p, tdv = best.tdv)
       } else {
-        already.in.bestsol <- any(sapply(RES.SANN, function (x) {equivalent_partition(x$par, best.p)}))
+        already.in.bestsol <- any(sapply(RES.SANN, function (x) {identical_partition(x$par, best.p)}))
         if (!already.in.bestsol) {
           if (length(RES.SANN) < n.sol) {
             RES.SANN[[length(RES.SANN)+1]] <- list(par = best.p, tdv = best.tdv)

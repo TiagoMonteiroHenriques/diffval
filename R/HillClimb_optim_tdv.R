@@ -162,7 +162,6 @@ HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.runs = 1, n.so
     }
     DV <- colSums(ifp * ofda) / gct
     curr.val <- sum(DV) / ns
-    #curr.val <- tdv.aux(mt = mt, p = p.ini, tp = tp, k = k, ns = ns, nr = nr)
 
     res.stoch <- NULL
     par.stoch <- NULL
@@ -261,7 +260,7 @@ HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.runs = 1, n.so
         res.list[[1]] <- list(local_maximum = loc_max, par = p.curr, tdv = curr.val)
       } else {
         already.in.bestsol <- any(sapply(res.list, function (x) {
-          equivalent_partition(x$par, p.curr)
+          identical_partition(x$par, p.curr)
         }))
         if (!already.in.bestsol) {
           if (length(res.list) < n.sol) {

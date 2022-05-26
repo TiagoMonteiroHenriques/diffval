@@ -6,13 +6,13 @@
 \alias{diffval-package}
 \title{diffval: Vegetation Patterns}
 \description{
-Find, visualize and explore patterns of 'differential taxa' in vegetation data (namely in a phytosociological table), using the Differential Value (DiffVal). Patterns are searched through mathematical optimization algorithms. Ultimately, TDV optimization aims at obtaining classifications of vegetation data based on 'differential taxa', as in the traditional phytosociological (or geobotanical) approach. The 'Gurobi' optimizer, as well as the R package 'gurobi', can be installed from <https://www.gurobi.com/products/gurobi-optimizer/>. The vignette "Gurobi Installation Guide", from package 'prioritizr', is useful and can be found here: <https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html>.
+Find, visualize and explore patterns of 'differential taxa' in vegetation data (namely in a phytosociological table), using the Differential Value (DiffVal). Patterns are searched through mathematical optimization algorithms. Ultimately, TDV optimization aims at obtaining classifications of vegetation data based on 'differential taxa', as in the traditional geobotanical approach. The 'Gurobi' optimizer, as well as the R package 'gurobi', can be installed from <https://www.gurobi.com/products/gurobi-optimizer/>. The useful vignette "Gurobi Installation Guide", from package 'prioritizr', can be found here: <https://prioritizr.net/articles/gurobi_installation_guide.html>.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://gitlab.com/point-veg/diffval}
-  \item Report bugs at \url{https://gitlab.com/point-veg/diffval/-/issues}
+  \item Report bugs at \url{https://gitlab.com/point-veg/diffval/issues}
 }
 
 }
@@ -26,7 +26,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Fundação para a Ciência e a Tecnologia, Portugal [funder]
+  \item Fundação para a Ciência e a Tecnologia, Portugal (<https://www.fct.pt/>) [funder]
 }
 
 }

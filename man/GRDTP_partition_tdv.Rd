@@ -28,7 +28,7 @@ The algorithm operates in the following way: Firstly, \code{k} columns are selec
 desired \code{k} groups. Secondly, one of the remaining columns is selected randomly and added to the partition group which maximizes
 the upcoming TDV. This second step is repeated until all columns are placed in a group of the k-partition.
 
-Being a simplified version of the Greedy algorithm, it is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
+This function is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
 returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{GRASP_partition_tdv}}.
 See \code{\link{tdv}} for an explanation on the TDV of a phytosociological table.
 }

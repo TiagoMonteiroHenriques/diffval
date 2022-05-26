@@ -21,5 +21,9 @@ A binary phytosociological table containing relevés of Taxus baccata forests, i
 
 #getting the Taxus baccata forests data set
 data(taxus_bin)
+
+#inspect the first rows and columns of taxus_bin
+head(taxus_bin, n = c(5, 5))
+
 }
 \keyword{datasets}

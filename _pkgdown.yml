@@ -1,0 +1,9 @@
+url: https://point-veg.utad.pt
+title: The diffval package for R
+template:
+  bootstrap: 5
+  bootswatch: cyborg
+  theme: arrow-dark
+  bslib:
+    pkgdown-nav-height: 70px
+

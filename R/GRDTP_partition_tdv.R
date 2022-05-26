@@ -15,7 +15,7 @@
 #' desired `k` groups. Secondly, one of the remaining columns is selected randomly and added to the partition group which maximizes
 #' the upcoming TDV. This second step is repeated until all columns are placed in a group of the k-partition.
 #'
-#' Being a simplified version of the Greedy algorithm, it is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
+#' This function is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
 #' returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{GRASP_partition_tdv}}.
 #' See \code{\link{tdv}} for an explanation on the TDV of a phytosociological table.
 #'
@@ -85,7 +85,7 @@ GRDTP_partition_tdv <- function(m, k, verify = TRUE) {
   rel.ind <- sample((1:nr)[-seed])
   for (newcol in rel.ind) {
     if (all(!usable.row)) {warning("Attention, there are no usable taxa for TDV calculation!")}
-    TDVchanges <- get_TDV(m = m, k = k, newcol = newcol, mat_cur = mat_cur, usable.row = usable.row, p_a_u = p_a_u, ind_a =ind_a, ind_b = ind_b, ind_c = ind_c, ind_d = ind_d, ind_ab = ind_ab, ind_cd = ind_cd, ind_e = ind_e, ind_usable = ind_usable)
+    TDVchanges <- get_TDV(m = m, k = k, newcol = newcol, mat_cur = mat_cur, usable.row = usable.row, p_a_u = p_a_u, ind_a =ind_a, ind_b = ind_b, ind_c = ind_c, ind_d = ind_d, ind_e = ind_e, ind_usable = ind_usable)
     g <- max.col(TDVchanges) #defining g as the group with higher tdv
     par.GRDTP[newcol] <- g #updating par.GRDTP accordingly
     #update mat_cur, given newcol and g
@@ -117,62 +117,4 @@ GRDTP_partition_tdv <- function(m, k, verify = TRUE) {
   }
   #print(max(TDVchanges)/ns)
   return(par.GRDTP)
-}
-
-### get_TDV
-
-#auxiliary function for GRDTP efficiency
-#this function uses current calculation matrix (mat_cur) to obtain, for each group g, the result of TDV by introducing a new relevé in to that group g.
-
-#usable.row   the lines of mat_cur that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups), but the respective taxa could still be absent from all groups
-#p_a_u        (present and usable) the lines of mat_cur that are not null and that are still useful for the TDV calculation (i.e. the respective taxa is not in all groups)
-
-get_TDV <- function(m, k, newcol, mat_cur, usable.row, p_a_u, ind_a, ind_b, ind_c, ind_d, ind_ab, ind_cd, ind_e, ind_usable) {
-  res.mat <- matrix(0, 1, k) #to store TDV for each group
-  where.0 <- m[,newcol] == 0
-  where.1 <- !where.0
-  for (g in 1:k) {
-    #for the 0s
-    where.0_pau <- p_a_u & where.0
-    a_local0 <- mat_cur[where.0_pau, ind_a, drop = FALSE]
-    b_local0 <- mat_cur[where.0_pau, ind_b, drop = FALSE]
-    b_local0[, g] <- b_local0[, g] + 1
-    ab_local0 <- a_local0 / b_local0
-    c_local0 <- mat_cur[where.0_pau, ind_c, drop = FALSE]
-    c_local0[, -g] <- mapply(aux_function_c_if0, a_wg = a_local0[,g], c_og = c_local0[,-g])
-    d_local0 <- mat_cur[where.0_pau, ind_d, drop = FALSE]
-    d_local0[, -g] <- d_local0[, -g] + 1
-    cd_local0 <- c_local0 / d_local0
-
-    #for the 1s
-    e_parameter <- mat_cur[, ind_e] #get the e parameter (all rows)
-    #auxiliary indices to update "e" and "usable"
-    ind.for.e <- mat_cur[usable.row, ind_a[g]] == 0 & where.1[usable.row] #previously absent in group g, but will be present as is present in newcol
-    ind.for.usable <- ind.for.e & (e_parameter[usable.row] == (k - 1)) #previously absent in group g, but will be present as is present in newcol, and g was the only empty group before
-    #updating parameter "e" locally
-    e_parameter[usable.row][ind.for.e] <- (e_parameter[usable.row][ind.for.e] + 1)
-    #updating "usable" locally
-    usable_col <- mat_cur[, ind_usable] #get the entire column (all rows)
-    usable_col[usable.row][ind.for.usable] <- 0 #lost rows
-    #updating "usable.row" and "p_a_u"
-    usable.row_new <- as.logical(usable_col) #taxa not present in all groups (taxa that are present in all groups have DiffVal = 0)
-    #present.in.groups_new <- rep(TRUE, ns) #all will have at least presence in group g (i.e. all taxa not absent from all groups)
-    p_a_u_new <- usable.row_new #as present.in.groups_new is all TRUE it is the same as usable.row_new (present and usable) taxa present in at least one group but not present in all of them
-
-    where.1_paunew <- p_a_u_new & where.1
-    a_local1 <- mat_cur[where.1_paunew, ind_a, drop = FALSE]
-    b_local1 <- mat_cur[where.1_paunew, ind_b, drop = FALSE]
-    c_local1 <- mat_cur[where.1_paunew, ind_c, drop = FALSE]
-    d_local1 <- mat_cur[where.1_paunew, ind_d, drop = FALSE]
-    c_local1[,-g] <- mapply(aux_function_c_if1, a_wg = a_local1[,g], c_og = c_local1[,-g], b_wg = b_local1[,g])
-    #a and b can only be updated after updating c, as it uses the older values of a and b
-    a_local1[, g] <- a_local1[, g] + 1
-    b_local1[, g] <- b_local1[,g] + 1
-    ab_local1 <- a_local1 / b_local1
-    d_local1[,-g] <- d_local1[,-g] + 1
-    cd_local1 <- c_local1 / d_local1
-
-    res.mat[1, g] <- sum(sum(rowSums(ab_local0 * cd_local0) / (e_parameter[p_a_u & where.0])), sum(rowSums(ab_local1 * cd_local1) / (e_parameter[p_a_u_new & where.1])))
-  }
-  return(res.mat)
 }

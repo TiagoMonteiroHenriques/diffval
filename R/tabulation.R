@@ -48,10 +48,11 @@
 #'
 #' #sorts the phytosociological table, putting exclusive taxa in the top and
 #' #plots an image of it
-#' tabul <- tabulation(taxus_bin_wmt, groups, taxa.names = rownames(taxus_bin_wmt), plot.im = "normal")
+#' tabul <- tabulation(taxus_bin_wmt, groups,
+#'   taxa.names = rownames(taxus_bin_wmt), plot.im = "normal", palette = "Zissou 1")
 #'
 #' #inspect the first rows and columns of the reordered phytosociological table
-#' tabul$tabulated[1:6, 1:10]
+#' head(tabul$tabulated, n = c(5, 5))
 #'
 #'
 #' @export
