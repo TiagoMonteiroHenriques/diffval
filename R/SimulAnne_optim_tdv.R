@@ -86,7 +86,9 @@
 #'   }
 #' }
 #'
-#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
+#'
+#' E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

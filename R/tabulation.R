@@ -33,7 +33,7 @@
 #' plots an image of the tabulated matrix, but presenting the sets of
 #' differential taxa as solid coloured blocks of equal width.
 #'
-#' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

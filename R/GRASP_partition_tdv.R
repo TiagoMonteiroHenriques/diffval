@@ -20,7 +20,7 @@
 #' @return A `numeric vector`, which length is the same as the number of columns of m, with numbers from 1 to `k`, representing the group to which
 #' the respective column was ascribed.
 #'
-#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

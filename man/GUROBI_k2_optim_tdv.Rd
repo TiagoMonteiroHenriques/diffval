@@ -60,5 +60,7 @@ GUROBI_k2_optim_tdv(taxus_bin)
 
 }
 \author{
-Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
+
+E-mail: \email{tmh.dev@icloud.com}.
 }

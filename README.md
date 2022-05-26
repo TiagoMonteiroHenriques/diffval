@@ -6,15 +6,22 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Find, visualize and explore patterns of differential taxa in a
-phytosociological table (vegetation data), using the Differential Value
-(DiffVal) index. The patterns are searched through mathematical
-optimization algorithms, maximizing the sum of the DiffVal index for all
-the taxa in the table, i.e. the Total Differential Value (TotDiffVal or
-TDV). Ultimately, the TDV optimization aims at obtaining classifications
-of vegetation data based on differential taxa, i.e. taxa that are
-exclusive of a certain group (or exclusive of some of the groups), as in
-the traditional phytosociological/geobotanical approach.
+Find, visualize and explore patterns of ‘differential taxa’ in
+vegetation data (namely in a phytosociological table), using the
+Differential Value (DiffVal). DiffVal captures the degree of
+exclusiveness of a taxon to each of the different clusters of relevés of
+a sorted phytosociological table. The patterns of ‘differential taxa’
+are searched through mathematical optimization algorithms, resorting the
+table while maximizing the sum of the DiffVal for all the taxa in the
+table, i.e. maximizing the Total Differential Value (TotDiffVal or TDV).
+Ultimately, TDV optimization aims at obtaining classifications of
+vegetation data based on ‘differential taxa’, as in the traditional
+phytosociological (or geobotanical) approach. The ‘Gurobi’ optimizer, as
+well as the R package ‘gurobi’, can be installed from
+<https://www.gurobi.com/products/gurobi-optimizer/>. The vignette
+“Gurobi Installation Guide”, from package ‘prioritizr’, is useful and
+can be found here:
+<https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html>.
 
 ## Acknowledgments
 

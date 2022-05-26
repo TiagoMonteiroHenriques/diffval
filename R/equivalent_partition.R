@@ -12,7 +12,7 @@
 #'
 #' @return `TRUE` if the k-partitions are equivalent; `FALSE` otherwise.
 #'
-#' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

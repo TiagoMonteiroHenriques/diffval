@@ -66,5 +66,5 @@ tabul$tabulated[1:6, 1:10]
 
 }
 \author{
-Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@icloud.com}.
 }

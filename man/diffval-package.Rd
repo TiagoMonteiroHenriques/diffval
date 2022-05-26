@@ -6,7 +6,7 @@
 \alias{diffval-package}
 \title{diffval: Vegetation Patterns}
 \description{
-Find, visualize and explore patterns of 'differential taxa' in vegetation data (namely in a phytosociological table), using the Differential Value (DiffVal). DiffVal captures the degree of exclusiveness of a taxon to each of the different clusters of relevés of a sorted phytosociological table. The patterns of 'differential taxa' are searched through mathematical optimization algorithms, resorting the table while maximizing the sum of the DiffVal for all the taxa in the table, i.e. maximizing the Total Differential Value (TotDiffVal or TDV). Ultimately, TDV optimization aims at obtaining classifications of vegetation data based on 'differential taxa', as in the traditional phytosociological (or geobotanical) approach. The 'Gurobi' optimizer, as well as the R package 'gurobi', can be installed from <https://www.gurobi.com/products/gurobi-optimizer/>. The vignette "Gurobi Installation Guide", from package 'prioritizr', is usefull and can be found here: <https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html>.
+Find, visualize and explore patterns of 'differential taxa' in vegetation data (namely in a phytosociological table), using the Differential Value (DiffVal). Patterns are searched through mathematical optimization algorithms. Ultimately, TDV optimization aims at obtaining classifications of vegetation data based on 'differential taxa', as in the traditional phytosociological (or geobotanical) approach. The 'Gurobi' optimizer, as well as the R package 'gurobi', can be installed from <https://www.gurobi.com/products/gurobi-optimizer/>. The vignette "Gurobi Installation Guide", from package 'prioritizr', is useful and can be found here: <https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html>.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Tiago Monteiro-Henriques \email{tiagomonteirohenriques@gmail.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
+\strong{Maintainer}: Tiago Monteiro-Henriques \email{tmh.dev@icloud.com} (\href{https://orcid.org/0000-0002-4206-0699}{ORCID})
 
 Authors:
 \itemize{

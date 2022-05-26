@@ -102,5 +102,5 @@ Monteiro-Henriques T. 2016. \emph{A bunch of R functions to assist phytosociolog
 Mueller-Dombois D. & Ellenberg H. 1974. \emph{Aims and Methods of Vegetation Ecology}. New York: John Wiley & Sons.
 }
 \author{
-Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@icloud.com}.
 }

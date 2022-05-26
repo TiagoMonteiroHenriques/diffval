@@ -71,7 +71,7 @@
 #'
 #' Mueller-Dombois D. & Ellenberg H. 1974. *Aims and Methods of Vegetation Ecology*. New York: John Wiley & Sons.
 #'
-#' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

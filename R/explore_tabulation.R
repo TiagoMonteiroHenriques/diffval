@@ -13,7 +13,7 @@
 #'
 #' @return Returns invisibly, although it prints taxa names on the console upon the user click on the figure.
 #'
-#' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

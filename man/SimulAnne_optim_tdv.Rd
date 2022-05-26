@@ -157,5 +157,7 @@ tabul <- tabulation(taxus_bin_wmt, result[["SANN"]][[1]]$par, rownames(taxus_bin
 
 }
 \author{
-Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
+
+E-mail: \email{tmh.dev@icloud.com}.
 }

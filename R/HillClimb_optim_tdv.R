@@ -62,7 +62,7 @@
 #'   \item{tdv}{A `numeric` with the TDV of `par`.}
 #' }
 #'
-#' @author Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

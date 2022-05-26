@@ -36,7 +36,9 @@
 #'   \item{par}{A `vector` with the 2-partition corresponding to the the maximum TDV found by GUROBI.}
 #' }
 #'
-#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@@gmail.com}.
+#' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
+#'
+#' E-mail: \email{tmh.dev@@icloud.com}.
 #'
 #' @examples
 #'

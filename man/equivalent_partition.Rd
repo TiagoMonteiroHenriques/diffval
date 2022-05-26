@@ -35,5 +35,5 @@ equivalent_partition(par2, par3) #FALSE
 
 }
 \author{
-Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@icloud.com}.
 }

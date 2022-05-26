@@ -42,5 +42,7 @@ GRDTP_partition_tdv(taxus_bin, 3)
 
 }
 \author{
-Jorge Orestes Cerdeira and Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
+
+E-mail: \email{tmh.dev@icloud.com}.
 }

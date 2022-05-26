@@ -125,5 +125,5 @@ tabul2 <- tabulation(taxus_bin, result[[1]]$par, rownames(taxus_bin), "normal")
 
 }
 \author{
-Tiago Monteiro-Henriques. E-mail: \email{tiagomonteirohenriques@gmail.com}.
+Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@icloud.com}.
 }
