@@ -1,4 +1,4 @@
-# HillClimb_optim_tdv.R
+# optim_tdv_HillClimb.R
 #'
 #' @title Total Differential Value optimization using Hill-climbing algorithms
 #'
@@ -33,12 +33,12 @@
 #' as a better solution if it improves TDV. This is repeated until a given number of maximum iterations (`stoch.maxit`) is reached. Stochastic Hill-climbing
 #' might be helpful for big tables (where the simple screening of all 1-neighbours might be too time consuming).
 #'
-#' Several runs of HillClimb_optim_tdv (i.e. multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
+#' Several runs of optim_tdv_HillClimb (i.e. multiple starts) should be tried out, as several local maxima are usually present and the Hill-climbing
 #' algorithm converges easily to local maxima.
 #'
 #' Trimming your table by a 'constancy' range or using the result of other cluster methodologies as input, might help finding interesting partitions.
 #' Specially after trimming the table by a 'constancy' range, getting a random initial partition with TDV greater than zero might be very unlikely; on
-#' such cases using a initial partition from \code{\link{GRASP_partition_tdv}} or \code{\link{GRDTP_partition_tdv}} (or even the result of other clustering
+#' such cases using a initial partition from \code{\link{partition_tdv_GRASP}} or \code{\link{partition_tdv_GRDTP}} (or even the result of other clustering
 #' strategies) as input might be useful.
 #'
 #' @return If `full.output = FALSE`, a `list` with (at most) `n.sol` best solutions (equivalent solutions are removed). Each best solution is also
@@ -76,7 +76,7 @@
 #' #obtaining a partition that maximizes TDV using the Stochastic Hill-climbing
 #' #and the Hill-climbing algorithms
 #'
-#' result <- HillClimb_optim_tdv(taxus_bin_wmt, k = 3, n.runs = 7, n.sol = 2,
+#' result <- optim_tdv_HillClimb(taxus_bin_wmt, k = 3, n.runs = 7, n.sol = 2,
 #'   min.g.size = 3, stoch.first = TRUE, stoch.maxit = 500, verbose = TRUE)
 #'
 #' #inspect the result
@@ -84,7 +84,7 @@
 #' result[[1]]$tdv
 #' #if result[[1]]$tdv is 0.1958471 you are probably reproducing the three
 #' #groups (Estrela, Gerês and Galicia) from the original article; if not
-#' #try again the HillClimb_optim_tdv function (maybe increasing n.runs)
+#' #try again the optim_tdv_HillClimb function (maybe increasing n.runs)
 #'
 #' #plot the sorted (or tabulated) phytosociological table
 #' tabul1 <- tabulation(taxus_bin_wmt, result[[1]]$par, rownames(taxus_bin_wmt), "normal")
@@ -95,7 +95,7 @@
 #'
 #' @export
 #'
-HillClimb_optim_tdv <- function(m.bin, p.initial = "random", k, n.runs = 1, n.sol = 1, maxit = 10, min.g.size = 1, stoch.first = FALSE, stoch.neigh.size = 1, stoch.maxit = 100, full.output = FALSE, verbose = FALSE) {
+optim_tdv_HillClimb <- function(m.bin, p.initial = "random", k, n.runs = 1, n.sol = 1, maxit = 10, min.g.size = 1, stoch.first = FALSE, stoch.neigh.size = 1, stoch.maxit = 100, full.output = FALSE, verbose = FALSE) {
   stopifnot(is.matrix(m.bin))
   mode(m.bin) <- "integer"
   if (!identical(c(0L,1L), sort(unique(as.vector(m.bin))))) {stop("Matrix m.bin should contain only 0's and 1's.")}

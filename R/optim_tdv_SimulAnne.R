@@ -1,4 +1,4 @@
-# SimulAnne_optim_tdv.R
+# optim_tdv_SimulAnne.R
 #'
 #' @title Total Differential Value optimization using a Simulated Annealing (and GRASP) algorithm(s)
 #'
@@ -26,7 +26,7 @@
 #'
 #' This function uses two main algorithms:
 #'
-#' 1) An optional GRASP, which is used to obtain initial solutions (partitions of `m.bin`) using function \code{\link{GRASP_partition_tdv}}. Such initial
+#' 1) An optional GRASP, which is used to obtain initial solutions (partitions of `m.bin`) using function \code{\link{partition_tdv_GRASP}}. Such initial
 #' solutions are then submitted to the SANN algorithm.
 #' 2) The (main) SANN algorithm, which is used to search for the global maximum of TDV. The initial partition for each run of SANN can be a partition
 #' obtained from GRASP (if `use.GRASP = TRUE`) or, (if `use.GRASP = FALSE`), a partition given by the user (using `p.initial`) or a random partition
@@ -101,7 +101,7 @@
 #'
 #' #obtaining a partition that maximizes TDV using the Simulated Annealing
 #' #algorithm
-#' result <- SimulAnne_optim_tdv(taxus_bin_wmt, k = 3, p.initial = "random",
+#' result <- optim_tdv_SimulAnne(taxus_bin_wmt, k = 3, p.initial = "random",
 #'   n.runs = 5, n.sol = 5, use.GRASP = FALSE, full.output = TRUE)
 #'
 #' #inspect the result
@@ -114,7 +114,7 @@
 #' #groups (Estrela, Gerês and Galicia) from the original article;
 #' #a solution with 0.2005789 might also occur, but note that one group
 #' #has only two elements; for now, min.g.size is not implemented in function
-#' #SimulAnne_optim_tdv as it is in the function HillClimb_optim_tdv.
+#' #optim_tdv_SimulAnne as it is in the function HillClimb_optim_tdv.
 #'
 #' #inspect how the optimization progressed (should increase towards the right)
 #' plot(result[["SANN"]][[1]]$current.tdv, type = "l", xlab = "Run number",
@@ -129,7 +129,7 @@
 #'
 #' @export
 #'
-SimulAnne_optim_tdv <- function(m.bin, k, p.initial = NULL, n.runs = 10, n.sol = 1, T_inic = 0.3, T_final = 0.000001, alpha = 0.05, n.iter = 1000, use.GRASP = TRUE, thr = 0.95, full.output = FALSE) {
+optim_tdv_SimulAnne <- function(m.bin, k, p.initial = NULL, n.runs = 10, n.sol = 1, T_inic = 0.3, T_final = 0.000001, alpha = 0.05, n.iter = 1000, use.GRASP = TRUE, thr = 0.95, full.output = FALSE) {
   stopifnot(is.matrix(m.bin))
   if (alpha >= 1 | alpha <= 0) {stop("Please note that 0 < alpha < 1 is mandatory.")}
   if (T_inic > 1 | T_inic <= 0) {stop("Please note that 0 < T_inic <= 1 is mandatory.")}
@@ -150,10 +150,10 @@ SimulAnne_optim_tdv <- function(m.bin, k, p.initial = NULL, n.runs = 10, n.sol =
     RES.SANN <- list()
     for (i in 1:n.runs) {
       #GRASP initial partitions
-      par.GRASP <- GRASP_partition_tdv(m.bin, k, thr = 0.95, verify = FALSE)
+      par.GRASP <- partition_tdv_GRASP(m.bin, k, thr = 0.95, verify = FALSE)
       GRASP_result <- list(par = par.GRASP, tdv = tdv(m.bin, par.GRASP, output.type = "fast"))
       #SANN step
-      SANN_result <- SimulAnne_optim_tdv(m.bin = m.bin, k = k, p.initial = par.GRASP, n.runs = 1, n.sol = 1, T_inic = T_inic, T_final = T_final, alpha = alpha, n.iter = n.iter, use.GRASP = FALSE, full.output = full.output)$SANN[[1]]
+      SANN_result <- optim_tdv_SimulAnne(m.bin = m.bin, k = k, p.initial = par.GRASP, n.runs = 1, n.sol = 1, T_inic = T_inic, T_final = T_final, alpha = alpha, n.iter = n.iter, use.GRASP = FALSE, full.output = full.output)$SANN[[1]]
 
       if (full.output) {
         RES.GRASP[[i]] <- GRASP_result

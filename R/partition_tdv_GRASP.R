@@ -1,4 +1,4 @@
-# GRASP_partition_tdv.R
+# partition_tdv_GRASP.R
 #'
 #' @title Obtain a partition using a GRASP algorithm
 #'
@@ -30,11 +30,11 @@
 #' data(taxus_bin)
 #'
 #' #obtaining a partiton based on the GRASP algorithm
-#' GRASP_partition_tdv(taxus_bin, 3)
+#' partition_tdv_GRASP(taxus_bin, 3)
 #'
 #' @export
 #'
-GRASP_partition_tdv <- function(m.bin, k, thr = 0.95, verify = TRUE) {
+partition_tdv_GRASP <- function(m.bin, k, thr = 0.95, verify = TRUE) {
   if (verify) {
     stopifnot(is.matrix(m.bin))
     mode(m.bin) <- "integer"

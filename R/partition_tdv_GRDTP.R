@@ -1,4 +1,4 @@
-# GRDTP_partition_tdv.R
+# partition_tdv_GRDTP.R
 #'
 #' @title Obtain a partition using a Greedy-type algorithm
 #'
@@ -15,8 +15,8 @@
 #' desired `k` groups. Secondly, one of the remaining columns is selected randomly and added to the partition group which maximizes
 #' the upcoming TDV. This second step is repeated until all columns are placed in a group of the k-partition.
 #'
-#' This function is expected to perform faster than \code{\link{GRASP_partition_tdv}}, yet
-#' returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{GRASP_partition_tdv}}.
+#' This function is expected to perform faster than \code{\link{partition_tdv_GRASP}}, yet
+#' returning worse partitions in terms of TDV. For the (true) Greedy algorithm see \code{\link{partition_tdv_GRASP}}.
 #' See \code{\link{tdv}} for an explanation on the TDV of a phytosociological table.
 #'
 #' @return A `numeric vector`, which length is the same as the number of columns of m, with numbers from 1 to `k`, representing the group to which
@@ -32,11 +32,11 @@
 #' data(taxus_bin)
 #'
 #' #obtaining a partiton based on a Greedy-type algorithm
-#' GRDTP_partition_tdv(taxus_bin, 3)
+#' partition_tdv_GRDTP(taxus_bin, 3)
 #'
 #' @export
 #'
-GRDTP_partition_tdv <- function(m, k, verify = TRUE) {
+partition_tdv_GRDTP <- function(m, k, verify = TRUE) {
   if (verify) {
     stopifnot(is.matrix(m))
     mode(m) <- "integer"

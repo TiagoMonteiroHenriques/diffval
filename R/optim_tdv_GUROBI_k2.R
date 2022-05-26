@@ -1,4 +1,4 @@
-# GUROBI_k2_optim_tdv.R
+# optim_tdv_GUROBI_k2.R
 #'
 #' @title Total Differential Value optimization using GUROBI
 #'
@@ -49,12 +49,12 @@
 #' #mixed-integer linear programming
 #' \dontrun{
 #' #requires the suggested package 'gurobi'
-#' GUROBI_k2_optim_tdv(taxus_bin)
+#' optim_tdv_GUROBI_k2(taxus_bin)
 #' }
 #'
 #' @export
 #'
-GUROBI_k2_optim_tdv <- function(m, formulation = "t-dependent", TimeLimit = 5) {
+optim_tdv_GUROBI_k2 <- function(m, formulation = "t-dependent", TimeLimit = 5) {
   if (!requireNamespace("gurobi", quietly = TRUE)) {
     stop(
       "Package \"gurobi\" must be installed to use this function.",
@@ -95,5 +95,5 @@ GUROBI_k2_optim_tdv <- function(m, formulation = "t-dependent", TimeLimit = 5) {
     max.sol <- which.max(res_objval_1)
     return(list(status.runs = res_status_1, par = res_par_1[[max.sol]], objval = res_objval_1[[max.sol]]))
   }
-  stop('In GUROBI_k2_optim_tdv, formulation must be "t-independent" or "t-dependent".')
+  stop('In optim_tdv_GUROBI_k2, formulation must be "t-independent" or "t-dependent".')
 }
