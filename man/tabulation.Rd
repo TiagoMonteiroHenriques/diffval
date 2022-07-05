@@ -2,9 +2,17 @@
 % Please edit documentation in R/tabulation.R
 \name{tabulation}
 \alias{tabulation}
-\title{Rearrange a phytosociological table, showing differential taxa on top.}
+\title{Rearrange a phytosociological table, showing differential taxa on top}
 \usage{
-tabulation(m, p, taxa.names, plot.im = NULL, palette = "Vik")
+tabulation(
+  m,
+  p,
+  taxa.names,
+  plot.im = NULL,
+  palette = "Vik",
+  greyout = TRUE,
+  greyout.colour = "grey"
+)
 }
 \arguments{
 \item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
@@ -16,6 +24,10 @@ tabulation(m, p, taxa.names, plot.im = NULL, palette = "Vik")
 \item{plot.im}{By default, \code{NULL}, returns without plotting. If \code{plot.im} = "normal", plots an image of the tabulated matrix. If \code{plot.im} = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.}
 
 \item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
+
+\item{greyout}{A \code{logical}. If \code{TRUE} (the default), non-differential taxa are greyed out (using the colour defined by "greyout.colour"). If \code{FALSE}, non-differential taxa is depicted with the respective group colours.}
+
+\item{greyout.colour}{A \code{character} with the name of the colour to use for non-differential taxa. Defaults to "grey".}
 }
 \value{
 If \code{plot.im} = \code{NULL}, a \code{list} with the following components:

@@ -1,6 +1,6 @@
 # explore_tabulation.R
 #'
-#' @title Interactively explore a tabulation of a phytosociological matrix.
+#' @title Interactively explore a tabulation of a phytosociological matrix
 #'
 #' @description This function plots an interactive image of a tabulation.
 #'

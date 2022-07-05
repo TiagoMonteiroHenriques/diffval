@@ -1,9 +1,95 @@
-url: https://point-veg.utad.pt
-title: The diffval package for R
+url: https://point-veg.utad.pt/pkgs/diffval
+title: The 'diffval' package for R
 template:
   bootstrap: 5
-  bootswatch: lux
-  theme: arrow-dark
+  bootswatch: cyborg
   bslib:
-    pkgdown-nav-height: 70px
-
+   #bg: "#000000"
+   #fg: "#ffffff"
+   #primary: "#ADAFAE" #neutral hiperlinks
+   primary: "#FFC618" #gold hiperlinks
+#   secondary: "#34A853" #green
+#   pkgdown-nav-height: 100px
+#   navbar-bg: "#AC2B18"
+   navbar-dark-bg: "#000000"
+   #navbar-light-bg: "#AC2B18"
+   #navbar-dark-contrast: "#FFC618" #gold before hover
+   navbar-light-contrast: "#34A853"
+   navbar-light-color: "#34A853"
+   navbar-dark-color: "#FFC618" #gold before hover
+   navbar-dark-hover-color: "#AC2B18" #red on hover
+   navbar-dark-active-color: "#AC2B18" #red package tittle
+   #navbar-dark-brand-color: "#FFC618" #gold package title (overrides the former one)
+   navtabs-link-active-bg: "#34A853"
+   #navbar-light-toggler-border-color: "#34A853"
+   navbar-dark-disabled-color: "#34A853"
+   #navbar-light-brand-color: "#34A853"
+   #thumbnail-bg: "#FFC618"
+   #btn-link-disabled-color: "#34A853"
+   #gray-100: "#34D3F8"
+   #gray-200: "#34D3F8"
+   #gray-300: "#34D3F8" #separation lines
+   #gray-400: "#34D3F8" #text body
+   #gray-500: "#34D3F8"
+   gray-600: "#ACACAC" #text of version and search for
+   #gray-700: "#34D3F8"
+   gray-800: "#FFC618" #bg of selected tab in navbar
+   #gray-900: "#971C21" #bg of search for
+   #black: "#FFC618"
+   #white: "#FFC618"
+   #body-color: "#34D3F8" #cor do corpo do texto
+   #code-bg: "#34D3F8" #fundo do código, corresponde a `` nos .R
+   #component-active-color: "#FFC618"
+reference:
+- title: TDV calculation
+  desc: >
+   Core function (contains an explanation on how TDV is calculated)
+- contents:
+  - tdv
+- title: Optimization functions
+  desc: >
+   Functions that search partitions of the columns of a
+   phytosociological table, optimizing the TDV
+- contents:
+  - starts_with("optim")
+- title: Tabulation and vizualization
+  desc: >
+   Functions to sort a phytosociological table
+   and to explore the result graphically
+- contents:
+  - tabulation
+  - explore_tabulation
+- title: Functions to obtain partitions
+  desc: >
+   Functions that produce (with heuristics) relatively good and fast
+   partitions that can feed the optimization functions
+- contents:
+  - starts_with("partition")
+- title: Other functions and data sets
+  desc: >
+   Utitly functions and data sets
+- contents:
+  - identical_partition
+  - taxus_bin
+navbar:
+  structure:
+    right: [gitlab, r, home]
+  components:
+    gitlab:
+      icon: fa-gitlab
+      href: https://gitlab.com
+      aria-label: GitLab
+    r:
+      icon: fab fa-r-project
+      href: https://www.r-project.org
+      aria-label: R-Project
+    home:
+      icon: fa-home
+      href: https://point-veg.utad.pt/pkgs_en.html
+      aria-label: POINT-VEG packages
+repo:
+  url:
+    home: https://gitlab.com/point-veg/diffval/
+    source: https://gitlab.com/point-veg/diffval/-/blob/master/
+    issue: https://gitlab.com/point-veg/diffval/issues/
+    user: https://gitlab.com/TiagoMH

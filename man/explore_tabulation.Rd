@@ -2,7 +2,7 @@
 % Please edit documentation in R/explore_tabulation.R
 \name{explore_tabulation}
 \alias{explore_tabulation}
-\title{Interactively explore a tabulation of a phytosociological matrix.}
+\title{Interactively explore a tabulation of a phytosociological matrix}
 \usage{
 explore_tabulation(tab, palette = "Vik")
 }

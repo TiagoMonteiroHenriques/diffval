@@ -1,6 +1,6 @@
 # tabulation.R
 #'
-#' @title Rearrange a phytosociological table, showing differential taxa on top.
+#' @title Rearrange a phytosociological table, showing differential taxa on top
 #'
 #' @description This function reorders a phytosociological table rows using,
 #' firstly, the increasing number of groups in which a taxon occurs, and
@@ -14,6 +14,8 @@
 #' @param taxa.names A `character vector` (with length equal to the number of rows of `m`) with the taxa names.
 #' @param plot.im By default, `NULL`, returns without plotting. If `plot.im` = "normal", plots an image of the tabulated matrix. If `plot.im` = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.
 #' @param palette A `character` with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}`()`) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".
+#' @param greyout A `logical`. If `TRUE` (the default), non-differential taxa are greyed out (using the colour defined by "greyout.colour"). If `FALSE`, non-differential taxa is depicted with the respective group colours.
+#' @param greyout.colour A `character` with the name of the colour to use for non-differential taxa. Defaults to "grey".
 #'
 #' @details The function accepts a phytosociological table (`m`), a k-partition of its columns (`p`) and the names of the taxa (corresponding to
 #' the rows of `m`), returning a rearranged/reordered matrix (and plotting optionally).
@@ -57,7 +59,7 @@
 #'
 #' @export
 #'
-tabulation <- function (m, p, taxa.names, plot.im = NULL, palette = "Vik") {
+tabulation <- function (m, p, taxa.names, plot.im = NULL, palette = "Vik", greyout = TRUE, greyout.colour = "grey") {
   stopifnot(is.matrix(m))
   nr <- ncol(m) # no. of relevés
   if (!identical(length(p), nr)) {stop("Object p must be a partition of the columns of m")}
@@ -86,24 +88,49 @@ tabulation <- function (m, p, taxa.names, plot.im = NULL, palette = "Vik") {
   colnames(mat1) <- sort.rel
   ht <- colnames(m)[sort.rel]
   rownames(mat1) <- c("group","space",as.character(taxa.names)[taxa.ord])
-  mat2 <- t(res$ofda * res$ifp)[taxa.ord,]
+  mat2 <- t(res$ofda * res$ifp)[taxa.ord,,drop = FALSE]
   rownames(mat2) <- c(as.character(taxa.names)[taxa.ord])
   if (!is.null(plot.im)) {
     if (plot.im == "normal") {
       mat1.im <- mat1
-      mat1.im[3:(ns+2),] <- mat1.im[3:(ns+2),] * matrix(sort(p)+1,ns,nr,byrow=TRUE)
-      mat1.im[mat1.im==0] <- 1
-      mat1.im[1,] <- mat1.im[1,]+1
+      mat1.im[3:(ns+2),] <- mat1.im[3:(ns+2),] * matrix(sort(p) + 1, ns, nr, byrow=TRUE)
+      mat1.im[mat1.im == 0] <- 1
+      mat1.im[1,] <- mat1.im[1,] + 1
       mat1.im[2,] <- 0
-      graphics::image(t(mat1.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
+      if (greyout) {
+        if (all(!rowSums(mat2) == 0)) {
+          group.colour <- c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k])
+        } else {
+          group.colour <- c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k], greyout.colour)
+          mat1.im[-c(1:2),][rowSums(mat2) == 0,][mat1.im[-c(1:2),][rowSums(mat2) == 0,] > 1] <- k + 2
+        }
+        graphics::image(t(mat1.im[(ns+2):1,]), col = group.colour, xaxt="n", yaxt="n")
+      } else {
+        graphics::image(t(mat1.im[(ns+2):1,]), col = c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k]), xaxt="n", yaxt="n")
+      }
     }
     if (plot.im == "condensed") {
-      mat2.im <- mat2 > 0
-      mat2.im <- rbind((1:k)+1, 0, mat2.im)
-      mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),]*matrix((1:k)+1,ns,k,byrow=TRUE)
-      mat2.im[mat2.im==0] <- 1
+      mat2.im <- mat2[,sort(p)]
+      mat2.im <- mat2.im > 0
+      #mat2.im <- rbind((1:k) + 1, 0, mat2.im) #for all groups with same size
+      mat2.im <- rbind(sort(p) + 1, 0, mat2.im)
+      #mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),] * matrix((1:k) + 1, ns, k, byrow=TRUE) #for all groups with same size
+      mat2.im[3:(ns+2),] <- mat2.im[3:(ns+2),] * matrix(sort(p) + 1, ns, nr, byrow=TRUE)
+
+      mat2.im[mat2.im == 0] <- 1
       mat2.im[2,] <- 0
-      graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
+      if (greyout) {
+        if (all(!rowSums(mat2) == 0)) {
+          group.colour <- c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k])
+        } else {
+          group.colour <- c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k], greyout.colour)
+          mat2.im[-c(1:2),][rowSums(mat2) == 0,] <- k + 2
+        }
+        graphics::image(t(mat2.im[(ns+2):1,]),col = group.colour, xaxt="n", yaxt="n")
+      } else {
+        graphics::image(t(mat2.im[(ns+2):1,]),col = c("black","white", grDevices::hcl.colors(max(k, 2), palette)[1:k]), xaxt="n", yaxt="n")
+      }
+
     }
   }
   return(list('taxa.names' = taxa.names, 'taxa.ord' = taxa.ord, header = ht, tabulated = mat1[-2,], condensed = mat2))

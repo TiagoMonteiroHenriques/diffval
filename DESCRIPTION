@@ -7,7 +7,7 @@ Authors@R: c(
     person("Jorge Orestes", "Cerdeira", role = "aut",
            comment = c(ORCID = "0000-0002-3814-7660")),
     person("Fundação para a Ciência e a Tecnologia, Portugal", role = "fnd",
-           comment = "<https://www.fct.pt/>")
+           comment = c("<https://www.fct.pt/>"))
   )
 Description: Find, visualize and explore patterns of 'differential taxa'
     in vegetation data (namely in a phytosociological table), using the

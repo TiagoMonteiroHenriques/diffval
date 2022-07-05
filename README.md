@@ -25,11 +25,23 @@ can be found here:
 
 ## Acknowledgments
 
-T.M.H. was funded by the European Social Fund (POCH and NORTE 2020) and
-by National Funds (MCTES), through a FCT – Fundação para a Ciência a
-Tecnologia postdoctoral fellowship (SFRH/BPD/115057/2016), as well as by
-National Funds, through the same foundation, under the project
-UIDB/04033/2020.
+TMH was funded by the European Social Fund (POCH and NORTE 2020) and by
+National Funds (MCTES), through a FCT – Fundação para a Ciência a
+Tecnologia (Portuguese Foundation for Science and Technology)
+postdoctoral fellowship (SFRH/BPD/115057/2016), as well as by National
+Funds, through the same foundation, under the project UIDB/04033/2020
+(CITAB - Centre for the Research and Technology of Agro-Environmental
+and Biological Sciences). JOC was financially supported by FCT through
+the projects UIDB/MAT/00297/2020, UIDP/MAT/00297/2020 (Centro de
+Matemática e Aplicações).
+
+## Related articles
+
+Portela-Pereira E, Monteiro-Henriques T, Casas C, Forner N,
+Garcia-Cabral I, Fonseca JP & Neto C 2021. Teixedos no noroeste da
+Península Ibérica. Finisterra LVI(117): 127–150. DOI:
+10.18055/FINIS18102
+<https://revistas.rcaap.pt/finisterra/article/view/18102>
 
 ## Installation
 
