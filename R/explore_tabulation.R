@@ -38,34 +38,32 @@
 #'
 #' @export
 #'
-explore_tabulation <- function (tab, palette = "Vik") {
+explore_tabulation <- function(tab, palette = "Vik") {
   mat2 <- tab$condensed
   ns <- nrow(mat2)
   k <- ncol(mat2)
-  taxa.names <- tab$taxa.names
-  taxa.ord <- tab$taxa.ord
-  mat2.im <- mat2 > 0
-  mat2.im <- rbind((1:k) + 1, 0, mat2.im)
-  mat2.im[3:(ns + 2),] <- mat2.im[3:(ns + 2),] * matrix((1:k) + 1, ns, k, byrow=TRUE)
-  mat2.im[mat2.im == 0] <- 1
-  mat2.im[2,] <- 0
-  graphics::image(t(mat2.im[(ns + 2):1,]), col = c("black","white", grDevices::hcl.colors(k, palette)), xaxt="n", yaxt="n")
-  id.x <- rep(seq(0, 1, length.out = k))
-  id.y <- rev(rep(seq(0, 1, length.out = ns + 2)[1:ns], times = k))
-  list.cent.label <- apply((mat2 > 0) + 0, 2, function (x) {
-    #x <- (mat2>0)+0
-    #x <- x[,2]
+  taxa_names <- tab$taxa.names
+  taxa_ord <- tab$taxa.ord
+  mat2_im <- mat2 > 0
+  mat2_im <- rbind((1:k) + 1, 0, mat2_im)
+  mat2_im[3:(ns + 2), ] <- mat2_im[3:(ns + 2), ] * matrix((1:k) + 1, ns, k, byrow = TRUE)
+  mat2_im[mat2_im == 0] <- 1
+  mat2_im[2, ] <- 0
+  graphics::image(t(mat2_im[(ns + 2):1, ]), col = c("black", "white", grDevices::hcl.colors(k, palette)), xaxt = "n", yaxt = "n")
+  id_x <- rep(seq(0, 1, length.out = k))
+  id_y <- rev(rep(seq(0, 1, length.out = ns + 2)[1:ns], times = k))
+  list_cent_label <- apply((mat2 > 0) + 0, 2, function(x) {
     ic <- 1
-    i.from <- NULL
-    i.to <- NULL
+    i_from <- NULL
+    i_to <- NULL
     sen <- "from"
-    x <- c(x,0)
-    while (ic <= length(x)) { #maybe replace with strgsplit + grep!
+    x <- c(x, 0)
+    while (ic <= length(x)) { #maybe replace with strgsplit and grep!
       if (sen == "from") {
         if (x[ic] == 0) {
           ic <- ic + 1
         } else {
-          i.from <- c(i.from, ic)
+          i_from <- c(i_from, ic)
           sen <- "to"
           ic <- ic + 1
         }
@@ -73,53 +71,53 @@ explore_tabulation <- function (tab, palette = "Vik") {
         if (x[ic] == 1) {
           ic <- ic + 1
         } else {
-          i.to <- c(i.to, ic - 1)
+          i_to <- c(i_to, ic - 1)
           sen <- "from"
           ic <- ic + 1
         }
       }
     }
-    if (is.null(cbind(i.from, i.to))) {
+    if (is.null(cbind(i_from, i_to))) {
       return()
     }
-    ind <- apply(cbind(i.from, i.to), 1, function (z) {
-      seq(z[1],z[2])
+    ind <- apply(cbind(i_from, i_to), 1, function(z) {
+      seq(z[1], z[2])
     })
     if (is.matrix(ind)) {
-      apply(ind, 2, function (y) {
-        res.y <- mean(id.y[y]) #find mean coordinate for plotting
-        res.label <- paste(paste(taxa.names[taxa.ord][y], collapse="\n"), "\n\n")
-        return(list(res.y = res.y, res.label = res.label))
+      apply(ind, 2, function(y) {
+        res_y <- mean(id_y[y]) #find mean coordinate for plotting
+        res_label <- paste(paste(taxa_names[taxa_ord][y], collapse = "\n"), "\n\n")
+        return(list(res.y = res_y, res.label = res_label))
       })
     } else {
-      lapply(ind, function (y) {
-        res.y <- mean(id.y[y]) #find mean coordinate for plotting
-        res.label <- paste(paste(taxa.names[taxa.ord][y], collapse="\n"), "\n\n")
-        return(list(res.y = res.y, res.label = res.label))
+      lapply(ind, function(y) {
+        res_y <- mean(id_y[y]) #find mean coordinate for plotting
+        res_label <- paste(paste(taxa_names[taxa_ord][y], collapse = "\n"), "\n\n")
+        return(list(res.y = res_y, res.label = res_label))
       })
     }
   })
-  id.x <- id.x[!sapply(list.cent.label, is.null)]
-  list.cent.label <- Filter(Negate(is.null), list.cent.label)
-  id.y.cent.labt <- lapply(list.cent.label, function (x) {
-    as.matrix(simplify2array(x, higher = FALSE)[1,])
+  id_x <- id_x[!sapply(list_cent_label, is.null)]
+  list_cent_label <- Filter(Negate(is.null), list_cent_label)
+  id_y_cent_labt <- lapply(list_cent_label, function(x) {
+    as.matrix(simplify2array(x, higher = FALSE)[1, ])
   })
-  id.y.cent.lab <- unlist(id.y.cent.labt)
-  id.lab <- c("",unlist(sapply(list.cent.label, function (x) {
-    as.matrix(simplify2array(x,higher = FALSE)[2,])
+  id_y_cent_lab <- unlist(id_y_cent_labt)
+  id_lab <- c("", unlist(sapply(list_cent_label, function(x) {
+    as.matrix(simplify2array(x, higher = FALSE)[2, ])
   })))
-  id.x.cent.lab <- rep.int(id.x, times = sapply(id.y.cent.labt, length))
+  id_x_cent_lab <- rep.int(id_x, times = sapply(id_y_cent_labt, length))
   #; print(id.y.cent.label); print(id.label)
-  graphics::points(id.x.cent.lab , id.y.cent.lab, cex = 0.5, pch = 20)
-  y.exit <- 0.95 #it can be improved
-  graphics::points(1, y.exit, cex = 3)
-  graphics::points(1, y.exit, cex = 2, col = "red")
-  graphics::points(1, y.exit, cex = 1, col = "white")
+  graphics::points(id_x_cent_lab, id_y_cent_lab, cex = 0.5, pch = 20)
+  y_exit <- 0.95 #it can be improved
+  graphics::points(1, y_exit, cex = 3)
+  graphics::points(1, y_exit, cex = 2, col = "red")
+  graphics::points(1, y_exit, cex = 1, col = "white")
   cat("Click on the plot black dots to retrieve taxon(taxa) names.\nClick on the top-right circle to exit.\n\n")
-  res.click <- "start"
-  while (res.click != "") {
-    res.click <- id.lab[(graphics::identify(x = c(1, id.x.cent.lab), y = c(y.exit, id.y.cent.lab), labels = id.lab, cex = 0.5, plot = FALSE, n = 1))]
-    cat(res.click)
+  res_click <- "start"
+  while (res_click != "") {
+    res_click <- id_lab[(graphics::identify(x = c(1, id_x_cent_lab), y = c(y_exit, id_y_cent_lab), labels = id_lab, cex = 0.5, plot = FALSE, n = 1))]
+    cat(res_click)
   }
   invisible()
 }
