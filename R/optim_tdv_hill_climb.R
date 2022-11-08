@@ -437,9 +437,9 @@ optim_tdv_hill_climb <- function(m_bin,
               x$tdv
             })
             if (curr_val > min(bestsol_values)) {
-              worse_bestsol <- which(bestsol_values
-              == min(bestsol_values))[1] # [1] selects
-              # One, in case of ties!
+              worse_bestsol <- which(
+                bestsol_values == min(bestsol_values)
+              )[1] # [1] selects one, in case of ties!
               res_list[[worse_bestsol]] <- list(
                 local_maximum = loc_max,
                 par           = p_curr,
