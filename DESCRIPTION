@@ -1,6 +1,6 @@
 Package: diffval
 Title: Vegetation Patterns
-Version: 0.0.0.9024
+Version: 0.0.0.9025
 Authors@R: c(
     person("Tiago", "Monteiro-Henriques", , "tmh.dev@icloud.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4206-0699")),
