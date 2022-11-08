@@ -152,7 +152,7 @@
 #'
 #' # Removing taxa occurring in only one relevé in order to
 #' # reproduce the example in the original article of the data set
-#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1, ]
 #'
 #' # Obtaining a partition that maximizes TDV using the Simulated Annealing
 #' # algorithm
@@ -168,7 +168,7 @@
 #'
 #' # Inspect the result
 #' # The TDV of each run
-#' sapply(result[["SANN"]], function (x) x$tdv)
+#' sapply(result[["SANN"]], function(x) x$tdv)
 #' # The best partition that was found (i.e., with highest TDV)
 #' result[["SANN"]][[1]]$par
 #'
@@ -268,7 +268,8 @@ optim_tdv_simul_anne <- function(m_bin,
         alpha = alpha,
         n_iter = n_iter,
         use_grasp = FALSE,
-        full_output = full_output)$SANN[[1]]
+        full_output = full_output
+      )$SANN[[1]]
 
       if (full_output) {
         res_grasp[[i]] <- grasp_result
@@ -290,7 +291,7 @@ optim_tdv_simul_anne <- function(m_bin,
               bestsol_values <- sapply(res_sann, function(x) {
                 x$tdv
               })
-              if (sann_result$tdv >  min(bestsol_values)) {
+              if (sann_result$tdv > min(bestsol_values)) {
                 worse_bestsol <- which.min(bestsol_values) # Selects the first
                 # in case of ties!
                 res_grasp[[worse_bestsol]] <- grasp_result
@@ -327,7 +328,7 @@ optim_tdv_simul_anne <- function(m_bin,
 
   # Cooling schedule (cool_sched)
   nt <- floor(n_iter / ((n_iter * log(1 - alpha)) / (log((1 - alpha) *
-                                                           t_final / t_inic))))
+    t_final / t_inic))))
   cool_sched <- floor(n_iter / nt * (1:nt))
 
   res_sann <- list()
@@ -394,7 +395,7 @@ optim_tdv_simul_anne <- function(m_bin,
             bestsol_values <- sapply(res_sann, function(x) {
               x$tdv
             })
-            if (best_tdv >  min(bestsol_values)) {
+            if (best_tdv > min(bestsol_values)) {
               worse_bestsol <- which.min(bestsol_values) # Selects the first in
               # case of ties!
               res_sann[[worse_bestsol]] <- list(par = best_p, tdv = best_tdv)

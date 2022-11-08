@@ -84,7 +84,7 @@ partition_tdv_grasp <- function(m_bin, k, thr = 0.95, verify = TRUE) {
   # For the special case of seed (i.e., only one relevé in each of the groups)
   mat_cur[, ind_a] <- m_bin[, seed]
   mat_cur[, ind_b] <- 1
-  mat_cur[, ind_c] <- absences_in_groups - !m_bin[, seed] #CF. THIS
+  mat_cur[, ind_c] <- absences_in_groups - !m_bin[, seed] # CF. THIS
   mat_cur[, ind_d] <- k - 1
   mat_cur[, ind_ab] <- mat_cur[, ind_a] # At this stage mat_cur[,ind_b] is
   # always 1

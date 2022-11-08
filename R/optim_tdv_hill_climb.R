@@ -338,7 +338,7 @@ optim_tdv_hill_climb <- function(m_bin,
           # outer groups [c/d]
         }
         ifp[g, i_tx] <- afg[g, i_tx] / tp[g] # Presences inside group g divided
-        #by the group g size [a/b]
+        # by the group g size [a/b]
       }
       dv <- colSums(ifp * ofda) / gct
       # curr_val was already calculated in the Stochastic Hill-climbing
@@ -438,7 +438,7 @@ optim_tdv_hill_climb <- function(m_bin,
             })
             if (curr_val > min(bestsol_values)) {
               worse_bestsol <- which(bestsol_values
-                                      == min(bestsol_values))[1] # [1] selects
+              == min(bestsol_values))[1] # [1] selects
               # One, in case of ties!
               res_list[[worse_bestsol]] <- list(
                 local_maximum = loc_max,

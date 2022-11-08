@@ -23,9 +23,9 @@
 #'
 #' @examples
 #' # Creating three 2-partitions
-#' par1 <- c(1,1,2,2,2)
-#' par2 <- c(2,2,1,1,1)
-#' par3 <- c(1,1,1,2,2)
+#' par1 <- c(1, 1, 2, 2, 2)
+#' par2 <- c(2, 2, 1, 1, 1)
+#' par3 <- c(1, 1, 1, 2, 2)
 #'
 #' # Is it the same partition?
 #' identical_partition(par1, par2) # TRUE
@@ -39,7 +39,8 @@ identical_partition <- function(p1, p2) {
   }
   if (!identical(
     as.numeric(sort(unique(p1))),
-    as.numeric(sort(unique(p2))))
+    as.numeric(sort(unique(p2)))
+  )
   ) {
     stop(
       "Partitions to compare must use the same group names (or numbers) and must

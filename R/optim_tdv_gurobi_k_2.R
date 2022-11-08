@@ -68,8 +68,8 @@
 #'
 #' @export
 optim_tdv_gurobi_k_2 <- function(m_bin,
-                                formulation = "t-dependent",
-                                time_limit = 5) {
+                                 formulation = "t-dependent",
+                                 time_limit = 5) {
   if (!requireNamespace("gurobi", quietly = TRUE)) {
     stop(
       "Package 'gurobi' must be installed to use this function.",

@@ -55,14 +55,14 @@
 #'
 #' # Creating a group partition, as presented in the original article of the
 #' # data set
-#' groups <- rep(c(1,2,3), c(3,11,19))
+#' groups <- rep(c(1, 2, 3), c(3, 11, 19))
 #'
-#' #Removing taxa occurring in only one relevé in order to
-#' #reproduce exactly the example in the original article of the data set
-#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+#' # Removing taxa occurring in only one relevé in order to
+#' # reproduce exactly the example in the original article of the data set
+#' taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1, ]
 #'
-#' #Sorting the phytosociological table, putting exclusive taxa in the top and
-#' #plotting an image of it
+#' # Sorting the phytosociological table, putting exclusive taxa in the top and
+#' # plotting an image of it
 #' tabul <- tabulation(
 #'   m_bin = taxus_bin_wmt,
 #'   p = groups,
@@ -155,7 +155,8 @@ tabulation <- function(m_bin,
         graphics::image(t(mat1_im[(ns + 2):1, ]),
           col = group_colour,
           xaxt = "n",
-          yaxt = "n")
+          yaxt = "n"
+        )
       } else {
         graphics::image(t(mat1_im[(ns + 2):1, ]),
           col = c(
@@ -199,16 +200,15 @@ tabulation <- function(m_bin,
         )
       } else {
         graphics::image(t(mat2_im[(ns + 2):1, ]),
-         col = c(
-           "black",
-           "white",
-           grDevices::hcl.colors(max(k, 2), palette)[1:k]
+          col = c(
+            "black",
+            "white",
+            grDevices::hcl.colors(max(k, 2), palette)[1:k]
           ),
-         xaxt = "n",
-         yaxt = "n"
+          xaxt = "n",
+          yaxt = "n"
         )
       }
-
     }
   }
   list(

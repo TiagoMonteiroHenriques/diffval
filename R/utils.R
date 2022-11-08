@@ -771,11 +771,11 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
   )
 
   list(
-    A          = mat,
-    obj        = obj,
+    A = mat,
+    obj = obj,
     modelsense = modelsense,
-    rhs       = rhs,
-    sense     = sense,
-    vtype     = types
+    rhs = rhs,
+    sense = sense,
+    vtype = types
   )
 }
