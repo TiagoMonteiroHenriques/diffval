@@ -5,77 +5,96 @@
 \title{Rearrange a phytosociological table, showing differential taxa on top}
 \usage{
 tabulation(
-  m,
+  m_bin,
   p,
-  taxa.names,
-  plot.im = NULL,
+  taxa_names,
+  plot_im = NULL,
   palette = "Vik",
   greyout = TRUE,
-  greyout.colour = "grey"
+  greyout_colour = "grey"
 )
 }
 \arguments{
-\item{m}{A \code{matrix}, i.e. a phytosociological table of 0s (absences) and 1s (presences), where rows correspond to taxa and columns correspond to relevés.}
+\item{m_bin}{A matrix. A phytosociological table of 0s (absences) and 1s
+(presences), where rows correspond to taxa and columns correspond to
+relevés.}
 
-\item{p}{A \code{vector} of integer numbers with the partition of the relevés (i.e. a k-partition, consisting in a vector with values from 1 to k, with length equal to the number of columns of m, ascribing each relevé to one of the k groups).}
+\item{p}{A vector of integer numbers with the partition of the relevés (i.e.,
+a k-partition, consisting in a vector with values from 1 to k, with length
+equal to the number of columns of \code{m_bin}, ascribing each relevé to one of
+the k groups).}
 
-\item{taxa.names}{A \verb{character vector} (with length equal to the number of rows of \code{m}) with the taxa names.}
+\item{taxa_names}{A character vector (with length equal to the number of rows
+of \code{m_bin}) with the taxa names.}
 
-\item{plot.im}{By default, \code{NULL}, returns without plotting. If \code{plot.im} = "normal", plots an image of the tabulated matrix. If \code{plot.im} = "condensed", plots an image of the tabulated matrix but presenting sets of differential taxa as solid coloured blocks.}
+\item{plot_im}{By default, \code{NULL}, returns without plotting. If
+\code{plot_im = "normal"}, plots an image of the tabulated matrix. If
+\code{plot_im = "condensed"}, plots an image of the tabulated matrix but
+presenting sets of differential taxa as solid coloured blocks.}
 
-\item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
+\item{palette}{A character with the name of the colour palette (one of
+\code{\link[grDevices:palettes]{grDevices::hcl.pals()}} to be passed to \code{\link[grDevices:palettes]{grDevices::hcl.colors()}}. Defaults
+to "Vik".}
 
-\item{greyout}{A \code{logical}. If \code{TRUE} (the default), non-differential taxa are greyed out (using the colour defined by "greyout.colour"). If \code{FALSE}, non-differential taxa is depicted with the respective group colours.}
+\item{greyout}{A logical. If \code{TRUE} (the default), non-differential taxa are
+greyed out (using the colour defined by \code{greyout_colour}). If \code{FALSE},
+non-differential taxa is depicted with the respective group colours.}
 
-\item{greyout.colour}{A \code{character} with the name of the colour to use for non-differential taxa. Defaults to "grey".}
+\item{greyout_colour}{A character with the name of the colour to use for
+non-differential taxa. Defaults to "grey".}
 }
 \value{
-If \code{plot.im} = \code{NULL}, a \code{list} with the following components:
-
+If \code{plot_im = NULL}, a list with the following components:
 \describe{
-\item{taxa.names}{The given \code{taxa.names}}
-\item{taxa.ord}{A \code{vector} with the order of the rows/taxa.}
-\item{tabulated}{The rearranged/reordered \code{m} \code{matrix}.}
+\item{taxa.names}{The given \code{taxa_names}}
+\item{taxa.ord}{A vector with the order of the rows/taxa.}
+\item{tabulated}{The rearranged/reordered \code{m_bin} matrix.}
 \item{condensed}{The matrix used to create the "condensed" image.}
 }
 
-If \code{plot.im} = "normal", it returns the above list and, additionally, plots
+If \code{plot_im = "normal"}, it returns the above list and, additionally, plots
 an image of the tabulated matrix.
-If \code{plot.im} = "condensed", it returns the above list and, additionally,
+If \code{plot_im = "condensed"}, it returns the above list and, additionally,
 plots an image of the tabulated matrix, but presenting the sets of
 differential taxa as solid coloured blocks of equal width.
 }
 \description{
-This function reorders a phytosociological table rows using,
-firstly, the increasing number of groups in which a taxon occurs, and
-secondly, the decreasing sum of the inner frequency of presences of each
-taxon (see \code{\link{tdv}}).
-The columns are also reordered, simply using the increasing number of the
-respective group membership.
+This function reorders a phytosociological table rows using, firstly, the
+increasing number of groups in which a taxon occurs, and secondly, the
+decreasing sum of the inner frequency of presences of each taxon
+(see \code{\link[=tdv]{tdv()}}). The columns are also reordered, simply using the increasing
+number of the respective group membership.
 }
 \details{
-The function accepts a phytosociological table (\code{m}), a k-partition of its columns (\code{p}) and the names of the taxa (corresponding to
-the rows of \code{m}), returning a rearranged/reordered matrix (and plotting optionally).
+The function accepts a phytosociological table (\code{m_bin}), a
+k-partition of its columns (\code{p}) and the names of the taxa (corresponding
+to the rows of \code{m_bin}), returning a rearranged/reordered matrix (and
+plotting optionally).
 }
 \examples{
-
-#getting the Taxus baccata forests data set
+# Getting the Taxus baccata forests data set
 data(taxus_bin)
-#creating a group partition, as presented in the original article of the data set
+
+# Creating a group partition, as presented in the original article of the
+# data set
 groups <- rep(c(1,2,3), c(3,11,19))
 
-#removing taxa occurring in only one relevé in order to
+#Removing taxa occurring in only one relevé in order to
 #reproduce exactly the example in the original article of the data set
 taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
 
-#sorts the phytosociological table, putting exclusive taxa in the top and
-#plots an image of it
-tabul <- tabulation(taxus_bin_wmt, groups,
-  taxa.names = rownames(taxus_bin_wmt), plot.im = "normal", palette = "Zissou 1")
+#Sorting the phytosociological table, putting exclusive taxa in the top and
+#plotting an image of it
+tabul <- tabulation(
+  m_bin = taxus_bin_wmt,
+  p = groups,
+  taxa_names = rownames(taxus_bin_wmt),
+  plot_im = "normal",
+  palette = "Zissou 1"
+)
 
-#inspect the first rows and columns of the reordered phytosociological table
+# Inspect the first rows and columns of the reordered phytosociological table
 head(tabul$tabulated, n = c(5, 5))
-
 
 }
 \author{

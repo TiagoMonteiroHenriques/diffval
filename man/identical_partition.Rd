@@ -7,12 +7,15 @@
 identical_partition(p1, p2)
 }
 \arguments{
-\item{p1}{A \code{vector} of integers representing a k-partition (taking values from 1 to k), of the same length of \code{p2}.}
+\item{p1}{A vector of integers representing a k-partition (taking values
+from 1 to k), of the same length of \code{p2}.}
 
-\item{p2}{A \code{vector} of integers representing a k-partition (taking values from 1 to k), of the same length of \code{p1}.}
+\item{p2}{A vector of integers representing a k-partition (taking values
+from 1 to k), of the same length of \code{p1}.}
 }
 \value{
-\code{TRUE} if \code{p1}and \code{p2} represent the same k-partitions; \code{FALSE} otherwise.
+\code{TRUE} if \code{p1}and \code{p2} represent the same k-partitions; \code{FALSE}
+otherwise.
 }
 \description{
 Checks if two vectors represent the same k-partition.
@@ -20,27 +23,25 @@ Checks if two vectors represent the same k-partition.
 \details{
 Parameters \code{p1}and \code{p2}are vectors indicating group membership.
 In this package context, these vectors have as many elements as the columns
-of a phytosociological table, indicating the group membership of each relevé
-to one of k groups (i.e. a k-partition).
+of a phytosociological table, indicating the group membership of each
+relevé to one of k groups (i.e., a k-partition).
 This function checks if the two given vectors \code{p1}and \code{p2} correspond, in
 practice, to the same k-partition, i.e., if the relevé groups are actually
 the same, but the group numbers are somehow swapped.
 }
 \examples{
-
-#creating three 2-partitions
+# Creating three 2-partitions
 par1 <- c(1,1,2,2,2)
 par2 <- c(2,2,1,1,1)
 par3 <- c(1,1,1,2,2)
 
-#Is it the same partition?
-identical_partition(par1, par2) #TRUE
-identical_partition(par1, par3) #FALSE
-identical_partition(par2, par3) #FALSE
+# Is it the same partition?
+identical_partition(par1, par2) # TRUE
+identical_partition(par1, par3) # FALSE
+identical_partition(par2, par3) # FALSE
 
 }
 \author{
 Tiago Monteiro-Henriques and Jorge Orestes Cerdeira.
-
 E-mail: \email{tmh.dev@icloud.com}.
 }

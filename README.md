@@ -13,8 +13,8 @@ exclusiveness of a taxon to each of the different clusters of relevés of
 a sorted phytosociological table. The patterns of ‘differential taxa’
 are searched through mathematical optimization algorithms, resorting the
 table while maximizing the sum of the DiffVal for all the taxa in the
-table, i.e. maximizing the Total Differential Value (TotDiffVal or TDV).
-Ultimately, TDV optimization aims at obtaining classifications of
+table, i.e., maximizing the Total Differential Value (TotDiffVal or
+TDV). Ultimately, TDV optimization aims at obtaining classifications of
 vegetation data based on ‘differential taxa’, as in the traditional
 phytosociological (or geobotanical) approach. The ‘Gurobi’ optimizer, as
 well as the R package ‘gurobi’, can be installed from

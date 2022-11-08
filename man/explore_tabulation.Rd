@@ -7,39 +7,48 @@
 explore_tabulation(tab, palette = "Vik")
 }
 \arguments{
-\item{tab}{A \code{list} as returned by the \code{\link{tabulation}} function.}
+\item{tab}{A list as returned by the \code{\link[=tabulation]{tabulation()}} function.}
 
-\item{palette}{A \code{character} with the name of the colour palette (one of \code{\link[grDevices]{hcl.pals}}\verb{()}) to be passed to \code{\link[grDevices]{hcl.colors}}. Defaults to "Vik".}
+\item{palette}{A character with the name of the colour palette (one of
+\code{\link[grDevices:palettes]{grDevices::hcl.pals()}} to be passed to \code{\link[grDevices:palettes]{grDevices::hcl.colors()}}. Defaults
+to "Vik".}
 }
 \value{
-Returns invisibly, although it prints taxa names on the console upon the user click on the figure.
+Returns invisibly, although it prints taxa names on the console upon
+the user click on the figure.
 }
 \description{
 This function plots an interactive image of a tabulation.
 }
 \details{
-The function explore.tabulation accepts an object returned by the \code{\link{tabulation}} function, plotting a condensed image
-of the respective tabulated matrix, permitting the user to click on the coloured blocks and receive the respective list of taxa names on
-the console.
+The function explore.tabulation accepts an object returned by the
+\code{\link[=tabulation]{tabulation()}} function, plotting a condensed image of the
+respective tabulated matrix, permitting the user to click on the coloured
+blocks and receive the respective list of taxa names on the console.
 }
 \examples{
-
-#getting the Taxus baccata forests data set
+# Getting the Taxus baccata forests data set
 data(taxus_bin)
-#creating a group partition, as presented in the original article of the data set
-groups <- rep(c(1,2,3), c(3,11,19))
+# Creating a group partition, as presented in the original article of
+# the data set
+groups <- rep(c(1, 2, 3), c(3, 11, 19))
 
-#removing taxa occurring in only one relevé in order to
-#reproduce exactly the example in the original article of the data set
-taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+# Removing taxa occurring in only one relevé in order to
+# reproduce exactly the example in the original article of the data set
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1, ]
 
-#sorts the phytosociological table, putting exclusive taxa at the top and
-#plots an image of it
-tabul <- tabulation(taxus_bin_wmt, groups, taxa.names = rownames(taxus_bin_wmt),
- plot.im = "normal", palette = "Zissou 1")
+# Sorts the phytosociological table, putting exclusive taxa at the top and
+# plots an image of it
+tabul <- tabulation(
+  m_bin = taxus_bin_wmt,
+  p = groups,
+  taxa_names = rownames(taxus_bin_wmt),
+  plot_im = "normal",
+  palette = "Zissou 1"
+)
 
 \dontrun{
-#this creates an interactive plot (where you can click)
+# This creates an interactive plot (where you can click)
 explore_tabulation(tabul, palette = "Zissou 1")
 }
 
