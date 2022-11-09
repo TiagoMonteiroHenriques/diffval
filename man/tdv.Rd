@@ -38,8 +38,8 @@ number of groups containing that taxon.}
 }
 
 If \code{output_type = "full"}, some extra components are added to the output:
-afg, empty.size, gct (= \eqn{e}), i.mul. These are intermediate matrices
-used in the computation of TDV.
+\code{afg}, \code{empty.size}, \code{gct} (= \eqn{e}) and \code{i.mul}. These are intermediate
+matrices used in the computation of TDV.
 
 If \code{output_type = "fast"}, only TDV is returned and no pre-validations are
 done.

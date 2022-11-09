@@ -6,18 +6,18 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Find, visualize and explore patterns of ‘differential taxa’ in
-vegetation data (namely in a phytosociological table), using the
-Differential Value (DiffVal). DiffVal captures the degree of
-exclusiveness of a taxon to each of the different clusters of relevés of
-a sorted phytosociological table. The patterns of ‘differential taxa’
-are searched through mathematical optimization algorithms, resorting the
-table while maximizing the sum of the DiffVal for all the taxa in the
-table, i.e., maximizing the Total Differential Value (TotDiffVal or
-TDV). Ultimately, TDV optimization aims at obtaining classifications of
-vegetation data based on ‘differential taxa’, as in the traditional
-phytosociological (or geobotanical) approach. The ‘Gurobi’ optimizer, as
-well as the R package ‘gurobi’, can be installed from
+Find, visualize and explore patterns of differential taxa in vegetation
+data (namely in a phytosociological table), using the Differential Value
+(DiffVal). DiffVal captures the degree of exclusiveness of a taxon to
+each of the different clusters of relevés of a sorted phytosociological
+table. The patterns of differential taxa are searched through
+mathematical optimization algorithms, resorting the table while
+maximizing the sum of the DiffVal for all the taxa in the table, i.e.,
+maximizing the Total Differential Value (TotDiffVal or TDV). Ultimately,
+TDV optimization aims at obtaining classifications of vegetation data
+based on differential taxa, as in the traditional phytosociological (or
+geobotanical) approach. The Gurobi optimizer, as well as the R package
+‘gurobi’, can be installed from
 <https://www.gurobi.com/products/gurobi-optimizer/>. The vignette
 “Gurobi Installation Guide”, from package ‘prioritizr’, is useful and
 can be found here:
@@ -26,7 +26,7 @@ can be found here:
 ## Acknowledgments
 
 TMH was funded by the European Social Fund (POCH and NORTE 2020) and by
-National Funds (MCTES), through a FCT – Fundação para a Ciência a
+National Funds (MCTES), through a FCT – Fundação para a Ciência e a
 Tecnologia (Portuguese Foundation for Science and Technology)
 postdoctoral fellowship (SFRH/BPD/115057/2016), as well as by National
 Funds, through the same foundation, under the project UIDB/04033/2020
@@ -45,7 +45,7 @@ Península Ibérica. Finisterra LVI(117): 127–150. DOI:
 
 ## Installation
 
-You can install the package from GitLab.
+You can install the development version of the package from GitLab.
 
 ``` r
 devtools::install_git("https://gitlab.com/point-veg/diffval")

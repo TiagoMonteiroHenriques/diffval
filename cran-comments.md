@@ -22,7 +22,6 @@ New submission
 Suggests or Enhances not in mainstream repositories:
   gurobi
 ````
-
 This is a first submission.
 In DESCRIPTION you can find full instructions for 'gurobi' package installation
 
@@ -58,7 +57,6 @@ Examples with CPU (user + system) or elapsed time > 5s
 optim_tdv_simul_anne 3.410  0.043  14.184
 optim_tdv_hill_climb 2.584  0.005   9.527
 ```
-
 Optimization can be time consuming. This example is small in size.
 This is not happening in Windows or OS X environments.
 
@@ -67,7 +65,6 @@ This is not happening in Windows or OS X environments.
 Skipping checking HTML validation: no command 'tidy' found
 Skipping checking math rendering: package 'V8' unavailable
 ```
-
 Related to test environment.
 
 ### There was 1 additional NOTE in R-hub Ubuntu Linux environment:
@@ -79,7 +76,6 @@ Examples with CPU (user + system) or elapsed time > 5s
 optim_tdv_simul_anne 3.383  0.028  12.895
 optim_tdv_hill_climb 2.583  0.019   9.804
 ```
-
 Optimization can be time consuming. This example is small in size.
 This is not happening in Windows or OS X environments.
 

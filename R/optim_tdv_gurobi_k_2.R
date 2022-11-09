@@ -1,4 +1,4 @@
-#' Total Differential Value optimization using GUROBI
+#' Total Differential Value optimization using Gurobi
 #'
 #' Given a phytosociological matrix, this function finds the partition of its
 #'   columns that maximizes the Total Differential Value (TDV).
@@ -6,14 +6,14 @@
 #' @param m_bin A matrix. A phytosociological table of 0s (absences) and 1s
 #'   (presences), where rows correspond to taxa and columns correspond to
 #'   relevés.
-#' @param formulation A character selecting wich formulation to use. Possible
+#' @param formulation A character selecting which formulation to use. Possible
 #'   values are "t-dependent" (the default) or "t-independent". See Details.
 #' @param time_limit A numeric ("double") with the time limit (in seconds) to
-#'   be passed as a parameter to GUROBI, Defaults to 5 seconds, but see Details.
+#'   be passed as a parameter to Gurobi, Defaults to 5 seconds, but see Details.
 #'
 #' @details Given a phytosociological table `m_bin` (rows corresponding to taxa
 #'   and columns corresponding to relevés) this function finds a 2-partition (a
-#'   partition in two groups) that maximizes TDV, using the GUROBI optimizer.
+#'   partition in two groups) that maximizes TDV, using the Gurobi optimizer.
 #'   When successful, this partition is a global maximum of TDV for any
 #'   2-partitions of the columns on `m_bin`.
 #'
@@ -24,7 +24,7 @@
 #'   formulations of the problem. The formulations differ as one is independent
 #'   of the size of the obtained groups (t-independent), while the other
 #'   formulation fixes the size of the obtained groups (t-dependent). The
-#'   t-dependent formulation is implemented to run GUROBI as many times as
+#'   t-dependent formulation is implemented to run Gurobi as many times as
 #'   necessary to cover all possible group sizes; this approach can result in
 #'   faster total computation time.
 #'
@@ -35,20 +35,20 @@
 #'   components:
 #'
 #'   \describe{
-#'     \item{status.runs}{A character vector with GUROBI output status for all
+#'     \item{status.runs}{A character vector with Gurobi output status for all
 #'     the runs.}
-#'     \item{objval}{A numeric with the maximum TDV found by GUROBI.}
+#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'     \item{par}{A vector with the 2-partition corresponding to the the
-#'     maximum TDV found by GUROBI.}
+#'     maximum TDV found by Gurobi.}
 #'   }
 #'
 #'   For `formulation = "t-independent"`, a list with the following components:
 #'
 #'   \describe{
-#'     \item{status}{A character with GUROBI output status.}
-#'     \item{objval}{A numeric with the maximum TDV found by GUROBI.}
+#'     \item{status}{A character with Gurobi output status.}
+#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'     \item{par}{A vector with the 2-partition corresponding to the the
-#'     maximum TDV found by GUROBI.}
+#'     maximum TDV found by Gurobi.}
 #'   }
 #'
 #' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.
@@ -58,7 +58,7 @@
 #' # Getting the Taxus baccata forests data set
 #' data(taxus_bin)
 #'
-#' # Obtaining the 2-partition that maximizes TDV using the GUROBI solver, by
+#' # Obtaining the 2-partition that maximizes TDV using the Gurobi solver, by
 #' # mixed-integer linear programming
 #' \dontrun{
 #' # Requires the suggested package 'gurobi'

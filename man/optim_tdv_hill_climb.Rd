@@ -124,13 +124,13 @@ is obtained, equivalently, ascribing n relevés to different groups.
 Optionally, a faster search (Stochastic Hill-climbing) can be performed in
 a first step (\code{stoch_first = TRUE}), consisting on searching for TDV
 improvements, by randomly selecting n-neighbours (n defined by the user
-with the parameter \code{stoch_neigh_size}), accepting that neighour partition
+with the parameter \code{stoch_neigh_size}), accepting that neighbour partition
 as a better solution if it improves TDV. This is repeated until a given
 number of maximum iterations (\code{stoch_maxit}) is reached. Stochastic
 Hill-climbing might be helpful for big tables (where the simple screening
 of all 1-neighbours might be too time consuming).
 
-Several runs of optim_tdv_hill_climb (i.e., multiple starts) should be
+Several runs of this function (i.e., multiple starts) should be
 tried out, as several local maxima are usually present and the
 Hill-climbing algorithm converges easily to local maxima.
 

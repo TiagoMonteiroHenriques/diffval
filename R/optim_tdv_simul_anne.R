@@ -97,18 +97,18 @@
 #'   \describe{
 #'     \item{GRASP}{A list with at most `n_sol` components, each one
 #'     containing also a list with two components:
-#'     \itemize{
-#'     \item{'par', a vector with the partition of highest TDV obtained by
-#'     GRASP;}
-#'     \item{'tdv', a numeric with the TDV of `par`.}
-#'     }
-#'     }
+#'     \describe{
+#'       \item{par}{A vector with the partition of highest TDV obtained by
+#'       GRASP;}
+#'       \item{tdv}{A numeric with the TDV of `par`.}
+#'       }
+#'       }
 #'     \item{SANN}{A list with at most `n_sol` components, each one containing
-#'     also a list with two components:
-#'     \itemize{
-#'     \item{'par', a vector with the partition of highest TDV obtained by the
-#'     (GRASP +) SANN algorithm(s);}
-#'     \item{'tdv', a numeric with the TDV of `par`.}
+#'       also a list with two components:
+#'     \describe{
+#'       \item{par}{A vector with the partition of highest TDV obtained by the
+#'       (GRASP +) SANN algorithm(s);}
+#'       \item{tdv}{A numeric with the TDV of `par`.}
 #'     }
 #'     }
 #'   }
@@ -119,26 +119,26 @@
 #'   \describe{
 #'     \item{GRASP}{A list with `n_runs` components, each one containing also a
 #'     list with two components:
-#'     \itemize{
-#'     \item{'par', a vector with the partition of highest TDV obtained by
-#'     GRASP.}
-#'     \item{'tdv', a numeric with the TDV of `par`.}
+#'     \describe{
+#'       \item{par}{A vector with the partition of highest TDV obtained by
+#'       GRASP.}
+#'       \item{tdv}{A numeric with the TDV of `par`.}
 #'     }
 #'     }
 #'     \item{SANN}{A list with `n_runs` components, each one containing also a
 #'     list with six components:
-#'     \itemize{
-#'     \item{'current.tdv', a vector of length `n_iter` with the current TDV of
-#'     each SANN iteration.}
-#'     \item{'alternative.tdv', a vector of length `n_iter` with the alternative
-#'     TDV used in each SANN iteration.}
-#'     \item{'probability', a vector of length `n_iter` with the probability
-#'     used in each SANN iteration.}
-#'     \item{'temperature', a vector of length `n_iter` with the temperature of
-#'     each SANN iteration.}
-#'     \item{'par', a vector with the partition of highest TDV obtained by the
-#'     (GRASP +) SANN algorithm(s).}
-#'     \item{'tdv', a numeric with the TDV of `par`.}
+#'     \describe{
+#'       \item{current.tdv}{A vector of length `n_iter` with the current TDV of
+#'       each SANN iteration.}
+#'       \item{alternative.tdv}{A vector of length `n_iter` with the alternative
+#'       TDV used in each SANN iteration.}
+#'       \item{probability}{A vector of length `n_iter` with the probability
+#'       used in each SANN iteration.}
+#'       \item{temperature}{A vector of length `n_iter` with the temperature of
+#'       each SANN iteration.}
+#'       \item{par}{A vector with the partition of highest TDV obtained by the
+#'       (GRASP +) SANN algorithm(s).}
+#'       \item{tdv}{A numeric with the TDV of `par`.}
 #'     }
 #'     }
 #'   }

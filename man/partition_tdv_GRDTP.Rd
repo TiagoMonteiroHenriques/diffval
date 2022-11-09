@@ -31,7 +31,7 @@ Given the phytosociological table \code{m_bin} (rows corresponding to
 taxa and columns corresponding to relevés), this function uses a
 Greedy-type algorithm (a simplified version of the Greedy algorithm) to
 obtain a \code{k}-partition (\code{k}, defined by the user) of the columns of
-\code{m_bin}, aiming at high values of TVD.
+\code{m_bin}, aiming at high values of TDV.
 The algorithm operates in the following way: Firstly, \code{k} columns are
 selected randomly to work as seeds for each one of the desired \code{k} groups.
 Secondly, one of the remaining columns is selected randomly and added to

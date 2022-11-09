@@ -108,8 +108,8 @@
 #'   }
 #'
 #'   If `output_type = "full"`, some extra components are added to the output:
-#'   afg, empty.size, gct (= \eqn{e}), i.mul. These are intermediate matrices
-#'   used in the computation of TDV.
+#'   `afg`, `empty.size`, `gct` (= \eqn{e}) and `i.mul`. These are intermediate
+#'   matrices used in the computation of TDV.
 #'
 #'   If `output_type = "fast"`, only TDV is returned and no pre-validations are
 #'   done.
