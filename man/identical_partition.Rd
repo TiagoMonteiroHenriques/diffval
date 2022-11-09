@@ -31,9 +31,9 @@ the same, but the group numbers are somehow swapped.
 }
 \examples{
 # Creating three 2-partitions
-par1 <- c(1,1,2,2,2)
-par2 <- c(2,2,1,1,1)
-par3 <- c(1,1,1,2,2)
+par1 <- c(1, 1, 2, 2, 2)
+par2 <- c(2, 2, 1, 1, 1)
+par3 <- c(1, 1, 1, 2, 2)
 
 # Is it the same partition?
 identical_partition(par1, par2) # TRUE

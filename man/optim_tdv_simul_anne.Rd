@@ -181,7 +181,7 @@ data(taxus_bin)
 
 # Removing taxa occurring in only one relevé in order to
 # reproduce the example in the original article of the data set
-taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1, ]
 
 # Obtaining a partition that maximizes TDV using the Simulated Annealing
 # algorithm
@@ -197,7 +197,7 @@ result <- optim_tdv_simul_anne(
 
 # Inspect the result
 # The TDV of each run
-sapply(result[["SANN"]], function (x) x$tdv)
+sapply(result[["SANN"]], function(x) x$tdv)
 # The best partition that was found (i.e., with highest TDV)
 result[["SANN"]][[1]]$par
 

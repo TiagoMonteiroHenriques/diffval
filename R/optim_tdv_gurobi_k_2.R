@@ -13,8 +13,7 @@
 #'
 #' @details Given a phytosociological table `m_bin` (rows corresponding to taxa
 #'   and columns corresponding to relevés) this function finds a 2-partition (a
-#'   partition in two groups) that maximizes TDV, using the GUROBI optimizer
-#'   (see [gurobi::gurobi()]).
+#'   partition in two groups) that maximizes TDV, using the GUROBI optimizer.
 #'   When successful, this partition is a global maximum of TDV for any
 #'   2-partitions of the columns on `m_bin`.
 #'

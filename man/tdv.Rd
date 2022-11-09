@@ -137,11 +137,11 @@ data(taxus_bin)
 
 # Creating a group partition, as the one presented in the original article of
 # the data set
-groups <- rep(c(1,2,3), c(3,11,19))
+groups <- rep(c(1, 2, 3), c(3, 11, 19))
 
 # Removing taxa occurring in only one relevé, in order to reproduce exactly
 # the example in the original article of the data set
-taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1,]
+taxus_bin_wmt <- taxus_bin[rowSums(taxus_bin) > 1, ]
 
 # Calculating TDV
 result <- tdv(taxus_bin_wmt, groups)
@@ -149,7 +149,7 @@ result <- tdv(taxus_bin_wmt, groups)
 # This is the TDV
 result$tdv
 # This is TDV1, reproducing exactly the value from the original article
-sum(result$diffval/result$e)/nrow(taxus_bin_wmt)
+sum(result$diffval / result$e) / nrow(taxus_bin_wmt)
 
 }
 \references{

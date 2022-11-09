@@ -504,7 +504,7 @@ optim_tdv_gurobi_td <- function(table, t, n, alphai) {
   mat[nlinha, 1:n] <- 1
 
   # Restriction 2
-  # x_j + G1_i ≤ 1 #for a_i_j = 1
+  # x_j + G1_i <= 1 #for a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -515,7 +515,7 @@ optim_tdv_gurobi_td <- function(table, t, n, alphai) {
   }
 
   # Restriction 3
-  # x_j - G2_i ≥ 0 #for a_i_j = 1
+  # x_j - G2_i >= 0 #for a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -560,8 +560,8 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
   # Rows of restrictions matrix
   n_restr1 <- 1 # sum x_j >= 1
   n_restr2 <- n_restr1 # sum x_j <= n-1
-  n_restr3 <- sum(table) # x_{j} + G1_{i} ≤ 1 #for a_i_j = 1
-  n_restr4 <- n_restr3 # x_{j} - G2_{i} ≥ 0 #for a_i_j = 1
+  n_restr3 <- sum(table) # x_{j} + G1_{i} <= 1 #for a_i_j = 1
+  n_restr4 <- n_restr3 # x_{j} - G2_{i} >= 0 #for a_i_j = 1
   n_restr5 <- n * m # Y1_{i} - Z1_{ij} >= 0
   n_restr6 <- n_restr5 # x_{j} - Z1_{ij} >= 0
   # restriction 7 was eliminated
@@ -608,7 +608,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
   mat[nlinha, 1:n_var1] <- 1
 
   # Restriction 3
-  # x_{j} + G2_{i} ≤ 1 #para a_i_j = 1
+  # x_{j} + G2_{i} <= 1 #para a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -619,7 +619,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
   }
 
   # Restriction 4
-  # x_{j} - G1_{i} ≥ 0 #para a_i_j = 1
+  # x_{j} - G1_{i} >= 0 #para a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
