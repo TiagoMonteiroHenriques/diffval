@@ -12,7 +12,7 @@ Find, visualize and explore patterns of 'differential taxa' in vegetation data (
 Useful links:
 \itemize{
   \item \url{https://gitlab.com/point-veg/diffval}
-  \item Report bugs at \url{https://gitlab.com/point-veg/diffval/issues}
+  \item Report bugs at \url{https://gitlab.com/point-veg/diffval/-/issues}
 }
 
 }
