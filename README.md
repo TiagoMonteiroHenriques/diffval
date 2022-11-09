@@ -21,7 +21,7 @@ geobotanical) approach. The Gurobi optimizer, as well as the R package
 <https://www.gurobi.com/products/gurobi-optimizer/>. The vignette
 “Gurobi Installation Guide”, from package ‘prioritizr’, is useful and
 can be found here:
-<https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html>.
+<https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation_guide.html>.
 
 ## Acknowledgments
 
