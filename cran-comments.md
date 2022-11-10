@@ -45,11 +45,11 @@ Package suggested but not available for checking: ‘gurobi’
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
 ```
-* checking examples ... [7s/28s] NOTE
+* checking examples ... [8s/29s] NOTE
 Examples with CPU (user + system) or elapsed time > 5s
                       user system elapsed
-optim_tdv_simul_anne 3.383  0.028  12.895
-optim_tdv_hill_climb 2.583  0.019   9.804
+optim_tdv_simul_anne 3.404  0.032  12.909
+optim_tdv_hill_climb 2.673  0.023   9.920
 ```
 Optimization can be time consuming. This example is small in size.
 This is not happening in Windows or OS X environments.
@@ -58,7 +58,7 @@ This is not happening in Windows or OS X environments.
 
 There were 4 NOTEs:
 ```
-* checking CRAN incoming feasibility ... [6s/31s] NOTE
+* checking CRAN incoming feasibility ... [6s/32s] NOTE
 Maintainer: ‘Tiago Monteiro-Henriques <tmh.dev@icloud.com>’
 
 New submission
@@ -76,11 +76,11 @@ Package suggested but not available for checking: ‘gurobi’
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
 ```
-* checking examples ... [8s/29s] NOTE
+* checking examples ... [8s/27s] NOTE
 Examples with CPU (user + system) or elapsed time > 5s
                       user system elapsed
-optim_tdv_simul_anne 3.410  0.043  14.184
-optim_tdv_hill_climb 2.584  0.005   9.527
+optim_tdv_simul_anne 3.545  0.017  12.572
+optim_tdv_hill_climb 2.631  0.011   9.552
 ```
 Optimization can be time consuming. This example is small in size.
 This is not happening in Windows or OS X environments.
@@ -131,7 +131,7 @@ seems a bug/crash in MiKTeX.
 
 ### Win-builder x86_64-w64-mingw32 (64-bit)
 
-There was 1 NOTE:
+There were 2 NOTEs:
 
 ```
 * checking CRAN incoming feasibility ... [14s] NOTE
@@ -148,9 +148,26 @@ Possibly misspelled words in DESCRIPTION:
 
 Suggests or Enhances not in mainstream repositories:
   gurobi
+
+Found the following (possibly) invalid URLs:
+  URL: https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation_guide.html
+    From: README.md
+    Status: 200
+    Message: OK
+    CRAN URL not in canonical form
+  The canonical URL of the CRAN page for a package is 
+    https://CRAN.R-project.org/package=pkgname
 ```
 This is a first submission.
 Spell check was performed. These terms are correct.
+DESCRIPTION has full instructions for 'gurobi' package installation.
+The URL is a vignette of package 'prioritizr' with instructions for 'gurobi'
+package installation.
+
+```
+* checking package dependencies ... NOTE
+Package suggested but not available for checking: 'gurobi'
+```
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
 ## Downstream dependencies
