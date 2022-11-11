@@ -1,3 +1,39 @@
+Dear CRAN maintainers,
+
+Thank you for your message and comments.
+I now resubmit addressing all raised issues.
+
+Sincerely,
+
+Tiago Monteiro-Henriques
+
+## Resubmission
+
+This is a resubmission where:
+
+* I included an explanation of the acronym TDV in the description text.
+
+* The CRAN URL that was not in canonical form was replaced in the README files.
+
+* I removed \dontrun{} from the example in the `explore_tabulation()` function,
+  and added an if clause to guarantee that R is being used interactively. In
+  function `optim_tdv_gurobi_k_2()` example, I kept the \dontrun{}, as that
+  function calls Gurobi, which is an additional software that must be installed
+  beforehand.
+
+* Considering the NOTE about package 'gurobi' (suggested but not available for
+  checking):
+  Package 'gurobi' provides an interface to the Gurobi optimization software.
+  DESCRIPTION file contains instructions for the installation of Gurobi,
+  as well as for the installation of the 'gurobi' package.
+  Following the practice found in package 'prioritizr', I had now included
+  such instructions also in the documentation of the function
+  `optim_tdv_gurobi_k_2()`, which is the only function from 'diffval' package
+  that relies on Gurobi optimization software (see `?optim_tdv_gurobi_k_2`). The
+  use of this software is relevant for the users, as it is the only way to
+  guarantee the optimality of a solution for the complex problem being
+  addressed.
+  
 ## Test environments
 
 * Local OS X 12.6 install, R 4.2.2

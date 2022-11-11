@@ -498,13 +498,11 @@ optim_tdv_gurobi_td <- function(table, t, n, alphai) {
   mat <- matrix(0, num_restr_1 + num_restr_2 + num_restr_3, n + m + m)
   nlinha <- 0
 
-  # Restriction 1
-  # sum x_j = t
+  # Restriction 1: sum x_j = t
   nlinha <- nlinha + 1
   mat[nlinha, 1:n] <- 1
 
-  # Restriction 2
-  # x_j + G1_i <= 1 #for a_i_j = 1
+  # Restriction 2: x_j + G1_i <= 1 #for a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -514,8 +512,7 @@ optim_tdv_gurobi_td <- function(table, t, n, alphai) {
     }
   }
 
-  # Restriction 3
-  # x_j - G2_i >= 0 #for a_i_j = 1
+  # Restriction 3: x_j - G2_i >= 0 #for a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -597,18 +594,15 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
   mat <- matrix(0, total_rest_rows, total_var_cols)
   nlinha <- 0
 
-  # Restriction 1
-  # sum x_j >= 1
+  # Restriction 1: sum x_j >= 1
   nlinha <- nlinha + 1
   mat[nlinha, 1:n_var1] <- 1
 
-  # Restriction 2
-  # sum x_j <= n-1 #TO DO: experimentar com <= floor(n/2)
+  # Restriction 2: sum x_j <= n-1 #TO DO: experimentar com <= floor(n/2)
   nlinha <- nlinha + 1
   mat[nlinha, 1:n_var1] <- 1
 
-  # Restriction 3
-  # x_{j} + G2_{i} <= 1 #para a_i_j = 1
+  # Restriction 3: x_{j} + G2_{i} <= 1 #para a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -618,8 +612,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 4
-  # x_{j} - G1_{i} >= 0 #para a_i_j = 1
+  # Restriction 4: x_{j} - G1_{i} >= 0 #para a_i_j = 1
   for (i in 1:m) {
     for (j in 1:n) {
       if (table[i, j] == 1) {
@@ -629,8 +622,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 5
-  # Y1_{i} - Z1_{ij} >= 0
+  # Restriction 5: Y1_{i} - Z1_{ij} >= 0
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -641,8 +633,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 6
-  # x_{j} - Z1_{ij} >= 0
+  # Restriction 6: x_{j} - Z1_{ij} >= 0
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -653,8 +644,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 8
-  # x_{j} + Y1_{i} - Z1_{ij} <= 1
+  # Restriction 8: x_{j} + Y1_{i} - Z1_{ij} <= 1
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -666,8 +656,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 9
-  # alpha_{i}*G1_{i} - sum_{j}(Z1_{i,j}) = 0
+  # Restriction 9: alpha_{i}*G1_{i} - sum_{j}(Z1_{i,j}) = 0
   for (i in 1:m) {
     nlinha <- nlinha + 1
     mat[nlinha, col_ini_g1 + i] <- alphai[i]
@@ -677,8 +666,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     ] <- -1
   }
 
-  # Restriction 10
-  # Y2_{i} - Z2_{ij} >= 0
+  # Restriction 10: Y2_{i} - Z2_{ij} >= 0
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -689,9 +677,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 11
-  # x_{j} - Z2_{ij} >= 0
-  # x_{j} + Z2_{ij} <= 1
+  # Restriction 11: x_{j} - Z2_{ij} >= 0 (old: x_{j} + Z2_{ij} <= 1)
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -703,8 +689,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 13
-  # x_{j} + Y2_{i} - Z2_{ij} <= 1
+  # Restriction 13: x_{j} + Y2_{i} - Z2_{ij} <= 1
   for (i in 1:m) {
     for (j in 1:n) {
       nlinha <- nlinha + 1
@@ -716,8 +701,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     }
   }
 
-  # Restriction 14
-  # alpha_{i}*G2_{i} - n * Y2_{i} + sum_{j}(Z2_{i,j}) = 0
+  # Restriction 14: alpha_{i}*G2_{i} - n * Y2_{i} + sum_{j}(Z2_{i,j}) = 0
   for (i in 1:m) {
     nlinha <- nlinha + 1
     mat[nlinha, c(col_ini_g2 + i, col_ini_y2 + i)] <- c(alphai[i], -n)

@@ -14,8 +14,18 @@
 #' @details Given a phytosociological table `m_bin` (rows corresponding to taxa
 #'   and columns corresponding to relevés) this function finds a 2-partition (a
 #'   partition in two groups) that maximizes TDV, using the Gurobi optimizer.
-#'   When successful, this partition is a global maximum of TDV for any
-#'   2-partitions of the columns on `m_bin`.
+#'
+#'   [Gurobi](https://www.gurobi.com/) is a commercial software for which a free
+#'   academic license can be obtained if you are affiliated with a recognized
+#'   educational institution. Package 'prioritizr' contains a comprehensive
+#'   vignette ([Gurobi Installation Guide](https://prioritizr.net/articles/gurobi_installation_guide.html)),
+#'   which can guide you trough the process of obtaining a license, installing
+#'   the [Gurobi optimizer](https://www.gurobi.com/products/gurobi-optimizer/),
+#'   activating the license and eventually installing the R package 'gurobi'.
+#'
+#'   [optim_tdv_gurobi_k_2()] returns, when the optimization is successful, a
+#'   2-partition which is a global maximum of TDV for any 2-partitions of the
+#'   columns on `m_bin`.
 #'
 #'   See [tdv()] for an explanation on the Total Differential Value of a
 #'   phytosociological table.

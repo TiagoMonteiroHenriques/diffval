@@ -47,9 +47,9 @@ tabul <- tabulation(
   palette = "Zissou 1"
 )
 
-\dontrun{
 # This creates an interactive plot (where you can click)
-explore_tabulation(tabul, palette = "Zissou 1")
+if (interactive()) {
+  explore_tabulation(tabul, palette = "Zissou 1")
 }
 
 }
