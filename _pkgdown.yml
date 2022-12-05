@@ -65,6 +65,11 @@ reference:
    partitions that can feed the optimization functions
 - contents:
   - starts_with("partition")
+- title: Functions for big datasets
+  desc: >
+   Functions that are able to handle big datasets
+- contents:
+  - starts_with("bigdata")
 - title: Other functions and data sets
   desc: >
    Utitly functions and data sets
