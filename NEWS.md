@@ -1,4 +1,4 @@
-# diffval (1.0.0.9000)
+# diffval (development version)
 
 * bigdata_tdv() function added, allowing Total Differential Value calculation
   for big matrices
