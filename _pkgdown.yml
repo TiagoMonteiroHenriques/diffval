@@ -67,7 +67,7 @@ reference:
   - starts_with("partition")
 - title: Functions for big datasets
   desc: >
-   Functions that are able to handle big datasets
+   Functions that are able to handle big data sets
 - contents:
   - starts_with("bigdata")
 - title: Other functions and data sets

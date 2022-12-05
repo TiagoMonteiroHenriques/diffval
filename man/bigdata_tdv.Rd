@@ -2,7 +2,7 @@
 % Please edit documentation in R/bigdata_tdv.R
 \name{bigdata_tdv}
 \alias{bigdata_tdv}
-\title{The Total Differential Value of a big phytosociological table}
+\title{The Total Differential Value of a big phytosociological data set}
 \usage{
 bigdata_tdv(
   phyto_list,
@@ -14,10 +14,10 @@ bigdata_tdv(
 )
 }
 \arguments{
-\item{phyto_list}{A list. This is a very light representation of a
-phytosociological table, registering only taxa presences. Each component
-should uniquely represent a taxon and should contain a vector (of numeric
-values) with the relevé(s) id(s) where that taxon was observed.
+\item{phyto_list}{A list. This is a very light representation of what could
+be a usual phytosociological table, registering only taxa presences. Each
+component should uniquely represent a taxon and should contain a vector (of
+numeric values) with the relevé(s) id(s) where that taxon was observed.
 Relevé's ids are expected to be represented by consecutive integers,
 starting with 1. The components of the list might be named (e.g. using the
 taxon name) or empty (decreasing further memory burden). However, for
@@ -64,24 +64,24 @@ If \code{output_type = "fast"}, only TDV is returned and no pre-validations are
 done.
 }
 \description{
-Given a big phytosociological table represented as a list (with each
-component containing an integer vector with relevé ids), and a partition of
-those relevés, this function calculates the respective Total Differential
-Value (TDV).
+Given a big phytosociological data set represented as a list, and a partition
+of the relevés in that list, this function calculates the respective Total
+Differential Value (TDV).
 }
 \details{
-The function accepts a list (\code{phyto_list}) representing a
-phytosociological table, as well as a k-partition of its relevés (\code{p}),
+This function accepts a list (\code{phyto_list}) representing a
+phytosociological data set, as well as a k-partition of its relevés (\code{p}),
 returning the corresponding TDV (see \code{\link[=tdv]{tdv()}} for an explanation
 on TDV).
 Partition \code{p} gives the group to which each relevé is ascribed, by
 increasing order of relevé id.
-Big phytosociological tables can occupy a significant amount of memory,
-which mostly relate to the fact that the absences (usually more frequent
-than presences) are also recorded and saved in memory. The use of a list
-split into chunks reduces significantly the amount of memory to store a
-phytosociological table and also the computation time of TDV for big
-datasets.
+Big phytosociological tables can occupy a significant amount of computer
+memory, which mostly relate to the fact that the absences (usually more
+frequent than presences) are also recorded in memory. The use of a list,
+focusing only on presences, reduces significantly the amount of needed
+memory to store all the information that a phytosociological table contains
+and also the computation time of TDV, allowing computations for big data
+sets.
 }
 \examples{
 # Getting the Taxus baccata forests data set

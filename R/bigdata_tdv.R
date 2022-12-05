@@ -1,14 +1,13 @@
-#' The Total Differential Value of a big phytosociological table
+#' The Total Differential Value of a big phytosociological data set
 #'
-#' Given a big phytosociological table represented as a list (with each
-#'   component containing an integer vector with relevé ids), and a partition of
-#'   those relevés, this function calculates the respective Total Differential
-#'   Value (TDV).
+#' Given a big phytosociological data set represented as a list, and a partition
+#'   of the relevés in that list, this function calculates the respective Total
+#'   Differential Value (TDV).
 #'
-#' @param phyto_list A list. This is a very light representation of a
-#'   phytosociological table, registering only taxa presences. Each component
-#'   should uniquely represent a taxon and should contain a vector (of numeric
-#'   values) with the relevé(s) id(s) where that taxon was observed.
+#' @param phyto_list A list. This is a very light representation of what could
+#'   be a usual phytosociological table, registering only taxa presences. Each
+#'   component should uniquely represent a taxon and should contain a vector (of
+#'   numeric values) with the relevé(s) id(s) where that taxon was observed.
 #'   Relevé's ids are expected to be represented by consecutive integers,
 #'   starting with 1. The components of the list might be named (e.g. using the
 #'   taxon name) or empty (decreasing further memory burden). However, for
@@ -28,18 +27,19 @@
 #' @param mc_cores The number of cores to be passed to [parallel::mclapply()] if
 #'   `parallel = TRUE`. See [parallel::mclapply()] for more information.
 #'
-#' @details The function accepts a list (`phyto_list`) representing a
-#'   phytosociological table, as well as a k-partition of its relevés (`p`),
+#' @details This function accepts a list (`phyto_list`) representing a
+#'   phytosociological data set, as well as a k-partition of its relevés (`p`),
 #'   returning the corresponding TDV (see [diffval::tdv()] for an explanation
 #'   on TDV).
 #'   Partition `p` gives the group to which each relevé is ascribed, by
 #'   increasing order of relevé id.
-#'   Big phytosociological tables can occupy a significant amount of memory,
-#'   which mostly relate to the fact that the absences (usually more frequent
-#'   than presences) are also recorded and saved in memory. The use of a list
-#'   split into chunks reduces significantly the amount of memory to store a
-#'   phytosociological table and also the computation time of TDV for big
-#'   datasets.
+#'   Big phytosociological tables can occupy a significant amount of computer
+#'   memory, which mostly relate to the fact that the absences (usually more
+#'   frequent than presences) are also recorded in memory. The use of a list,
+#'   focusing only on presences, reduces significantly the amount of needed
+#'   memory to store all the information that a phytosociological table contains
+#'   and also the computation time of TDV, allowing computations for big data
+#'   sets.
 #'
 #' @return If `output_type = "normal"` (the default) pre-validations are done
 #'   (which can take some time) and a list is returned, with the following
