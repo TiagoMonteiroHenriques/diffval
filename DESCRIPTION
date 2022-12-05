@@ -27,6 +27,7 @@ Depends:
     R (>= 2.10)
 Imports: 
     graphics,
+    parallel,
     stats
 Suggests: 
     gurobi,

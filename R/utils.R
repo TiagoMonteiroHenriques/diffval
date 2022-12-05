@@ -763,3 +763,57 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
     vtype      = types
   )
 }
+
+# Two auxiliary functions to bigdata_tdv ======================================
+
+# dv_in_list: this function calculates DiffVal of a taxon when the data is in
+# list format (i.e. calculates DiffVal for one component of the list)
+
+dv_in_list <- function (comp,
+                        p,
+                        k,
+                        n_taxa,
+                        b,
+                        d) {
+
+  # Getting the group ascribed to each of the relevé(s) that contain(s) the
+  # taxon
+  groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
+  # where the taxon was observed
+
+  a <- tabulate(groups_with_taxon, nbins = k)   # a
+  #b is calculated in main function             # b
+  c <- rep(sum(b[a == 0]), k)
+  c[a == 0] <- 0                                # c
+  #d is calculated in main function             # d
+  e <- sum(a != 0)                              # e
+
+  # For the parcels: (a/b) * (c/d)
+  return(list(
+    ifp     = a/b,
+    ofda    = c/d,
+    e       = e,
+    diffval = sum((a/b)*(c/d))/e
+  ))
+}
+
+# dvilf: this function calculates DiffVal (when data is) in list format. This is
+# a fast version returning only minimum information for TDV calculation
+
+dvilf <- function (comp,
+                   p,
+                   k,
+                   n_taxa,
+                   b,
+                   d) {
+  # Getting the group ascribed to each of the relevé(s) that contain(s) the
+  # taxon
+  groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
+  # where the taxon was observed
+  a <- tabulate(groups_with_taxon, nbins = k)   # a
+  #b is calculated in main function             # b
+  c <- rep(sum(b[a == 0]), k)                   # c
+  #d is calculated in main function             # d
+  e <- sum(a != 0)                              # e
+  sum((a/b)*(c/d))/e
+}
