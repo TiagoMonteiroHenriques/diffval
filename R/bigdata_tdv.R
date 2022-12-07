@@ -11,7 +11,7 @@
 #'   Relevé's ids are expected to be represented by consecutive integers,
 #'   starting with 1. The components of the list might be named (e.g. using the
 #'   taxon name) or empty (decreasing further memory burden). However, for
-#'   `output_type == "normal` taxa names are useful for output interpretation.
+#'   `output_type == "normal"` taxa names are useful for output interpretation.
 #' @param p A vector of integer numbers with the partition of the relevés (i.e.,
 #'   a k-partition, consisting in a vector with values from 1 to k, with length
 #'   equal to the number of relevés in `phyto_list`, ascribing each relevé to
