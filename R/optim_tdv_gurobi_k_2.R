@@ -1,7 +1,8 @@
 #' Total Differential Value optimization using Gurobi
 #'
-#' Given a phytosociological matrix, this function finds the partition of its
-#'   columns that maximizes the Total Differential Value (TDV).
+#' Given a phytosociological matrix, this function finds a partition in two
+#'   groups of the matrix columns, which maximizes the Total Differential Value
+#'   (TDV).
 #'
 #' @param m_bin A matrix. A phytosociological table of 0s (absences) and 1s
 #'   (presences), where rows correspond to taxa and columns correspond to
