@@ -27,7 +27,7 @@
 #'   `TRUE` all runs will produce an output). Defaults to 1.
 #' @param t_inic A numeric giving the initial temperature. Must be greater
 #'   than 0 and maximum admitted value is 1. Defaults to 0.3.
-#' @param t_final A numeric giving the initial temperature. Must be bounded
+#' @param t_final A numeric giving the final temperature. Must be bounded
 #'   between 0 and 1. Usually very low values are needed to ensure convergence.
 #'   Defaults to 0.000001.
 #' @param alpha A numeric giving the fraction of temperature drop to be used

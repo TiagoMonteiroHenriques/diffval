@@ -39,8 +39,9 @@ maximum TDV found by Gurobi.}
 }
 }
 \description{
-Given a phytosociological matrix, this function finds the partition of its
-columns that maximizes the Total Differential Value (TDV).
+Given a phytosociological matrix, this function finds a partition in two
+groups of the matrix columns, which maximizes the Total Differential Value
+(TDV).
 }
 \details{
 Given a phytosociological table \code{m_bin} (rows corresponding to taxa

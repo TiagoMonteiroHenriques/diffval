@@ -43,7 +43,7 @@ final output (only used if \code{full_output} is \code{FALSE}; if \code{full_out
 \item{t_inic}{A numeric giving the initial temperature. Must be greater
 than 0 and maximum admitted value is 1. Defaults to 0.3.}
 
-\item{t_final}{A numeric giving the initial temperature. Must be bounded
+\item{t_final}{A numeric giving the final temperature. Must be bounded
 between 0 and 1. Usually very low values are needed to ensure convergence.
 Defaults to 0.000001.}
 
