@@ -354,6 +354,7 @@ optim_tdv_hill_climb <- function(m_bin,
     } else {
       loc_max <- FALSE
       p_curr <- p_ini
+
       # curr_val is already calculated (during or before the Stochastic
       # Hill-climbing)
       if (full_output == TRUE) {
@@ -383,6 +384,13 @@ optim_tdv_hill_climb <- function(m_bin,
         if (neig_val > curr_val) {
           p_curr <- p_neig
           curr_val <- neig_val
+          ofda <- temp$ofda
+          ifp <- temp$ifp
+          afg <- temp$afg
+          empty_size <- temp$empty_size
+          gct <- temp$gct
+          i_mul <- temp$i_mul
+          dv <- temp$dv
         } else {
           loc_max <- TRUE
           if (full_output == TRUE) {

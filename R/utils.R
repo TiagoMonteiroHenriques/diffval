@@ -79,8 +79,7 @@ max_tdv_neighbour <- function(mt,
   mat_neig <- list(p.list = res1, pairs = res2) # Matrix of neighbouring
   # partitions
 
-  mat_neig_tdv <- sapply(seq_len(nrow(mat_neig$p.list)), function(x) { # Like
-    # this, it is difficult to parallelize!
+  mat_neig_tdv <- sapply(seq_len(nrow(mat_neig$p.list)), function(x) {
     pn <- mat_neig$p.list[x, ]
     kc <- mat_neig$pairs[x, ]
     return(tdv_neig(
@@ -89,10 +88,77 @@ max_tdv_neighbour <- function(mt,
       i_mul = i_mul, dv = dv, pn = pn, kc = kc
     ))
   })
-  list(
-    tdv = tdv <- max(mat_neig_tdv),
-    p   = mat_neig$p.list[which(mat_neig_tdv == tdv)[1], ]
-  )
+
+  tdv_max <- max(mat_neig_tdv)
+  x_max <- which(mat_neig_tdv == tdv_max)[1]
+  p_max <- mat_neig$p.list[x_max, ]
+  kc_max <- mat_neig$pairs[x_max, ]
+
+  if (identical_partition(p, p_max)) {
+    return(list(tdv = tdv_max, p = p_max))
+  } else {
+
+    # update according to the found maximum (it is repeating the calculation),
+    # at least should not repeat it in case it is lower or equal to current
+    # solution
+    tp_max <- tabulate(p_max) # Size of each group (inner) in neighbour partition
+    outer_size_n_max <- nr - tp_max # Sum of the sizes of the outer groups in neighbour
+    # partition
+
+    i_aff_tx_max <- afg[kc_max, ][1, ] > 0 | afg[kc_max, ][2, ] > 0 # Taxa affected by the
+    # swap of groups (i.e., present in at least one of the swapping groups). This
+    # should be done before the update of afg!
+
+    # Updating ofda, ifp, afg, empty_size and gct (not changing their names)
+    for (i in kc_max) { # (Updates afg) no. of relevés containing the taxa, within
+      # each group (absolute frequency in each group), only for the two groups
+      # that changed a relevé!
+      afg[i, ] <- colSums(mt[which(p_max == i), , drop = FALSE])
+    }
+    empty_size[kc_max, ] <- (afg == 0)[kc_max, ] * tp_max[kc_max] # (Updates empty_size) no.
+    # of relevés of each group, when the taxon is not present. i_aff_tx_max must
+    # not be used here(!), because  when the taxon is absent from the swapping
+    # groups the size of the groups change and must be updated (specially for
+    # future swappings)
+    gct[i_aff_tx_max] <- colSums(afg > 0)[i_aff_tx_max] # (Updates gct) no. of groups
+    # containing the taxon [e]
+    i_mul[i_aff_tx_max] <- (gct > 1)[i_aff_tx_max] # (Updates i_mul) indices of the taxa
+    # occurring in more than one group (they must occur in at least one)
+    for (g in 1:k) { # Fills matrices ofda [c/d] and ifp [a/b], only when the
+      # taxon is present in the group and only for the affected taxa!
+      i_tx_max <- afg[g, ] > 0 # Indices of the taxa present in the group g
+      if (sum(i_tx_max & i_aff_tx_max) > 0) { # In the case that the group g has affected
+        # taxa
+        ofda[g, i_tx_max & !i_mul] <- 1 # ofda is 1 for the taxa occurring in one
+        # group only!
+        if (sum(i_mul) > 0) { # If there are taxa occurring in more than one group
+          i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other group
+          # than g
+          ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
+                                       / outer_size_n_max[g]) # Size of outer empty groups divided by the sum of
+          # the sizes of the outer groups [c/d]
+        }
+        ofda[g, i_aff_tx_max & !i_tx_max] <- 0 # Inserts a zero to the affected taxa that
+        # is no more present in the group!
+        ifp[g, i_aff_tx_max] <- afg[g, i_aff_tx_max] / tp_max[g] # Presences inside group g
+        # divided by the group g size [a/b]
+      }
+    }
+    dv[i_aff_tx_max] <- colSums(
+      ifp[, i_aff_tx_max, drop = FALSE] *
+        ofda[, i_aff_tx_max, drop = FALSE]) / gct[i_aff_tx_max]
+    list(
+      tdv        = tdv_max,
+      p          = p_max,
+      ofda       = ofda,
+      ifp        = ifp,
+      afg        = afg,
+      empty_size = empty_size,
+      gct        = gct,
+      i_mul       = i_mul,
+      dv          = dv
+    )
+  }
 }
 
 # tdv_neig: an auxiliary function for tdv calculation (of a 1-neighbour
@@ -120,17 +186,21 @@ tdv_neig <- function(mt,
   outer_size_n <- nr - tp_n # Sum of the sizes of the outer groups in neighbour
   # partition
 
+  i_aff_tx <- afg[kc, ][1, ] > 0 | afg[kc, ][2, ] > 0 # Taxa affected by the
+  # swap of groups (i.e., present in at least one of the swapping groups). This
+  # should be done before the update of afg!
+
   # Updating ofda, ifp, afg, empty_size and gct (not changing their names)
   for (i in kc) { # (Updates afg) no. of relevés containing the taxa, within
     # each group (absolute frequency in each group), only for the two groups
     # that changed a relevé!
     afg[i, ] <- colSums(mt[which(pn == i), , drop = FALSE])
   }
-  i_aff_tx <- afg[kc, ][1, ] > 0 | afg[kc, ][2, ] > 0 # Taxa affected by the
-  # swap of groups (i.e., present in at least one of the swapping groups)
   empty_size[kc, ] <- (afg == 0)[kc, ] * tp_n[kc] # (Updates empty_size) no. of
   # relevés of each group, when the taxon is not present. i_aff_tx must not be
-  # used here!
+  # used here(!), because  when the taxon is absent from the swapping groups
+  # the size of the groups change and must be updated (specially for future)
+  # swappings
   gct[i_aff_tx] <- colSums(afg > 0)[i_aff_tx] # (Updates gct) no. of groups
   # containing the taxon [e]
   i_mul[i_aff_tx] <- (gct > 1)[i_aff_tx] # (Updates i_mul) indices of the taxa
@@ -155,11 +225,9 @@ tdv_neig <- function(mt,
       # divided by the group g size [a/b]
     }
   }
-  dv <- colSums(ifp[, i_aff_tx,
-    drop = FALSE
-  ] * ofda[, i_aff_tx,
-    drop = FALSE
-  ]) / gct[i_aff_tx]
+  dv[i_aff_tx] <- colSums(
+    ifp[, i_aff_tx, drop = FALSE] *
+      ofda[, i_aff_tx, drop = FALSE]) / gct[i_aff_tx]
   sum(dv) / ns
 }
 
