@@ -1,5 +1,12 @@
 # diffval (development version)
 
+1.0.0.9001
+
+* TDV calculation was corrected for some cases in optim_tdv_hill_climb() and in
+  the associated auxiliary function in utils.R
+
+1.0.0.9000
+
 * bigdata_tdv() function added, allowing Total Differential Value calculation
   for big matrices
 * bigdata_tdv() can optionally use forking from package 'parallel'
