@@ -111,15 +111,16 @@ tabulation <- function(m_bin,
   }
   res <- tdv(m_bin, p, output_type = "full")
   ot <- (res$afg > 0) * (1:k)
+  order_0 <- res$e
   order_1 <- apply(ot, 2, function(x) {
     as.numeric(paste0(x[x > 0], collapse = ""))
-  }) # This will give shortlex/radix order, i.e., it sorts taxa firstly by the
-  # number of groups containing the taxon and secondly by the lexicographical
-  # order of the groups the taxa belongs to
+  }) # This will give shortlex/radix order within order_ 0, i.e., order_0 first
+  # sorts taxavby the number of groups containing the taxon and after order_1
+  # by the lexicographical order of the groups the taxa belongs to
   order_2 <- -colSums(res$ifp) # Minus the sum of all the relative frequencies
   # for the taxon (no need to divide by res$e, as will be used only as ordering
   # factor for the ties within order_1
-  taxa_ord <- order(order_1, order_2)
+  taxa_ord <- order(order_0, order_1, order_2)
   sort_rel <- order(p) # To sort relevés by the respective group numbers
 
   mat1 <- rbind(sort(p), 0, m_bin[taxa_ord, sort_rel])
