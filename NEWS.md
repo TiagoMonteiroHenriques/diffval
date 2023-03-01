@@ -1,5 +1,9 @@
 # diffval (development version)
 
+1.0.0.9002
+
+* Improved sorting in tabulation() function
+
 1.0.0.9001
 
 * TDV calculation was corrected for some cases in optim_tdv_hill_climb() and in
