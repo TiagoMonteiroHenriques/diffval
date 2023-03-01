@@ -4,6 +4,7 @@
 
 * TDV calculation was corrected for some cases in optim_tdv_hill_climb() and in
   the associated auxiliary function in utils.R
+* Minor corrections to the documentation
 
 1.0.0.9000
 
