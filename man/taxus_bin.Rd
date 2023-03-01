@@ -5,8 +5,8 @@
 \alias{taxus_bin}
 \title{\emph{Taxus baccata} forests}
 \format{
-A matrix with 209 rows and 33 columns. Each column correspond to a
-phytosociological relevé and each row correspond to a taxon. Values in the
+A matrix with 209 rows and 33 columns. Each column corresponds to a
+phytosociological relevé and each row corresponds to a taxon. Values in the
 matrix denote presences (1) and absences (0).
 }
 \source{
@@ -20,7 +20,7 @@ taxus_bin
 }
 \description{
 A binary phytosociological table containing relevés of \emph{Taxus baccata}
-forests, in the northwest of the Iberian Peninsula.
+forests, from the northwest of the Iberian Peninsula.
 }
 \examples{
 # Getting the Taxus baccata forests data set
