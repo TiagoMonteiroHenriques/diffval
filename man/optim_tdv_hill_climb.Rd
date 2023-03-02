@@ -37,8 +37,8 @@ generates a random initial partition.}
 \item{n_sol}{A numeric giving the number of best solutions to keep
 in the final output. Defaults to 1.}
 
-\item{maxit}{A numeric giving the number of iterations of the
-Hill-climbing optimization.}
+\item{maxit}{A numeric giving the number of iterations of the Hill-climbing
+optimization.}
 
 \item{min_g_size}{A numeric. The minimum number of relevés that a group can
 contain (must be 1 or higher).}
@@ -54,8 +54,8 @@ n-neighbours for the Stochastic Hill-climbing; only used if
 \code{stoch_first = TRUE}. Defaults to 1.}
 
 \item{stoch_maxit}{A numeric giving the number of iterations of the
-Hill-climbing optimization; only used if \code{stoch_first = TRUE}. Defaults
-to 100.}
+Stochastic Hill-climbing optimization; only used if \code{stoch_first = TRUE}.
+Defaults to 100.}
 
 \item{full_output}{A logical. If \code{FALSE} (the default) the best \code{n_sol}
 partitions and respective indices are returned. If \code{TRUE} (only available

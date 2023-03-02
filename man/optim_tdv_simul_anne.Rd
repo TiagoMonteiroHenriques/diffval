@@ -51,7 +51,7 @@ Defaults to 0.000001.}
 in the temperature reduction scheme (see Details). Must be bounded between
 0 and 1. Defaults to 0.05.}
 
-\item{n_iter}{A numeric giving the initial temperature. Defaults to 1000.}
+\item{n_iter}{A numeric giving the number of iterations. Defaults to 1000.}
 
 \item{use_grasp}{A logical. Defaults to \code{TRUE}. IF \code{TRUE}, a GRASP is used
 to obtain the initial partitions for the Simulated Annealing. If \code{FALSE}
@@ -131,16 +131,16 @@ partition (seed) to be passed to the SANN algorithm.
 \details{
 Given a phytosociological table (\code{m_bin}, with rows corresponding to
 taxa and columns corresponding to relevés) this function searches for a
-\code{k}-partition (\code{k}, defined by the user) optimizing TDV, i.e., searches,
-using a SANN algorithm (optionally working upon GRASP solutions), for the
-global maximum of TDV (by rearranging the relevés into \code{k} groups).
+\code{k}-partition (\code{k}, defined by the user) optimizing the TDV, i.e.,
+searches, using a SANN algorithm (optionally working upon GRASP solutions),
+for a global maximum of TDV (by rearranging the relevés into \code{k} groups).
 
 This function uses two main algorithms:
 \enumerate{
 \item An optional GRASP, which is used to obtain initial solutions
 (partitions of \code{m_bin}) using function \code{\link[=partition_tdv_grasp]{partition_tdv_grasp()}}.
 Such initial solutions are then submitted to the SANN algorithm.
-\item The (main) SANN algorithm, which is used to search for the global
+\item The (main) SANN algorithm, which is used to search for a global
 maximum of TDV. The initial partition for each run of SANN can be a
 partition obtained from GRASP (if \code{use_grasp = TRUE}) or, (if
 \code{use_grasp = FALSE}), a partition given by the user (using \code{p_initial}) or

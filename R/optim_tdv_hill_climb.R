@@ -15,8 +15,8 @@
 #' @param n_runs A numeric giving the number of runs to perform.
 #' @param n_sol A numeric giving the number of best solutions to keep
 #'   in the final output. Defaults to 1.
-#' @param maxit A numeric giving the number of iterations of the
-#'   Hill-climbing optimization.
+#' @param maxit A numeric giving the number of iterations of the Hill-climbing
+#'   optimization.
 #' @param min_g_size A numeric. The minimum number of relevés that a group can
 #'   contain (must be 1 or higher).
 #' @param stoch_first A logical. `FALSE` (the default), performs only
@@ -28,8 +28,8 @@
 #'   n-neighbours for the Stochastic Hill-climbing; only used if
 #'   `stoch_first = TRUE`. Defaults to 1.
 #' @param stoch_maxit A numeric giving the number of iterations of the
-#'   Hill-climbing optimization; only used if `stoch_first = TRUE`. Defaults
-#'   to 100.
+#'   Stochastic Hill-climbing optimization; only used if `stoch_first = TRUE`.
+#'   Defaults to 100.
 #' @param full_output A logical. If `FALSE` (the default) the best `n_sol`
 #'   partitions and respective indices are returned. If `TRUE` (only available
 #'   for `n_sol = 1`) the output will also contain information on the
