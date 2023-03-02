@@ -182,7 +182,7 @@
 #' plot(
 #'   result[["SANN"]][[1]]$current.tdv,
 #'   type = "l",
-#'   xlab = "Run number",
+#'   xlab = "Iteration number",
 #'   ylab = "TDV of the currently accepted solution"
 #' )
 #' for (run in 2:length(result[["SANN"]])) {
