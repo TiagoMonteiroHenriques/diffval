@@ -56,12 +56,12 @@
 #'
 #'   Optionally, a faster search (Stochastic Hill-climbing) can be performed in
 #'   a first step (`stoch_first = TRUE`), consisting on searching for TDV
-#'   improvements, by randomly selecting n-neighbours (n defined by the user
-#'   with the parameter `stoch_neigh_size`), accepting that neighbour partition
-#'   as a better solution if it improves TDV. This is repeated until a given
-#'   number of maximum iterations (`stoch_maxit`) is reached. Stochastic
-#'   Hill-climbing might be helpful for big tables (where the simple screening
-#'   of all 1-neighbours might be too time consuming).
+#'   improvements, by randomly selecting, in each iteration, one n-neighbour (n
+#'   defined by the user in the parameter `stoch_neigh_size`), accepting that
+#'   n-neighbour partition as a better solution if it improves TDV. This is
+#'   repeated until a given number of maximum iterations (`stoch_maxit`) is
+#'   reached. Stochastic Hill-climbing might be helpful for big tables (where
+#'   the screening of all 1-neighbours might be too time consuming).
 #'
 #'   Several runs of this function (i.e., multiple starts) should be
 #'   tried out, as several local maxima are usually present and the
@@ -93,13 +93,13 @@
 #'   \describe{
 #'     \item{res.stoch}{A matrix with the iteration number (of the Stochastic
 #'     Hill-climbing phase), the maximum TDV found until that iteration, and the
-#'     higher TDV among all 1-neighbours.}
+#'     TDV of the randomly selected n-neighbour in that iteration.}
 #'     \item{par.stoch}{A vector with the best partition found in the Stochastic
 #'     Hill-climbing phase.}
 #'     \item{tdv.stoch}{A numeric showing the maximum TDV found in the
 #'     Stochastic Hill-climbing phase (if selected).}
 #'     \item{res}{A matrix with the iteration number (of the Hill-climbing), the
-#'     maximum TDV found until that iteration, and the higher TDV among all
+#'     maximum TDV found until that iteration, and the highest TDV among all
 #'     1-neighbours.}
 #'     \item{local_maximum}{A logical indicating if `par` is a 1-neighbour local
 #'     maximum.}
