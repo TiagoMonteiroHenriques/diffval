@@ -9,7 +9,7 @@
 #'
 #' @source Portela-Pereira E., Monteiro-Henriques T., Casas C., Forner N.,
 #'   Garcia-Cabral I., Fonseca J.P. & Neto C. 2021. *Teixedos no noroeste da*
-#'   *Península Ibérica*. Finisterra 56(117): 127‐150.
+#'   *Península Ibérica*. Finisterra 56(117): 127-150.
 #'   \doi{10.18055/FINIS18102}.
 #'
 #' @examples

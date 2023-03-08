@@ -108,17 +108,16 @@ bigdata_tdv <- function(phyto_list,
       stop("`nrel` is not matching the number of relev\u00e9s in `phyto_list`.")
     }
     mode(rel_ids) <- "integer"
-    if (!identical(rel_ids, 1:length(rel_ids))) {
+    if (!identical(rel_ids, seq_along(rel_ids))) {
       stop("Relev\u00e9's ids should be consecutive integers starting with 1.")
     }
     if (!identical(length(p), as.integer(n_rel))) {
-      stop("Object `p` must be a partition of the relev\u00e9s in `phyto_list`.")
+      stop("`p` must be a partition of the relev\u00e9s in `phyto_list`.")
     }
     k <- max(p)
     mode(p) <- "integer"
-    groups <- sort(unique(p))
     if (!identical(sort(unique(p)), 1:k)) {
-      stop("Object `p` is not a valid partition of the relev\u00e9s in `phyto_list`.")
+      stop("`p` is not a valid partition of the relev\u00e9s in `phyto_list`.")
     }
   }
   n_taxa <- length(phyto_list)
@@ -148,7 +147,6 @@ bigdata_tdv <- function(phyto_list,
         n_taxa = n_taxa,
         b = b,
         d = d
-        #USE.NAMES = FALSE
       )
     }
     return(tdv = sum(result) / n_taxa)
@@ -179,10 +177,16 @@ bigdata_tdv <- function(phyto_list,
       )
     }
     # Creating an output identical to tdv()
-    diffval <- sapply(result, function (x) {x$diffval})
-    ifp <-  t(sapply(result, function (x) {x$ifp}))
+    diffval <- sapply(result, function(x) {
+      x$diffval
+    })
+    ifp <-  t(sapply(result, function(x) {
+      x$ifp
+    }))
     colnames(ifp) <- 1:k
-    ofda <- t(sapply(result, function (x) {x$ofda}))
+    ofda <- t(sapply(result, function(x) {
+      x$ofda
+    }))
     colnames(ofda) <- 1:k
     tdv <- sum(diffval) / n_taxa
     diffval <- as.matrix(diffval)
@@ -190,8 +194,9 @@ bigdata_tdv <- function(phyto_list,
     return(list(
       ifp     = ifp,
       ofda    = ofda,
-      e       = sapply(result, function (x) {x$e}), # This is returning integer,
-      # while tdv() is returning double
+      e       = sapply(result, function(x) {
+        x$e
+      }), # This is returning integer, while tdv() is returning double
       diffval = diffval,
       tdv     = tdv
     ))

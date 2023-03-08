@@ -101,47 +101,51 @@ max_tdv_neighbour <- function(mt,
     # update according to the found maximum (it is repeating the calculation),
     # at least should not repeat it in case it is lower or equal to current
     # solution
-    tp_max <- tabulate(p_max) # Size of each group (inner) in neighbour partition
-    outer_size_n_max <- nr - tp_max # Sum of the sizes of the outer groups in neighbour
+    tp_max <- tabulate(p_max) # Size of each group (inner) in neighbour
     # partition
+    outer_size_n_max <- nr - tp_max # Sum of the sizes of the outer groups in
+    # neighbour partition
 
-    i_aff_tx_max <- afg[kc_max, ][1, ] > 0 | afg[kc_max, ][2, ] > 0 # Taxa affected by the
-    # swap of groups (i.e., present in at least one of the swapping groups). This
-    # should be done before the update of afg!
+    i_aff_tx_max <- afg[kc_max, ][1, ] > 0 | afg[kc_max, ][2, ] > 0 # Taxa
+    # affected by the swap of groups (i.e., present in at least one of the
+    # swapping groups). This should be done before the update of afg!
 
     # Updating ofda, ifp, afg, empty_size and gct (not changing their names)
-    for (i in kc_max) { # (Updates afg) no. of relevés containing the taxa, within
-      # each group (absolute frequency in each group), only for the two groups
-      # that changed a relevé!
+    for (i in kc_max) { # (Updates afg) no. of relevés containing the taxa,
+      # within each group (absolute frequency in each group), only for the two
+      # groups that changed a relevé!
       afg[i, ] <- colSums(mt[which(p_max == i), , drop = FALSE])
     }
-    empty_size[kc_max, ] <- (afg == 0)[kc_max, ] * tp_max[kc_max] # (Updates empty_size) no.
-    # of relevés of each group, when the taxon is not present. i_aff_tx_max must
-    # not be used here(!), because  when the taxon is absent from the swapping
-    # groups the size of the groups change and must be updated (specially for
-    # future swappings)
-    gct[i_aff_tx_max] <- colSums(afg > 0)[i_aff_tx_max] # (Updates gct) no. of groups
-    # containing the taxon [e]
-    i_mul[i_aff_tx_max] <- (gct > 1)[i_aff_tx_max] # (Updates i_mul) indices of the taxa
-    # occurring in more than one group (they must occur in at least one)
+    empty_size[kc_max, ] <- (afg == 0)[kc_max, ] * tp_max[kc_max] # (Updates
+    # empty_size) no. of relevés of each group, when the taxon is not present.
+    # i_aff_tx_max must not be used here(!), because  when the taxon is absent
+    # from the swapping groups the size of the groups change and must be updated
+    # (specially for future swappings)
+    gct[i_aff_tx_max] <- colSums(afg > 0)[i_aff_tx_max] # (Updates gct) no. of
+    # groups containing the taxon [e]
+    i_mul[i_aff_tx_max] <- (gct > 1)[i_aff_tx_max] # (Updates i_mul) indices of
+    # the taxa occurring in more than one group (they must occur in at least
+    # one)
     for (g in 1:k) { # Fills matrices ofda [c/d] and ifp [a/b], only when the
       # taxon is present in the group and only for the affected taxa!
       i_tx_max <- afg[g, ] > 0 # Indices of the taxa present in the group g
-      if (sum(i_tx_max & i_aff_tx_max) > 0) { # In the case that the group g has affected
-        # taxa
-        ofda[g, i_tx_max & !i_mul] <- 1 # ofda is 1 for the taxa occurring in one
-        # group only!
-        if (sum(i_mul) > 0) { # If there are taxa occurring in more than one group
-          i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other group
-          # than g
+      if (sum(i_tx_max & i_aff_tx_max) > 0) { # In the case that the group g has
+        # affected taxa
+        ofda[g, i_tx_max & !i_mul] <- 1 # ofda is 1 for the taxa occurring in
+        # one group only!
+        if (sum(i_mul) > 0) { # If there are taxa occurring in more than one
+          # group
+          i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other
+          # group than g
           ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
-                                       / outer_size_n_max[g]) # Size of outer empty groups divided by the sum of
-          # the sizes of the outer groups [c/d]
+                                       / outer_size_n_max[g]) # Size of outer
+          # empty groups divided by the sum of the sizes of the outer groups
+          # [c/d]
         }
-        ofda[g, i_aff_tx_max & !i_tx_max] <- 0 # Inserts a zero to the affected taxa that
-        # is no more present in the group!
-        ifp[g, i_aff_tx_max] <- afg[g, i_aff_tx_max] / tp_max[g] # Presences inside group g
-        # divided by the group g size [a/b]
+        ofda[g, i_aff_tx_max & !i_tx_max] <- 0 # Inserts a zero to the affected
+        # taxa that is no more present in the group!
+        ifp[g, i_aff_tx_max] <- afg[g, i_aff_tx_max] / tp_max[g] # Presences
+        # inside group g divided by the group g size [a/b]
       }
     }
     dv[i_aff_tx_max] <- colSums(
@@ -837,13 +841,7 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
 # dv_in_list: this function calculates DiffVal of a taxon when the data is in
 # list format (i.e. calculates DiffVal for one component of the list)
 
-dv_in_list <- function (comp,
-                        p,
-                        k,
-                        n_taxa,
-                        b,
-                        d) {
-
+dv_in_list <- function(comp, p, k, n_taxa, b, d) {
   # Getting the group ascribed to each of the relevé(s) that contain(s) the
   # taxon
   groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
@@ -858,22 +856,17 @@ dv_in_list <- function (comp,
 
   # For the parcels: (a/b) * (c/d)
   return(list(
-    ifp     = a/b,
-    ofda    = c/d,
+    ifp     = a / b,
+    ofda    = c / d,
     e       = e,
-    diffval = sum((a/b)*(c/d))/e
+    diffval = sum((a / b) * (c / d)) / e
   ))
 }
 
 # dvilf: this function calculates DiffVal (when data is) in list format. This is
 # a fast version returning only minimum information for TDV calculation
 
-dvilf <- function (comp,
-                   p,
-                   k,
-                   n_taxa,
-                   b,
-                   d) {
+dvilf <- function(comp, p, k, n_taxa, b, d) {
   # Getting the group ascribed to each of the relevé(s) that contain(s) the
   # taxon
   groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
@@ -883,5 +876,5 @@ dvilf <- function (comp,
   c <- rep(sum(b[a == 0]), k)                   # c
   #d is calculated in main function             # d
   e <- sum(a != 0)                              # e
-  sum((a/b)*(c/d))/e
+  sum((a / b) * (c / d)) / e
 }

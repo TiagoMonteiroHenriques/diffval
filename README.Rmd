@@ -32,7 +32,7 @@ data based on differential taxa, as in the traditional phytosociological
 The vignette "Gurobi Installation Guide", from package 'prioritizr', is useful
 and can be found here: <https://prioritizr.net/articles/gurobi_installation_guide.html>.
 
-## Acknowledgments
+## Acknowledgements
 
 TMH was funded by the European Social Fund (POCH and NORTE 2020) and
 by National Funds (MCTES), through a FCT – Fundação para a Ciência e a
