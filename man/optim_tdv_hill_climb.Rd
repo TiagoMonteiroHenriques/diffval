@@ -6,8 +6,8 @@
 \usage{
 optim_tdv_hill_climb(
   m_bin,
-  p_initial = "random",
   k,
+  p_initial = "random",
   n_runs = 1,
   n_sol = 1,
   maxit = 10,
@@ -24,13 +24,13 @@ optim_tdv_hill_climb(
 (presences), where rows correspond to taxa and columns correspond to
 relevés.}
 
+\item{k}{A numeric giving the number of desired groups.}
+
 \item{p_initial}{A vector or a character. A vector of integer numbers
 with the initial partition of the relevés (i.e., a vector with values from
 1 to \code{k}, with length equal to the number of columns of \code{m_bin}, ascribing
 each relevé to one of the \code{k} groups). By default, \code{p_initial = "random"},
 generates a random initial partition.}
-
-\item{k}{A numeric giving the number of desired groups.}
 
 \item{n_runs}{A numeric giving the number of runs to perform.}
 

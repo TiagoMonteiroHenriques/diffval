@@ -6,12 +6,12 @@
 #' @param m_bin A matrix. A phytosociological table of 0s (absences) and 1s
 #'   (presences), where rows correspond to taxa and columns correspond to
 #'   relevés.
+#' @param k A numeric giving the number of desired groups.
 #' @param p_initial A vector or a character. A vector of integer numbers
 #'   with the initial partition of the relevés (i.e., a vector with values from
 #'   1 to `k`, with length equal to the number of columns of `m_bin`, ascribing
 #'   each relevé to one of the `k` groups). By default, `p_initial = "random"`,
 #'   generates a random initial partition.
-#' @param k A numeric giving the number of desired groups.
 #' @param n_runs A numeric giving the number of runs to perform.
 #' @param n_sol A numeric giving the number of best solutions to keep
 #'   in the final output. Defaults to 1.
@@ -157,8 +157,8 @@
 #'
 #' @export
 optim_tdv_hill_climb <- function(m_bin,
-                                 p_initial = "random",
                                  k,
+                                 p_initial = "random",
                                  n_runs = 1,
                                  n_sol = 1,
                                  maxit = 10,

@@ -105,12 +105,12 @@ taxus_phyto_list <- apply(taxus_bin_wmt, 1, function(x) which(as.logical(x)))
 n_rel <- length(unique(unlist(taxus_phyto_list)))
 
 # Calculating TDV using bigdata_tdv(), even if this is not a big matrix
-  bigdata_tdv(
-    phyto_list = taxus_phyto_list,
-    p = groups,
-    n_rel = n_rel,
-    output_type = "normal"
-  )$tdv
+bigdata_tdv(
+  phyto_list = taxus_phyto_list,
+  p = groups,
+  n_rel = n_rel,
+  output_type = "normal"
+)$tdv
 
 }
 \author{
