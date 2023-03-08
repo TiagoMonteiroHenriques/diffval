@@ -97,7 +97,6 @@ max_tdv_neighbour <- function(mt,
   if (identical_partition(p, p_max)) {
     return(list(tdv = tdv_max, p = p_max))
   } else {
-
     # update according to the found maximum (it is repeating the calculation),
     # at least should not repeat it in case it is lower or equal to current
     # solution
@@ -138,7 +137,7 @@ max_tdv_neighbour <- function(mt,
           i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other
           # group than g
           ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
-                                       / outer_size_n_max[g]) # Size of outer
+          / outer_size_n_max[g]) # Size of outer
           # empty groups divided by the sum of the sizes of the outer groups
           # [c/d]
         }
@@ -150,17 +149,18 @@ max_tdv_neighbour <- function(mt,
     }
     dv[i_aff_tx_max] <- colSums(
       ifp[, i_aff_tx_max, drop = FALSE] *
-        ofda[, i_aff_tx_max, drop = FALSE]) / gct[i_aff_tx_max]
+        ofda[, i_aff_tx_max, drop = FALSE]
+    ) / gct[i_aff_tx_max]
     list(
-      tdv        = tdv_max,
-      p          = p_max,
-      ofda       = ofda,
-      ifp        = ifp,
-      afg        = afg,
+      tdv = tdv_max,
+      p = p_max,
+      ofda = ofda,
+      ifp = ifp,
+      afg = afg,
       empty_size = empty_size,
-      gct        = gct,
-      i_mul       = i_mul,
-      dv          = dv
+      gct = gct,
+      i_mul = i_mul,
+      dv = dv
     )
   }
 }
@@ -231,7 +231,8 @@ tdv_neig <- function(mt,
   }
   dv[i_aff_tx] <- colSums(
     ifp[, i_aff_tx, drop = FALSE] *
-      ofda[, i_aff_tx, drop = FALSE]) / gct[i_aff_tx]
+      ofda[, i_aff_tx, drop = FALSE]
+  ) / gct[i_aff_tx]
   sum(dv) / ns
 }
 
@@ -302,7 +303,6 @@ get_dv_01 <- function(k,
   # (depending if the new relevé to enter the group has a 0 or 1 in the row)
   res_mat_02 <- matrix(NA, ns, k) # To store p_a_u_new for each group
   for (g in 1:k) {
-
     # For the 0 column
     b_local <- mat_cur[p_a_u, ind_b, drop = FALSE]
     b_local[, g] <- b_local[, g] + 1
@@ -844,15 +844,15 @@ optim_tdv_gurobi_ti <- function(table, n, alphai) {
 dv_in_list <- function(comp, p, k, n_taxa, b, d) {
   # Getting the group ascribed to each of the relevé(s) that contain(s) the
   # taxon
-  groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
+  groups_with_taxon <- p[comp] # `comp` is a vector with the relevé(s) id(s)
   # where the taxon was observed
 
-  a <- tabulate(groups_with_taxon, nbins = k)   # a
-  #b is calculated in main function             # b
+  a <- tabulate(groups_with_taxon, nbins = k) # a
+  # b is calculated in main function             # b
   c <- rep(sum(b[a == 0]), k)
-  c[a == 0] <- 0                                # c
-  #d is calculated in main function             # d
-  e <- sum(a != 0)                              # e
+  c[a == 0] <- 0 # c
+  # d is calculated in main function             # d
+  e <- sum(a != 0) # e
 
   # For the parcels: (a/b) * (c/d)
   return(list(
@@ -869,12 +869,12 @@ dv_in_list <- function(comp, p, k, n_taxa, b, d) {
 dvilf <- function(comp, p, k, n_taxa, b, d) {
   # Getting the group ascribed to each of the relevé(s) that contain(s) the
   # taxon
-  groups_with_taxon <- p[comp]  # `comp` is a vector with the relevé(s) id(s)
+  groups_with_taxon <- p[comp] # `comp` is a vector with the relevé(s) id(s)
   # where the taxon was observed
-  a <- tabulate(groups_with_taxon, nbins = k)   # a
-  #b is calculated in main function             # b
-  c <- rep(sum(b[a == 0]), k)                   # c
-  #d is calculated in main function             # d
-  e <- sum(a != 0)                              # e
+  a <- tabulate(groups_with_taxon, nbins = k) # a
+  # b is calculated in main function             # b
+  c <- rep(sum(b[a == 0]), k) # c
+  # d is calculated in main function             # d
+  e <- sum(a != 0) # e
   sum((a / b) * (c / d)) / e
 }

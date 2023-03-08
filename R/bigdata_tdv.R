@@ -85,12 +85,12 @@
 #' n_rel <- length(unique(unlist(taxus_phyto_list)))
 #'
 #' # Calculating TDV using bigdata_tdv(), even if this is not a big matrix
-#'   bigdata_tdv(
-#'     phyto_list = taxus_phyto_list,
-#'     p = groups,
-#'     n_rel = n_rel,
-#'     output_type = "normal"
-#'   )$tdv
+#' bigdata_tdv(
+#'   phyto_list = taxus_phyto_list,
+#'   p = groups,
+#'   n_rel = n_rel,
+#'   output_type = "normal"
+#' )$tdv
 #'
 #' @export
 bigdata_tdv <- function(phyto_list,
@@ -180,7 +180,7 @@ bigdata_tdv <- function(phyto_list,
     diffval <- sapply(result, function(x) {
       x$diffval
     })
-    ifp <-  t(sapply(result, function(x) {
+    ifp <- t(sapply(result, function(x) {
       x$ifp
     }))
     colnames(ifp) <- 1:k
@@ -192,13 +192,13 @@ bigdata_tdv <- function(phyto_list,
     diffval <- as.matrix(diffval)
     colnames(diffval) <- "DiffVal"
     return(list(
-      ifp     = ifp,
-      ofda    = ofda,
-      e       = sapply(result, function(x) {
+      ifp = ifp,
+      ofda = ofda,
+      e = sapply(result, function(x) {
         x$e
       }), # This is returning integer, while tdv() is returning double
       diffval = diffval,
-      tdv     = tdv
+      tdv = tdv
     ))
   }
   stop('Argument `output_type` must be "fast" or "normal".')
