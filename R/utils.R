@@ -136,8 +136,8 @@ max_tdv_neighbour <- function(mt,
           # group
           i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other
           # group than g
-          ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
-          / outer_size_n_max[g]) # Size of outer
+          ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE] /
+            outer_size_n_max[g]) # Size of outer
           # empty groups divided by the sum of the sizes of the outer groups
           # [c/d]
         }
@@ -848,10 +848,10 @@ dv_in_list <- function(comp, p, k, n_taxa, b, d) {
   # where the taxon was observed
 
   a <- tabulate(groups_with_taxon, nbins = k) # a
-  # b is calculated in main function             # b
+  # b is calculated in main function
   c <- rep(sum(b[a == 0]), k)
   c[a == 0] <- 0 # c
-  # d is calculated in main function             # d
+  # d is calculated in main function
   e <- sum(a != 0) # e
 
   # For the parcels: (a/b) * (c/d)
@@ -872,9 +872,9 @@ dvilf <- function(comp, p, k, n_taxa, b, d) {
   groups_with_taxon <- p[comp] # `comp` is a vector with the relevé(s) id(s)
   # where the taxon was observed
   a <- tabulate(groups_with_taxon, nbins = k) # a
-  # b is calculated in main function             # b
+  # b is calculated in main function
   c <- rep(sum(b[a == 0]), k) # c
-  # d is calculated in main function             # d
+  # d is calculated in main function
   e <- sum(a != 0) # e
   sum((a / b) * (c / d)) / e
 }
