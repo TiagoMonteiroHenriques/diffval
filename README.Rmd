@@ -45,12 +45,14 @@ UIDP/MAT/00297/2020 (Centro de Matemática e Aplicações).
 
 ## Related articles
 
-Portela-Pereira E, Monteiro-Henriques T, Casas C, Forner N, Garcia-Cabral I, Fonseca JP & Neto C 2021. Teixedos no noroeste da Península Ibérica. Finisterra LVI(117): 127–150. DOI: 10.18055/FINIS18102 <https://revistas.rcaap.pt/finisterra/article/view/18102>
+Portela-Pereira E, Monteiro-Henriques T, Casas C, Forner N, Garcia-Cabral I,
+Fonseca JP & Neto C 2021. Teixedos no noroeste da Península Ibérica. Finisterra
+LVI(117): 127–150. DOI: 10.18055/FINIS18102 <https://revistas.rcaap.pt/finisterra/article/view/18102>
 
 ## Installation
 
 You can install the development version of the package from GitLab.
 
 ```{r, eval = FALSE}
-devtools::install_git("https://gitlab.com/point-veg/diffval")
+remotes::install_gitlab("point-veg/diffval")
 ```

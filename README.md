@@ -48,5 +48,5 @@ Península Ibérica. Finisterra LVI(117): 127–150. DOI:
 You can install the development version of the package from GitLab.
 
 ``` r
-devtools::install_git("https://gitlab.com/point-veg/diffval")
+remotes::install_gitlab("point-veg/diffval")
 ```
