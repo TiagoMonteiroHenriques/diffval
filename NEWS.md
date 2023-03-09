@@ -1,4 +1,4 @@
-# diffval (development version)
+# diffval 1.1.0
 
 ## Major changes
 
