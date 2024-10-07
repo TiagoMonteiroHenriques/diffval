@@ -1,5 +1,9 @@
 # diffval (development version)
 
+# diffval 1.1.0.9001
+
+* Improved documentation text
+
 # diffval 1.1.0
 
 ## Major changes
