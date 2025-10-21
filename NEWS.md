@@ -2,12 +2,12 @@
 
 # diffval 1.1.0.9002
 
-* Improved documentation text.
+* Improved documentation.
 * Added function `internal_assignment()`
 
 # diffval 1.1.0.9001
 
-* Improved documentation text.
+* Improved documentation.
 
 # diffval 1.1.0
 

@@ -1,4 +1,4 @@
-url: https://point-veg.utad.pt/pkgs/diffval
+# url: https://point-veg.utad.pt/pkgs/diffval
 title: The 'diffval' package for R
 template:
   bootstrap: 5
