@@ -1,13 +1,10 @@
 # diffval (development version)
 
-# diffval 1.1.0.9002
+# diffval 1.2.0
 
-* Improved documentation.
 * Added function `internal_assignment()`
-
-# diffval 1.1.0.9001
-
-* Improved documentation.
+* Improved documentation, linking to Monteiro-Henriques (2025,
+  <https://doi.org/10.3897/VCS.140466>).
 
 # diffval 1.1.0
 
@@ -20,8 +17,8 @@
 ## Bug fixes
 
 * Improved sorting in `tabulation()` function.
-* TDV calculation was corrected for some cases in `optim_tdv_hill_climb()` and in
-  the associated auxiliary function in `utils.R`.
+* TDV calculation was corrected for some cases in `optim_tdv_hill_climb()` and
+  in the associated auxiliary function in `utils.R`.
 
 # diffval 1.0.0
 
