@@ -48,18 +48,18 @@
 #'   \describe{
 #'     \item{status.runs}{A character vector with Gurobi output status for all
 #'     the runs.}
-#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'     \item{par}{A vector with the 2-partition corresponding to the the
 #'     maximum TDV found by Gurobi.}
+#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'   }
 #'
 #'   For `formulation = "t-independent"`, a list with the following components:
 #'
 #'   \describe{
 #'     \item{status}{A character with Gurobi output status.}
-#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'     \item{par}{A vector with the 2-partition corresponding to the the
 #'     maximum TDV found by Gurobi.}
+#'     \item{objval}{A numeric with the maximum TDV found by Gurobi.}
 #'   }
 #'
 #' @author Jorge Orestes Cerdeira and Tiago Monteiro-Henriques.

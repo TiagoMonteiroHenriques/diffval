@@ -201,9 +201,9 @@ optim_tdv_hill_climb <- function(m_bin,
   ns <- ncol(mt) # No. of taxa
   if (nr <= mgs * k) {
     stop(paste0(
-      "Random partition cannot guarantee at least ",
+      "A partition cannot guarantee at least ",
       mgs,
-      " relev\u00e9s per group!"
+      " relev\u00e9s per group (or only exactly)!"
     ))
   }
 
@@ -211,11 +211,13 @@ optim_tdv_hill_climb <- function(m_bin,
     p_ini <- p_initial
     if (!identical(as.integer(sort(unique(p_ini))), 1:k)) { # maybe when
       # p_initial is given k could be ignored
-      stop("Object `p` is not a valid partition of the columns of m.")
+      stop(
+        "Object `p_initial` is not a valid partition of the columns of `m_bin`"
+      )
     }
     if (!identical(length(p_ini), nr)) {
       stop(
-        "Object `p_ini` must be a partition of the columns of matrix `m_bin`."
+        "Object `p_initial` must be a partition of the columns of `m_bin`."
       )
     }
     tp <- tabulate(p_ini) # size of each group (inner)

@@ -2,10 +2,10 @@
 #'   algorithm(s)
 #'
 #' This function searches for `k`-partitions of the columns of a given matrix
-#'   (i.e., a partition of the columns in `k` groups), optimizing the Total
+#'   (i.e., partitions of the columns into `k` groups), optimizing the Total
 #'   Differential Value (TDV) using a stochastic global optimization method
-#'   called Simulated Annealing (SANN) algorithm. Optionally, a Greedy
-#'   Randomized Adaptive Search Procedure (GRASP) can be used to find a initial
+#'   known as the Simulated Annealing (SANN) algorithm. Optionally, a Greedy
+#'   Randomized Adaptive Search Procedure (GRASP) can be used to find an initial
 #'   partition (seed) to be passed to the SANN algorithm.
 #'
 #' @param m_bin A matrix. A phytosociological table of 0s (absences) and
@@ -26,7 +26,7 @@
 #'   final output (only used if `full_output` is `FALSE`; if `full_output` is
 #'   `TRUE` all runs will produce an output). Defaults to 1.
 #' @param t_inic A numeric giving the initial temperature. Must be greater
-#'   than 0 and maximum admitted value is 1. Defaults to 0.3.
+#'   than 0 and the maximum admitted value is 1. Defaults to 0.3.
 #' @param t_final A numeric giving the final temperature. Must be bounded
 #'   between 0 and 1. Usually very low values are needed to ensure convergence.
 #'   Defaults to 0.000001.
@@ -52,6 +52,9 @@
 #'   searches, using a SANN algorithm (optionally working upon GRASP solutions),
 #'   for a global maximum of TDV (by rearranging the relevés into `k` groups).
 #'
+#'   In the terminology of cluster analysis, taxa correspond to features,
+#'   variables, or attributes, while relevés correspond to objects or samples.
+#'
 #'   This function uses two main algorithms:
 #'
 #'   1) An optional GRASP, which is used to obtain initial solutions
@@ -72,8 +75,7 @@
 #'   `t_final` starting from `t_inic`. The number of times that the temperature
 #'   decreases, say `nt`, is calculated by the expression:
 #'
-#'   `floor(n_iter/((n_iter * log(1 - alpha)) / (log((1 - alpha) * t_final / `
-#'   `t_inic))))`.
+#'   `floor(log(t_final / t_inic) / log(1 - alpha))`.
 #'
 #'   Finally, these decreasing stages are scattered through the desired
 #'   iterations (`n_iter`) homogeneously, by calculating the indices of the
@@ -89,7 +91,7 @@
 #'   Generally, convergence failure can be spotted when final SANN TDV values
 #'   are similar to the initial `current.tdv`, specially when coming from random
 #'   partitions. In such cases, as a rule of thumb, it is advisable to decrease
-#'   `t_final`.
+#'   `t_final` by a factor of 10.
 #'
 #' @return If `full_output = FALSE` (the default), a list with the following
 #'   components (the GRASP component is only returned if `use_grasp = TRUE`):
@@ -225,8 +227,8 @@ optim_tdv_simul_anne <- function(m_bin,
     stop("Please note that `t_final` must be lower than `t_inic`.")
   }
   if (t_inic * (1 - alpha)^n_iter > t_final) {
-    stop("Desired `t_final` is not achieved with given `alpha` and `n_iter`
-    (`alpha` and/or `n_iter` are too small).")
+    stop("Desired `t_final` is not reached with given `alpha` and `n_iter`
+    (i.e.,`alpha` and/or `n_iter` are too small).")
   }
   mode(m_bin) <- "integer"
   if (!identical(c(0L, 1L), sort(unique(as.vector(m_bin))))) {
@@ -327,8 +329,10 @@ optim_tdv_simul_anne <- function(m_bin,
   }
 
   # Cooling schedule (cool_sched)
-  nt <- floor(n_iter / ((n_iter * log(1 - alpha)) / (log((1 - alpha) *
-    t_final / t_inic))))
+  # nt <- floor(n_iter / ((n_iter * log(1 - alpha)) / (log((1 - alpha) *
+  #   t_final / t_inic))))
+  #nt <- floor(log((1 - alpha) * t_final / t_inic) / log(1 - alpha))
+  nt <- floor(log(t_final / t_inic) / log(1 - alpha))
   cool_sched <- floor(n_iter / nt * (1:nt))
 
   res_sann <- list()

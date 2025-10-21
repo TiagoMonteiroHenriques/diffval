@@ -878,3 +878,5 @@ dvilf <- function(comp, p, k, n_taxa, b, d) {
   e <- sum(a != 0) # e
   sum((a / b) * (c / d)) / e
 }
+
+

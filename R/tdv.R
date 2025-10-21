@@ -15,7 +15,9 @@
 #'   "normal" (the default), "fast" and "full".
 #'
 #' @details The function accepts a phytosociological table (`m_bin`) and a
-#'   k-partition of its columns (`p`), returning the corresponding TDV.
+#'   k-partition of its columns (`p`), returning the corresponding TDV (Monteiro
+#'   -Henriques 2025).
+#'
 #'   TDV was proposed by Monteiro-Henriques and Bellu (2014).
 #'   Monteiro-Henriques (2016) proposed TDV1, modifying TDV slightly with the
 #'   objective of ensuring a value from 0 to 1. Yet, TDV is always within that
@@ -115,16 +117,20 @@
 #'   done.
 #'
 #' @references
-#' Monteiro-Henriques T. & Bellu A. 2014. *An optimization approach to the*
+#' Monteiro-Henriques T, Bellu A. 2014. *An optimization approach to the*
 #' *production of differentiated tables based on new differentiability*
 #' *measures*. 23rd EVS European Vegetation Survey. Presented orally. Ljubljana,
 #' Slovenia.
 #'
-#' Monteiro-Henriques T. 2016. *A bunch of R functions to assist*
+#' Monteiro-Henriques T 2016. *A bunch of R functions to assist*
 #' *phytosociological tabulation*. 25th Meeting of European Vegetation Survey.
 #' Presented in poster. Rome. Italy.
 #'
-#' Mueller-Dombois D. & Ellenberg H. 1974. *Aims and Methods of Vegetation*
+#' Monteiro-Henriques T 2025. *TDV-optimization: A novel numerical method for*
+#' *phytosociological tabulation*. Vegetation Classification and Survey 6:
+#' 99-127. DOI: <https://doi.org/10.3897/VCS.140466>
+#'
+#' Mueller-Dombois D, Ellenberg H 1974. *Aims and Methods of Vegetation*
 #' *Ecology*. New York: John Wiley & Sons.
 #'
 #' @author Tiago Monteiro-Henriques. E-mail: \email{tmh.dev@@icloud.com}.

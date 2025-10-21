@@ -41,7 +41,7 @@ final output (only used if \code{full_output} is \code{FALSE}; if \code{full_out
 \code{TRUE} all runs will produce an output). Defaults to 1.}
 
 \item{t_inic}{A numeric giving the initial temperature. Must be greater
-than 0 and maximum admitted value is 1. Defaults to 0.3.}
+than 0 and the maximum admitted value is 1. Defaults to 0.3.}
 
 \item{t_final}{A numeric giving the final temperature. Must be bounded
 between 0 and 1. Usually very low values are needed to ensure convergence.
@@ -122,10 +122,10 @@ each SANN iteration.}
 }
 \description{
 This function searches for \code{k}-partitions of the columns of a given matrix
-(i.e., a partition of the columns in \code{k} groups), optimizing the Total
+(i.e., partitions of the columns into \code{k} groups), optimizing the Total
 Differential Value (TDV) using a stochastic global optimization method
-called Simulated Annealing (SANN) algorithm. Optionally, a Greedy
-Randomized Adaptive Search Procedure (GRASP) can be used to find a initial
+known as the Simulated Annealing (SANN) algorithm. Optionally, a Greedy
+Randomized Adaptive Search Procedure (GRASP) can be used to find an initial
 partition (seed) to be passed to the SANN algorithm.
 }
 \details{
@@ -134,6 +134,9 @@ taxa and columns corresponding to relevés) this function searches for a
 \code{k}-partition (\code{k}, defined by the user) optimizing the TDV, i.e.,
 searches, using a SANN algorithm (optionally working upon GRASP solutions),
 for a global maximum of TDV (by rearranging the relevés into \code{k} groups).
+
+In the terminology of cluster analysis, taxa correspond to features,
+variables, or attributes, while relevés correspond to objects or samples.
 
 This function uses two main algorithms:
 \enumerate{
@@ -156,8 +159,7 @@ times that the temperature has to be decreased in order to approximate
 \code{t_final} starting from \code{t_inic}. The number of times that the temperature
 decreases, say \code{nt}, is calculated by the expression:
 
-\verb{floor(n_iter/((n_iter * log(1 - alpha)) / (log((1 - alpha) * t_final / }
-\verb{t_inic))))}.
+\code{floor(log(t_final / t_inic) / log(1 - alpha))}.
 
 Finally, these decreasing stages are scattered through the desired
 iterations (\code{n_iter}) homogeneously, by calculating the indices of the
@@ -173,7 +175,7 @@ inspect the behaviour of \code{current.tdv} and check if convergence fails.
 Generally, convergence failure can be spotted when final SANN TDV values
 are similar to the initial \code{current.tdv}, specially when coming from random
 partitions. In such cases, as a rule of thumb, it is advisable to decrease
-\code{t_final}.
+\code{t_final} by a factor of 10.
 }
 \examples{
 # Getting the Taxus baccata forests data set

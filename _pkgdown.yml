@@ -75,6 +75,7 @@ reference:
    Utitly functions and data sets
 - contents:
   - identical_partition
+  - internal_assignment
   - taxus_bin
 navbar:
   structure:

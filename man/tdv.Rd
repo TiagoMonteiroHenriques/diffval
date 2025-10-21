@@ -50,7 +50,9 @@ calculates the respective Total Differential Value (TDV).
 }
 \details{
 The function accepts a phytosociological table (\code{m_bin}) and a
-k-partition of its columns (\code{p}), returning the corresponding TDV.
+k-partition of its columns (\code{p}), returning the corresponding TDV (Monteiro
+-Henriques 2025).
+
 TDV was proposed by Monteiro-Henriques and Bellu (2014).
 Monteiro-Henriques (2016) proposed TDV1, modifying TDV slightly with the
 objective of ensuring a value from 0 to 1. Yet, TDV is always within that
@@ -153,16 +155,20 @@ sum(result$diffval / result$e) / nrow(taxus_bin_wmt)
 
 }
 \references{
-Monteiro-Henriques T. & Bellu A. 2014. \emph{An optimization approach to the}
+Monteiro-Henriques T, Bellu A. 2014. \emph{An optimization approach to the}
 \emph{production of differentiated tables based on new differentiability}
 \emph{measures}. 23rd EVS European Vegetation Survey. Presented orally. Ljubljana,
 Slovenia.
 
-Monteiro-Henriques T. 2016. \emph{A bunch of R functions to assist}
+Monteiro-Henriques T 2016. \emph{A bunch of R functions to assist}
 \emph{phytosociological tabulation}. 25th Meeting of European Vegetation Survey.
 Presented in poster. Rome. Italy.
 
-Mueller-Dombois D. & Ellenberg H. 1974. \emph{Aims and Methods of Vegetation}
+Monteiro-Henriques T 2025. \emph{TDV-optimization: A novel numerical method for}
+\emph{phytosociological tabulation}. Vegetation Classification and Survey 6:
+99-127. DOI: \url{https://doi.org/10.3897/VCS.140466}
+
+Mueller-Dombois D, Ellenberg H 1974. \emph{Aims and Methods of Vegetation}
 \emph{Ecology}. New York: John Wiley & Sons.
 }
 \author{

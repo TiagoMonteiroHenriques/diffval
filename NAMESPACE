@@ -3,6 +3,7 @@
 export(bigdata_tdv)
 export(explore_tabulation)
 export(identical_partition)
+export(internal_assignment)
 export(optim_tdv_gurobi_k_2)
 export(optim_tdv_hill_climb)
 export(optim_tdv_simul_anne)

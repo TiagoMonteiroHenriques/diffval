@@ -102,7 +102,7 @@ bigdata_tdv <- function(phyto_list,
   if (output_type == "fast") {
     k <- max(p)
   } else {
-    stopifnot(is.list(phyto_list))
+    stopifnot("`phyto_list` must be a list." = is.list(phyto_list))
     rel_ids <- sort(unique(unlist(phyto_list)))
     if (!identical(as.integer(n_rel), length(rel_ids))) {
       stop("`nrel` is not matching the number of relev\u00e9s in `phyto_list`.")
@@ -164,7 +164,7 @@ bigdata_tdv <- function(phyto_list,
         d = d,
         mc.cores = mc_cores
       )
-      result <- unlist(result)
+      # result <- unlist(result) # at a certain point this was not needed anymore
     } else {
       result <- lapply(
         phyto_list,
