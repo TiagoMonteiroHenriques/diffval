@@ -1,0 +1,22 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/bigdata_tdv.html</loc></url>
+<url><loc>/reference/diffval-package.html</loc></url>
+<url><loc>/reference/explore_tabulation.html</loc></url>
+<url><loc>/reference/identical_partition.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/internal_assignment.html</loc></url>
+<url><loc>/reference/optim_tdv_gurobi_k_2.html</loc></url>
+<url><loc>/reference/optim_tdv_hill_climb.html</loc></url>
+<url><loc>/reference/optim_tdv_simul_anne.html</loc></url>
+<url><loc>/reference/partition_tdv_grasp.html</loc></url>
+<url><loc>/reference/partition_tdv_grdtp.html</loc></url>
+<url><loc>/reference/tabulation.html</loc></url>
+<url><loc>/reference/taxus_bin.html</loc></url>
+<url><loc>/reference/tdv.html</loc></url>
+</urlset>
+
