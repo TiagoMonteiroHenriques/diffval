@@ -166,7 +166,7 @@ Presented in poster. Rome. Italy.
 
 Monteiro-Henriques T 2025. \emph{TDV-optimization: A novel numerical method for}
 \emph{phytosociological tabulation}. Vegetation Classification and Survey 6:
-99-127. DOI: \url{https://doi.org/10.3897/VCS.140466}
+99-127. DOI: \url{doi:10.3897/VCS.140466}
 
 Mueller-Dombois D, Ellenberg H 1974. \emph{Aims and Methods of Vegetation}
 \emph{Ecology}. New York: John Wiley & Sons.

@@ -128,7 +128,7 @@
 #'
 #' Monteiro-Henriques T 2025. *TDV-optimization: A novel numerical method for*
 #' *phytosociological tabulation*. Vegetation Classification and Survey 6:
-#' 99-127. DOI: <https://doi.org/10.3897/VCS.140466>
+#' 99-127. DOI: <doi:10.3897/VCS.140466>
 #'
 #' Mueller-Dombois D, Ellenberg H 1974. *Aims and Methods of Vegetation*
 #' *Ecology*. New York: John Wiley & Sons.
