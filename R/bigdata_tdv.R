@@ -16,8 +16,8 @@
 #'   a k-partition, consisting in a vector with values from 1 to k, with length
 #'   equal to the number of relevés in `phyto_list`, ascribing each relevé to
 #'   one of the k groups).
-#' @param n_rel The number of relevés in the `phyto_list`, obtained, for
-#'   example, with `length(unique(unlist(phyto_list)))`.
+#' @param n_rel The number of relevés in `phyto_list`, obtained, for
+#'   example, using the instruction `length(unique(unlist(phyto_list)))`.
 #' @param output_type A character determining the amount of information returned
 #'   by the function and also the amount of pre-validations. Possible values are
 #'   "normal" (the default) and "fast".

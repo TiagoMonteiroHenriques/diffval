@@ -28,8 +28,8 @@ a k-partition, consisting in a vector with values from 1 to k, with length
 equal to the number of relevés in \code{phyto_list}, ascribing each relevé to
 one of the k groups).}
 
-\item{n_rel}{The number of relevés in the \code{phyto_list}, obtained e.g.
-with \code{length(unique(unlist(phyto_list)))}.}
+\item{n_rel}{The number of relevés in \code{phyto_list}, obtained, for
+example, using the instruction \code{length(unique(unlist(phyto_list)))}.}
 
 \item{output_type}{A character determining the amount of information returned
 by the function and also the amount of pre-validations. Possible values are
