@@ -91,7 +91,7 @@ navbar:
       aria-label: R-Project
     home:
       icon: fa-home
-      href: https://point-veg.utad.pt/pkgs_en.html
+      href: https://point-veg.gitlab.io/diffval/
       aria-label: POINT-VEG packages
 repo:
   url:

@@ -5,6 +5,7 @@
 ^_pkgdown\.yml$
 ^.gitlab-ci.yml$
 ^docs$
+^public$
 ^pkgdown$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
