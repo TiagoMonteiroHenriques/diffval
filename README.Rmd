@@ -36,13 +36,13 @@ and can be found here: <https://prioritizr.net/articles/gurobi_installation_guid
 
 ## How to use
 
-The package provides several mathematical approaches for maximizing TDV.
+The package provides several optimization approaches for maximizing TDV.
 Finding a partition into $k$ subsets that maximizes TDV is NP-hard for any fixed
 $k$. For the case $k=2$, integer linear programming formulations are implemented
 in `optim_tdv_gurobi_k_2()`, allowing optimal solutions to be obtained for
 moderately sized data sets.
 
-For larger data sets and for $k>2$, (meta)heuristic algorithms are available: a
+For larger data sets and for $k>2$, (meta)heuristic algorithms are provided: a
 *greedy randomized adaptive search procedure* (GRASP), a *simulated annealing*
 approach, and a *hill climbing* approach. Good-quality partitions can often be
 achieved by running the simulated annealing algorithm initialized with solutions
