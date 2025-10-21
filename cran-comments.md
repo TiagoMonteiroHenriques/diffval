@@ -1,6 +1,6 @@
 Dear CRAN maintainers,
 
-I submit diffval version 1.1.0, a minor release to the current CRAN version.
+I submit diffval version 1.2.0, a minor release to the current CRAN version.
 
 Sincerely,
 
@@ -22,7 +22,7 @@ Tiago Monteiro-Henriques
   
 ## Test environments
 
-* Local macOS 13.2.1 (22D68) install, R 4.2.2
+* Local macOS 15.6.1 (24G90) install, R 4.5.0
 * macOS builder (r-release-macosx-arm64|4.2.1|macosx|macOS 11.5.2 (20G95)|Mac
   mini|Apple M1||en_US.UTF-8)
 * R-hub Ubuntu Linux 20.04.1 LTS, R-release, GCC
@@ -52,8 +52,11 @@ There were no NOTEs:
 There was 1 NOTE:
 
 ```
-* checking package dependencies ... NOTE
-Package suggested but not available for checking: ‘gurobi’
+ checking CRAN incoming feasibility ... [7s/26s] NOTE
+  Maintainer: ‘Tiago Monteiro-Henriques <tmh.dev@icloud.com>’
+  
+  Suggests or Enhances not in mainstream repositories:
+    gurobi
 ```
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
@@ -158,21 +161,20 @@ seems a bug/crash in MiKTeX.
 
 ### Win-builder x86_64-w64-mingw32 (64-bit)
 
-There were 2 NOTEs:
+There was 2 NOTEs:
 
 ```
-* checking CRAN incoming feasibility ... [15s] NOTE
+* checking CRAN incoming feasibility ... [13s] NOTE
 Maintainer: 'Tiago Monteiro-Henriques <tmh.dev@icloud.com>'
+
+Possibly misspelled words in DESCRIPTION:
+  Henriques (18:37)
+  Monteiro (18:28)
 
 Suggests or Enhances not in mainstream repositories:
   gurobi
 ```
-DESCRIPTION has full instructions for 'gurobi' package installation.
-
-```
-* checking package dependencies ... NOTE
-Package suggested but not available for checking: 'gurobi'  
-```
+Words are spelled correctly.
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
 ## Downstream dependencies
