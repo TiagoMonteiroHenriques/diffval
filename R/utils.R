@@ -82,11 +82,11 @@ max_tdv_neighbour <- function(mt,
   mat_neig_tdv <- sapply(seq_len(nrow(mat_neig$p.list)), function(x) {
     pn <- mat_neig$p.list[x, ]
     kc <- mat_neig$pairs[x, ]
-    return(tdv_neig(
+    tdv_neig(
       mt = mt, k = k, ns = ns, nr = nr, ofda = ofda, ifp = ifp,
       afg = afg, empty_size = empty_size, gct = gct,
       i_mul = i_mul, dv = dv, pn = pn, kc = kc
-    ))
+    )
   })
 
   tdv_max <- max(mat_neig_tdv)
@@ -95,7 +95,7 @@ max_tdv_neighbour <- function(mt,
   kc_max <- mat_neig$pairs[x_max, ]
 
   if (identical_partition(p, p_max)) {
-    return(list(tdv = tdv_max, p = p_max))
+    list(tdv = tdv_max, p = p_max)
   } else {
     # update according to the found maximum (it is repeating the calculation),
     # at least should not repeat it in case it is lower or equal to current
@@ -136,10 +136,10 @@ max_tdv_neighbour <- function(mt,
           # group
           i_tx_mul <- i_tx_max & i_mul # Taxa of group g occurring also in other
           # group than g
-          ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE] /
-            outer_size_n_max[g]) # Size of outer
-          # empty groups divided by the sum of the sizes of the outer groups
-          # [c/d]
+          ofda[g, i_tx_mul] <- colSums(
+            empty_size[-g, i_tx_mul, drop = FALSE] / outer_size_n_max[g]
+          ) # The size of outer empty groups divided by the sum of the sizes of
+          # the outer groups [c/d]
         }
         ofda[g, i_aff_tx_max & !i_tx_max] <- 0 # Inserts a zero to the affected
         # taxa that is no more present in the group!
@@ -219,9 +219,10 @@ tdv_neig <- function(mt,
       if (sum(i_mul) > 0) { # If there are taxa occurring in more than one group
         i_tx_mul <- i_tx & i_mul # Taxa of group g occurring also in other group
         # than g
-        ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
-        / outer_size_n[g]) # Size of outer empty groups divided by the sum of
-        # the sizes of the outer groups [c/d]
+        ofda[g, i_tx_mul] <- colSums(
+          empty_size[-g, i_tx_mul, drop = FALSE] / outer_size_n[g]
+        ) # Size of outer empty groups divided by the sum of the sizes of the
+        # outer groups [c/d]
       }
       ofda[g, i_aff_tx & !i_tx] <- 0 # Inserts a zero to the affected taxa that
       # is no more present in the group!
@@ -260,9 +261,10 @@ tdv_aux <- function(mt, p, k, ns, nr) {
     if (sum(i_mul) > 0) { # If there are taxa occurring in more than one group
       i_tx_mul <- i_tx & i_mul # Taxa of group g occurring also in other group
       # than g
-      ofda[g, i_tx_mul] <- colSums(empty_size[-g, i_tx_mul, drop = FALSE]
-      / outer_size[g]) # Size of outer empty groups divided by the sum of the
-      # sizes of the outer groups [c/d]
+      ofda[g, i_tx_mul] <- colSums(
+        empty_size[-g, i_tx_mul, drop = FALSE] / outer_size[g]
+      ) # Size of outer
+      # empty groups divided by the sum of the sizes of the outer groups [c/d]
     }
     ifp[g, i_tx] <- afg[g, i_tx] / tp[g] # Presences inside group g divided by
     # the group g size [a/b]
@@ -329,8 +331,7 @@ get_dv_01 <- function(k,
     # and g was the only empty group before
 
     # Updating parameter "e" locally
-    e_param[usable_row][ind_for_e] <- (e_param[usable_row][ind_for_e] +
-      1)
+    e_param[usable_row][ind_for_e] <- (e_param[usable_row][ind_for_e] + 1)
     # Updating "usable" locally
     usable_col <- mat_cur[, ind_usable] # Get the entire column (all rows)
     usable_col[usable_row][ind_for_usable] <- 0 # Lost rows
@@ -481,10 +482,8 @@ get_tdv_grdtp <- function(m_bin,
     cd_local1 <- c_local1 / d_local1
 
     res_mat[1, g] <- sum(
-      sum(rowSums(ab_local0 * cd_local0) /
-        (e_param[p_a_u & where_0])),
-      sum(rowSums(ab_local1 * cd_local1) /
-        (e_param[p_a_u_new & where_1]))
+      sum(rowSums(ab_local0 * cd_local0) / (e_param[p_a_u & where_0])),
+      sum(rowSums(ab_local1 * cd_local1) / (e_param[p_a_u_new & where_1]))
     )
   }
   res_mat
@@ -507,12 +506,12 @@ get_tdv_grdtp <- function(m_bin,
 aux_function_c <- function(a_wg, newrel, c_og, b_wg) {
   if (a_wg == 0) {
     if (newrel == 0) {
-      return(c_og + 1)
+      c_og + 1
     } else {
-      return(c_og - b_wg)
+      c_og - b_wg
     }
   } else {
-    return(c_og)
+    c_og
   }
 }
 
@@ -520,9 +519,9 @@ aux_function_c <- function(a_wg, newrel, c_og, b_wg) {
 aux_function_c_if0 <- function(a_wg, c_og) { # Simpler function, to use when
   # newrel is a vector of 0s
   if (a_wg == 0) {
-    return(c_og + 1)
+    c_og + 1
   } else {
-    return(c_og)
+    c_og
   }
 }
 
@@ -530,9 +529,9 @@ aux_function_c_if0 <- function(a_wg, c_og) { # Simpler function, to use when
 aux_function_c_if1 <- function(a_wg, c_og, b_wg) { # Simpler function, to use
   # when newrel is a vector of 1s
   if (a_wg == 0) {
-    return(c_og - b_wg)
+    c_og - b_wg
   } else {
-    return(c_og)
+    c_og
   }
 }
 
@@ -855,12 +854,12 @@ dv_in_list <- function(comp, p, k, n_taxa, b, d) {
   e <- sum(a != 0) # e
 
   # For the parcels: (a/b) * (c/d)
-  return(list(
+  list(
     ifp     = a / b,
     ofda    = c / d,
     e       = e,
     diffval = sum((a / b) * (c / d)) / e
-  ))
+  )
 }
 
 # dvilf: this function calculates DiffVal (when data is) in list format. This is
@@ -878,5 +877,3 @@ dvilf <- function(comp, p, k, n_taxa, b, d) {
   e <- sum(a != 0) # e
   sum((a / b) * (c / d)) / e
 }
-
-

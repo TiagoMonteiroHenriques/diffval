@@ -78,7 +78,7 @@ internal_assignment <- function(m_bin, p) {
   afg <- rowsum(t(m_bin), group = p)
   nrel <- ncol(m_bin)
   k <- max(p)
-  if (k==1) {
+  if (k == 1) {
     warning("Only one group is present!")
     return(
       list(
@@ -92,24 +92,22 @@ internal_assignment <- function(m_bin, p) {
   key <- t(afg) > 0 # key of species presences in groups
   # possible groups to which the relevé can be assigned given the species it
   # contains
-  poss_g <- sapply(
-    1:nrel,
-    function (x) {
-      apply(
-        key[names(m_bin[, x][m_bin[, x] > 0 ]), , drop = FALSE],
-        2,
-        all
-      )
-    })
+  poss_g <- sapply(1:nrel, function(x) {
+    apply(
+      key[names(m_bin[, x][m_bin[, x] > 0]), , drop = FALSE],
+      2,
+      all
+    )
+  })
   colnames(poss_g) <- colnames(m_bin)
   # number of groups to which each relevé can be assigned
   n_poss_g <- colSums(poss_g)
   names(n_poss_g) <- colnames(m_bin)
   amb_rel <- names(n_poss_g)[n_poss_g > 1] # relevés with ambiguous assignment
   unamb_rel <- names(n_poss_g)[n_poss_g == 1] # relevés with precise assignment
-  IAP <- length(unamb_rel)/nrel
+  iap <- length(unamb_rel) / nrel
   # possible assignments (for each relevé)
-  poss_a <- cbind(possible_assignments = apply(poss_g, 2, function (x) {
+  poss_a <- cbind(possible_assignments = apply(poss_g, 2, function(x) {
     paste0("{", paste((1:k)[x], collapse = ", "), "}")
   }))
   # possible assignments of ambiguous relevés
@@ -117,7 +115,7 @@ internal_assignment <- function(m_bin, p) {
   list(
     releves_with_ambiguous_assignment = amb_rel,
     possible_assignments_of_ambiguous_releves = as.data.frame(poss_a_amb),
-    iap = IAP, # Internal assignment precision
-    iaa = 1 - IAP # Internal assignment ambiguity
+    iap = iap, # Internal assignment precision
+    iaa = 1 - iap # Internal assignment ambiguity
   )
 }

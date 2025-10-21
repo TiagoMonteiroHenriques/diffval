@@ -164,7 +164,6 @@ bigdata_tdv <- function(phyto_list,
         d = d,
         mc.cores = mc_cores
       )
-      # result <- unlist(result) # at a certain point this was not needed anymore
     } else {
       result <- lapply(
         phyto_list,

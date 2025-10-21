@@ -331,7 +331,7 @@ optim_tdv_simul_anne <- function(m_bin,
   # Cooling schedule (cool_sched)
   # nt <- floor(n_iter / ((n_iter * log(1 - alpha)) / (log((1 - alpha) *
   #   t_final / t_inic))))
-  #nt <- floor(log((1 - alpha) * t_final / t_inic) / log(1 - alpha))
+  # nt <- floor(log((1 - alpha) * t_final / t_inic) / log(1 - alpha))
   nt <- floor(log(t_final / t_inic) / log(1 - alpha))
   cool_sched <- floor(n_iter / nt * (1:nt))
 
