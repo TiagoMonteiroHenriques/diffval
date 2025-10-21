@@ -45,6 +45,8 @@ jobs:
     if: ${{ needs.setup.outputs.containers != '[]' }}
     runs-on: ubuntu-latest
     name: ${{ matrix.config.label }}
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: "false"
     strategy:
       fail-fast: false
       matrix:
@@ -72,6 +74,8 @@ jobs:
     if: ${{ needs.setup.outputs.platforms != '[]' }}
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.label }}
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: "false"
     strategy:
       fail-fast: false
       matrix:
@@ -95,3 +99,5 @@ jobs:
         with:
           job-config: ${{ matrix.config.job-config }}
           token: ${{ secrets.RHUB_TOKEN }}
+        env:
+          _R_CHECK_FORCE_SUGGESTS_: "false"
