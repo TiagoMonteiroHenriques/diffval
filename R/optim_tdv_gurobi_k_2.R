@@ -80,58 +80,59 @@
 optim_tdv_gurobi_k_2 <- function(m_bin,
                                  formulation = "t-dependent",
                                  time_limit = 5) {
-  if (!requireNamespace("gurobi", quietly = TRUE)) {
+  if (requireNamespace("gurobi", quietly = TRUE)) {
+    n <- ncol(m_bin)
+    ns <- nrow(m_bin)
+    alphai <- rowSums(m_bin) # Number of ones in each row
+    if ("t-independent" %in% formulation) {
+      params <- list(OutputFlag = 0, TimeLimit = time_limit)
+      list_gurobi <- optim_tdv_gurobi_ti(table = m_bin, n = n, alphai = alphai)
+      res_gurobi <- gurobi::gurobi(list_gurobi, params)
+      return(list(
+        status = res_gurobi$status,
+        par    = res_gurobi$x[1:n] + 1,
+        objval = res_gurobi$objval / ns
+      ))
+    }
+    if ("t-dependent" %in% formulation) {
+      res_objval_1 <- NULL
+      res_par_1 <- list()
+      res_status_1 <- NULL
+      params <- list(OutputFlag = 0, TimeLimit = time_limit)
+      t <- 1
+      list_gurobi <- optim_tdv_gurobi_td(
+        table = m_bin,
+        t = t,
+        n = n,
+        alphai = alphai
+      )
+      res_gurobi <- gurobi::gurobi(list_gurobi, params)
+      res_objval_1 <- c(res_objval_1, res_gurobi$objval / ns)
+      res_par_1[[t]] <- res_gurobi$x[1:n] + 1
+      res_status_1 <- c(res_status_1, res_gurobi$status)
+      if (floor(n / 2) > 1) {
+        for (t in 2:floor(n / 2)) {
+          list_gurobi$rhs[1] <- t
+          list_gurobi$obj <- c(rep(0, n), alphai / (n - t), alphai / t)
+          res_gurobi <- gurobi::gurobi(list_gurobi, params)
+          res_objval_1 <- c(res_objval_1, res_gurobi$objval / ns)
+          res_par_1[[t]] <- res_gurobi$x[1:n] + 1
+          res_status_1 <- c(res_status_1, res_gurobi$status)
+        }
+      }
+      max_sol <- which.max(res_objval_1)
+      return(list(
+        status.runs = res_status_1,
+        par         = res_par_1[[max_sol]],
+        objval      = res_objval_1[[max_sol]]
+      ))
+    }
+    stop('In optim_tdv_gurobi_k_2, formulation must be "t-independent" or
+       "t-dependent".')
+  } else {
     stop(
       "Package 'gurobi' must be installed to use this function.",
       call. = FALSE
     )
   }
-  n <- ncol(m_bin)
-  ns <- nrow(m_bin)
-  alphai <- rowSums(m_bin) # Number of ones in each row
-  if ("t-independent" %in% formulation) {
-    params <- list(OutputFlag = 0, TimeLimit = time_limit)
-    list_gurobi <- optim_tdv_gurobi_ti(table = m_bin, n = n, alphai = alphai)
-    res_gurobi <- gurobi::gurobi(list_gurobi, params)
-    return(list(
-      status = res_gurobi$status,
-      par    = res_gurobi$x[1:n] + 1,
-      objval = res_gurobi$objval / ns
-    ))
-  }
-  if ("t-dependent" %in% formulation) {
-    res_objval_1 <- NULL
-    res_par_1 <- list()
-    res_status_1 <- NULL
-    params <- list(OutputFlag = 0, TimeLimit = time_limit)
-    t <- 1
-    list_gurobi <- optim_tdv_gurobi_td(
-      table = m_bin,
-      t = t,
-      n = n,
-      alphai = alphai
-    )
-    res_gurobi <- gurobi::gurobi(list_gurobi, params)
-    res_objval_1 <- c(res_objval_1, res_gurobi$objval / ns)
-    res_par_1[[t]] <- res_gurobi$x[1:n] + 1
-    res_status_1 <- c(res_status_1, res_gurobi$status)
-    if (floor(n / 2) > 1) {
-      for (t in 2:floor(n / 2)) {
-        list_gurobi$rhs[1] <- t
-        list_gurobi$obj <- c(rep(0, n), alphai / (n - t), alphai / t)
-        res_gurobi <- gurobi::gurobi(list_gurobi, params)
-        res_objval_1 <- c(res_objval_1, res_gurobi$objval / ns)
-        res_par_1[[t]] <- res_gurobi$x[1:n] + 1
-        res_status_1 <- c(res_status_1, res_gurobi$status)
-      }
-    }
-    max_sol <- which.max(res_objval_1)
-    return(list(
-      status.runs = res_status_1,
-      par         = res_par_1[[max_sol]],
-      objval      = res_objval_1[[max_sol]]
-    ))
-  }
-  stop('In optim_tdv_gurobi_k_2, formulation must be "t-independent" or
-       "t-dependent".')
 }
