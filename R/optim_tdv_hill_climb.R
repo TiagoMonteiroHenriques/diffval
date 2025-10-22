@@ -61,7 +61,7 @@
 #'   partition is tagged as a local maximum and outputted.
 #'
 #'   As the screening of all 1-neighbours might be computationally heavy,
-#'   specially while analyzing big tables, optionally, a Stochastic
+#'   specially while analysing big tables, optionally, a Stochastic
 #'   Hill-climbing search can be performed as a first step
 #'   (`stoch_first = TRUE`). This consists in searching for TDV improvements, by
 #'   randomly selecting, in each iteration, one `n`-neighbour (`n` defined by

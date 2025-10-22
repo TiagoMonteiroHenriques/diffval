@@ -67,14 +67,14 @@ produced.
 
 ## Acknowledgements
 
-TMH was funded by the European Social Fund (POCH and NORTE 2020) and
+TMH was partially funded by the European Social Fund (POCH and NORTE 2020) and
 by National Funds (MCTES), through a FCT – Fundação para a Ciência e a
 Tecnologia (Portuguese Foundation for Science and Technology) postdoctoral
 fellowship (SFRH/BPD/115057/2016), as well as by National Funds, through the
 same foundation, under the project UIDB/04033/2020 (CITAB - Centre for the
 Research and Technology of Agro-Environmental and Biological Sciences). JOC
-was financially supported by FCT through the projects UIDB/MAT/00297/2020,
-UIDP/MAT/00297/2020 (Centro de Matemática e Aplicações).
+was financially supported by FCT through the projects UID/297/2025 and
+UID/PRR/297/2025 (Center for Mathematics and Applications – NOVA Math).
 
 ## Related articles
 

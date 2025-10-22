@@ -22,146 +22,58 @@ Tiago Monteiro-Henriques
   
 ## Test environments
 
-* Local macOS 15.6.1 (24G90) install, R 4.5.0
-* macOS builder (r-release-macosx-arm64|4.2.1|macosx|macOS 11.5.2 (20G95)|Mac
-  mini|Apple M1||en_US.UTF-8)
-* R-hub Ubuntu Linux 20.04.1 LTS, R-release, GCC
-* R-hub Fedora Linux, R-devel, clang, gfortran
-* R-hub Windows Server 2022, R-devel, 64 bit
-* Win-builder x86_64-w64-mingw32 (64-bit), R Under development (unstable)
-  (2023-03-08 r83956 ucrt)
+* **Local macOS** 15.6.1 (24G90) install, R 4.5.0
+* **macOS builder**, r-devel-macosx-arm64|4.5.1|macosx|macOS 13.3.1 (22E261)|Mac
+  mini|Apple M1||en_US.UTF-8|macOS 11.3|clang-1403.0.22.14.1|GNU Fortran (GCC)
+  14.2.0
+* **Win-builder**, x86_64-w64-mingw32, R Under development (unstable)
+  (2025-10-21 r88957 ucrt)
+* **R-hub** (GitHub) VM **'linux'**, ubuntu-latest
+* **R-hub** (GitHub) VM **'m1-san'**, macos-15, ASAN + UBSAN on macOS
+* **R-hub** (GitHub) VM **'macos'**, macos-13
+* **R-hub** (GitHub) VM **'macos-arm64'**, macos-latest
+* **R-hub** (GitHub) VM **'windows'**, windows-latest
+* **R-hub** (GitHub) Container **'nosuggests'**, R Under development (unstable) (2025-10-20 r88955) on Fedora Linux 38
+* **R-hub** (GitHub) Container **'ubuntu-release'**, R version 4.5.1 (2025-06-13) on Ubuntu 24.04.3 LTS
 
 ## R CMD check results
 
-R-hub checks were done setting `_R_CHECK_FORCE_SUGGESTS_ to false`, as package
-'gurobi' is not in mainstream repositories.
+R-hub (GitHub) checks were done setting `extra-packages:` to `gurobi=?ignore`, as
+package 'gurobi' is not in mainstream repositories.
 
 There were no ERRORs or WARNINGs in all test environments. I list all the NOTEs
-that were returned in each of the tested environments:
+and INFOs that were returned in each of the tested environments:
 
-### Local OS X
-
-There were no NOTEs:
-
-```
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
-```
-
-### macOS builder 
+### Local macOS
 
 There was 1 NOTE:
 
 ```
- checking CRAN incoming feasibility ... [7s/26s] NOTE
+checking CRAN incoming feasibility ... [7s/26s] NOTE
   Maintainer: ‘Tiago Monteiro-Henriques <tmh.dev@icloud.com>’
   
   Suggests or Enhances not in mainstream repositories:
     gurobi
+
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
 ```
+
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
-### R-hub Ubuntu Linux
+### macOS builder
 
-There were 3 NOTEs:
-
-```
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘Tiago Monteiro-Henriques <tmh.dev@icloud.com>’
-
-Suggests or Enhances not in mainstream repositories:
-  gurobi
-````
-DESCRIPTION has full instructions for 'gurobi' package installation.
+There was 1 INFO:
 
 ```
-* checking package dependencies ... NOTE
+* checking package dependencies ... INFO
 Package suggested but not available for checking: ‘gurobi’
-```
-DESCRIPTION has full instructions for 'gurobi' package installation.
 
+Status: OK
 ```
-* checking examples ... [8s/17s] NOTE
-Examples with CPU (user + system) or elapsed time > 5s
-                      user system elapsed
-optim_tdv_simul_anne 3.234  0.044   7.558
-optim_tdv_hill_climb 2.850  0.012   5.997
-```
-Optimization can be time consuming. This example is small in size.
-This is not happening in Windows or OS X environments.
 
-### R-hub Fedora Linux
+### Win-builder
 
-There were 4 NOTEs:
-
-```
-* checking CRAN incoming feasibility ... [8s/29s] NOTE
-Maintainer: ‘Tiago Monteiro-Henriques <tmh.dev@icloud.com>’
-
-Suggests or Enhances not in mainstream repositories:
-  gurobi
-```
-DESCRIPTION has full instructions for 'gurobi' package installation.
-
-```
-* checking package dependencies ... NOTE
-Package suggested but not available for checking: ‘gurobi’
-```
-DESCRIPTION has full instructions for 'gurobi' package installation.
-
-```
-* checking examples ... [8s/17s] NOTE
-Examples with CPU (user + system) or elapsed time > 5s
-                      user system elapsed
-optim_tdv_simul_anne 3.248  0.008   7.543
-optim_tdv_hill_climb 2.878  0.023   6.003
-```
-Optimization can be time consuming. This example is small in size.
-This is not happening in Windows or OS X environments.
-
-```
-* checking HTML version of manual ... NOTE
-Skipping checking HTML validation: no command 'tidy' found
-Skipping checking math rendering: package 'V8' unavailable
-```
-Related to test environment.
-
-### R-hub Windows Server 2022
-
-There were 4 NOTEs:
-
-```
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Tiago Monteiro-Henriques <tmh.dev@icloud.com>'
-
-Suggests or Enhances not in mainstream repositories:
-  gurobi
-```
-DESCRIPTION has full instructions for 'gurobi' package installation.
-
-```
-* checking package dependencies ... NOTE
-Package suggested but not available for checking: 'gurobi'
-```
-DESCRIPTION has full instructions for 'gurobi' package installation.
-
-```
-* checking HTML version of manual ... NOTE
-Skipping checking math rendering: package 'V8' unavailable
-```
-Related to test environment.
-
-```
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
-```
-Related to test environment.
-As stated in [R-hub issue #503](https://github.com/r-hub/rhub/issues/503), this
-seems a bug/crash in MiKTeX.
-
-### Win-builder x86_64-w64-mingw32 (64-bit)
-
-There was 2 NOTEs:
+There was 1 NOTE:
 
 ```
 * checking CRAN incoming feasibility ... [13s] NOTE
@@ -177,6 +89,16 @@ Suggests or Enhances not in mainstream repositories:
 Words are spelled correctly.
 DESCRIPTION has full instructions for 'gurobi' package installation.
 
+### All seven R-hub (GitHub) checks
+
+There was 1 INFO:
+
+```
+* checking package dependencies ... INFO
+Package suggested but not available for checking: ‘gurobi’
+
+Status: OK
+```
 ## Downstream dependencies
 
 There are currently no downstream dependencies for this package.
