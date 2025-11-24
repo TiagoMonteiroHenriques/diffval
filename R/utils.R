@@ -10,7 +10,12 @@ random_neighbour_hc <- function(p, k, mgs, stoch_neigh_size) {
   tp <- tabulate(p)
   k_int <- which(tp > mgs) # k of interest to sample
   k_sam <- tp[k_int] - mgs # k samplable
-  swap <- sample(rep(k_int, k_sam), min(stoch_neigh_size, sum(k_sam))) #
+  v_sample <- rep(k_int, k_sam) # vector to sample from
+  if (length(v_sample) == 1) {
+    swap <- v_sample
+  } else {
+    swap <- sample(v_sample, min(stoch_neigh_size, sum(k_sam)))
+  }
   # stoch_neigh_size cannot be greater than sum(k_sam)
   niter <- table(swap)
   gn_tot <- NULL
