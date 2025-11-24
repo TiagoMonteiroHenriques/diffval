@@ -1,5 +1,8 @@
 # diffval (development version)
 
+* Corrected a bug in the stochastic hill climbing auxiliary function that could
+  return a partition in violation of the defined minimum group size
+
 # diffval 1.2.0
 
 * Added function `internal_assignment()`
